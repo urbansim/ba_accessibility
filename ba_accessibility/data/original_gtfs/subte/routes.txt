@@ -1,0 +1,9 @@
+﻿route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
+LineaA,3,A,Plaza de Mayo - San Pedrito,,1,,A5C8FF,000000
+LineaB,3,B,Leandro N. Alem - Juan Manuel de Rosas,,1,,FF0000,000000
+LineaC,3,C,Retiro - Constitución,,1,,0000FF,FFFFFF
+LineaD,3,D,Catedral - Congreso de Tucumán,,1,,00AC67,000000
+LineaE,3,E,Retiro - Plaza de los Virreyes,,1,,8300BB,FFFFFF
+LineaH,3,H,Facultad de Derecho - Hospitales,,1,,FFF300,000000
+PM-Civico,3,PM-C,Saguier - Centro Cívico,,0,,FFBD33,000000
+PM-Savio,3,PM-S,Saguier - Savio,,0,,FFBD33,000000

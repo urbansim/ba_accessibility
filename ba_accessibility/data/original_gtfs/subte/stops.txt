@@ -1,0 +1,709 @@
+﻿stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station,wheelchair_boarding
+11143,,F.Medicina a Catedral y C.Tucuman - Cordoba 2125,Vestibulo intermedio - Escalera pedestre,-34.599683118106,-58.397604384784,,,2,1114,2
+11146,,F.Medicina a Catedral y C.Tucuman - Cordoba 2124,Vestibulo intermedio - Escalera pedestre,-34.599879721076,-58.397657130188,,,2,1114,2
+11144,,F.Medicina a Catedral y C.Tucuman - Cordoba 2150,Vestibulo intermedio - Escalera pedestre,-34.599882811796,-58.398018558274,,,2,1114,2
+11142,,F.Medicina a Catedral y C.Tucuman - Cordoba 2156,Anden a C. de Tucuman - Ascensor - Accesible,-34.599857187272,-58.398338044014,,,2,1114,1
+1164S,,Retiro,,-34.59210278,-58.37609722,4,,0,1164,1
+1165N,,Catalinas,,-34.59655556,-58.37205278,4,,0,1165,1
+1165S,,Catalinas,,-34.59646111,-58.37195,4,,0,1165,1
+1166N,,Correo Central,,-34.60362222,-58.37019444,4,,0,1166,1
+1166S,,Correo Central,,-34.60342778,-58.37005833,4,,0,1166,1
+11641,,Retiro a Virreyes - Av. Ramos Mejia 1301,Vestibulo intermedio - Escalera pedestre,-34.59261111,-58.37544722,,,2,1164,2
+11643,,Retiro a Virreyes - Av. Del Libertador 125,Salida unicamente - Escalera mecanica,-34.59254167,-58.37572222,,,2,1164,2
+11645,,Retiro a Virreyes - Av. Del Libertador 145,Vestibulo intermedio - Ascensor - Accesible,-34.59233889,-58.375925,,,2,1164,1
+11647,,Retiro a Virreyes - Av. Del Libertador 185,Vestibulo intermedio - Escalera pedestre,-34.59200278,-58.37624167,,,2,1164,2
+11642,,Retiro a Virreyes - Juncal 600,Escalera pedestre y mecanica,-34.59289722,-58.37621389,,,2,1164,2
+11644,,Retiro a Virreyes - Basabilvaso 1363,Vestibulo intermedio - Escalera pedestre,-34.59266389,-58.37682222,,,2,1164,2
+11651,,Catalinas a Virreyes y Retiro - Av. Alem 951,Escalera pedestre y mecanica,-34.59678056,-58.37176389,,,2,1165,2
+11652,,Catalinas a Virreyes y Retiro - Av. Alem 910,Vestibulo intermedio - Escalera pedestre,-34.59703056,-58.37215833,,,2,1165,2
+11653,,Catalinas a Virreyes y Retiro - Av. Alem 951,Vestibulo intermedio - Ascensor - Accesible,-34.59664722,-58.37182778,,,2,1165,1
+11654,,Catalinas a Virreyes y Retiro - Av. Alem 996,Salida unicamente - Escalera mecanica,-34.59640278,-58.37236944,,,2,1165,2
+11662,,C. Central a Virreyes y Retiro - Corrientes 212,Vestibulo intermedio - Escalera pedestre,-34.603325,-58.37053889,,,2,1166,2
+11666,,C. Central a Virreyes y Retiro - Av. Alem 322,Salida unicamente - Escalera mecanica,-34.60395556,-58.37036111,,,2,1166,2
+11668,,C. Central a Virreyes y Retiro - Av. Alem 286,Vestibulo intermedio - Escalera pedestre,-34.60454722,-58.37032222,,,2,1166,2
+11669,,C. Central a Virreyes y Retiro - Av. Alem 345,Vestibulo intermedio - Ascensor - Accesible,-34.60358611,-58.36978056,,,2,1166,1
+116611,,C. Central a Virreyes y Retiro - Sarmiento 151,Escalera pedestre y mecanica,-34.60371667,-58.36957222,,,2,1166,2
+10993,,D.Norte a Retiro y Constitucion - Sarmiento 865,Escalera mecanica y pedestre,-34.60486389,-58.37895278,,,2,1099,2
+11147,,F.Medicina a Catedral y C.Tucuman - Pza Houssay,Vestibulo intermedio - Escalera pedestre,-34.599375,-58.39791667,,,2,1114,2
+10915,,C. Pellegrini a Rosas y Alem - Cerrito 458,Escalera pedestre - Galeria Obelisco Norte,-34.60301667,-58.38260278,,,2,1091,2
+11178,,9 de Julio a Catedral y C. de Tucuman - Cerrito 37,Escalera pedestre - Galeria Obelisco Sur,-34.60423889,-58.382275,,,2,1117,2
+11065,,Olleros a Catedral y C. de Tucuman - Cabildo 705,Salvaescaleras,-34.57034444,-58.44412778,,,2,1106,1
+11056,,J.Hernandez a Catedral y C.Tucuman - Cabildo 1574,Salvaescaleras,-34.56650278,-58.45191111,,,2,1105,1
+11135,,Pueyrredon a Catedral y C.Tucuman-Pueyrredon 1340,Salida unicamente - Vestibulo/Exterior,-34.59535,-58.40285,,,2,1113,2
+1164N,,Retiro,,-34.59219722,-58.37619167,4,,0,1164,1
+1059N,,San Pedrito,,-34.630922591443,-58.470433205504,4,,0,1059,1
+1059S,,San Pedrito,,-34.630922591443,-58.470433205504,4,,0,1059,1
+1060N,,San Jose de Flores,,-34.629054501979,-58.463536343831,4,,0,1060,1
+1060S,,San Jose de Flores,,-34.629054501979,-58.463536343831,4,,0,1060,1
+1061N,,Carabobo,,-34.626422392738,-58.456044495010,4,,0,1061,1
+1061S,,Carabobo,,-34.626422392738,-58.456044495010,4,,0,1061,1
+1062N,,Puan,,-34.623571847053,-58.448787778687,4,,0,1062,1
+1062S,,Puan,,-34.623571847053,-58.448787778687,4,,0,1062,1
+1063N,,Primera Junta,,-34.620460192436,-58.441400975016,4,,0,1063,2
+1063S,,Primera Junta,,-34.620460192436,-58.441400975016,4,,0,1063,1
+1064N,,Acoyte,,-34.618036012360,-58.435862213379,4,,0,1064,1
+1064S,,Acoyte,,-34.618036012360,-58.435862213379,4,,0,1064,1
+1065N,,Rio de Janeiro,,-34.615111439413,-58.429285879212,4,,0,1065,2
+1065S,,Rio de Janeiro,,-34.615111439413,-58.429285879212,4,,0,1065,2
+1066N,,Castro Barros,,-34.611763606902,-58.421728313005,4,,0,1066,2
+1066S,,Castro Barros,,-34.611763606902,-58.421728313005,4,,0,1066,1
+1067N,,Loria,,-34.610811060554,-58.415152877453,4,,0,1067,1
+1067S,,Loria,,-34.610811060554,-58.415152877453,4,,0,1067,2
+1068N,,Plaza Miserere,,-34.609688,-58.406813889700,4,,0,1068,1
+1068S,,Plaza Miserere,,-34.609688,-58.406813889700,4,,0,1068,2
+1069S,,Alberti,,-34.609832012885,-58.400719910883,4,,0,1069,2
+1070N,,Pasco,,-34.609664444429,-58.398340314029,4,,0,1070,2
+1071N,,Congreso,,-34.609241487037,-58.392670601487,4,,0,1071,1
+1071S,,Congreso,,-34.609241487037,-58.392670601487,4,,0,1071,1
+1072N,,Saenz Peña,,-34.609416989391,-58.386668153102,4,,0,1072,2
+1072S,,Saenz Peña,,-34.609416989391,-58.386668153102,4,,0,1072,2
+1073N,,Lima,,-34.609105721538,-58.382521122784,4,,0,1073,2
+1073S,,Lima,,-34.609105721538,-58.382521122784,4,,0,1073,2
+1074N,,Piedras,,-34.608837932068,-58.378502407734,4,,0,1074,2
+1074S,,Piedras,,-34.608837932068,-58.378502407734,4,,0,1074,2
+1075N,,Peru,,-34.608559343180,-58.374563008418,4,,0,1075,0
+1075S,,Peru,,-34.608559343180,-58.374563008418,4,,0,1075,0
+1076N,,Plaza de Mayo,,-34.608695109514,-58.371493220293,4,,0,1076,1
+1076S,,Plaza de Mayo,,-34.608695109514,-58.371493220293,4,,0,1076,1
+1077N,,Juan Manuel de Rosas,,-34.574011003989,-58.486718237493,4,,0,1077,1
+1077S,,Juan Manuel de Rosas,,-34.574011003989,-58.486718237493,4,,0,1077,1
+1078N,,Echeverria,,-34.577998380396,-58.480763733193,4,,0,1078,1
+1078S,,Echeverria,,-34.577998380396,-58.480763733193,4,,0,1078,1
+1079N,,De Los Incas - Parque Chas,,-34.581941400922,-58.472949117288,4,,0,1079,1
+1079S,,De Los Incas - Parque Chas,,-34.581941400922,-58.472949117288,4,,0,1079,1
+1080N,,Tronador - Villa Ortuzar,,-34.584319159038,-58.465676307586,4,,0,1080,1
+1080S,,Tronador - Villa Ortuzar,,-34.584319159038,-58.465676307586,4,,0,1080,1
+1081N,,Federico Lacroze,,-34.587565207891,-58.454097211372,4,,0,1081,2
+1081S,,Federico Lacroze,,-34.587565207891,-58.454097211372,4,,0,1081,2
+1082N,,Dorrego,,-34.591692697391,-58.447618335534,4,,0,1082,2
+1082S,,Dorrego,,-34.591692697391,-58.447618335534,4,,0,1082,2
+1083N,,Angel Gallardo,,-34.602156515827,-58.431022167144,4,,0,1083,2
+1083S,,Angel Gallardo,,-34.602156515827,-58.431022167144,4,,0,1083,2
+1084N,,Malabia,,-34.599048472974,-58.439674973441,4,,0,1084,2
+1084S,,Malabia,,-34.599048472974,-58.439674973441,4,,0,1084,2
+1085N,,Medrano,,-34.603139517524,-58.421303182836,4,,0,1085,2
+1085S,,Medrano,,-34.603139517524,-58.421303182836,4,,0,1085,2
+1086N,,Carlos Gardel,,-34.604103190729,-58.411704897892,4,,0,1086,2
+1086S,,Carlos Gardel,,-34.604103190729,-58.411704897892,4,,0,1086,2
+1087N,,Pueyrredon,,-34.604613170616,-58.405234068657,4,,0,1087,2
+1087S,,Pueyrredon,,-34.604613170616,-58.405234068657,4,,0,1087,2
+1088N,,Pasteur,,-34.604623105662,-58.399357348627,4,,0,1088,2
+1088S,,Pasteur,,-34.604623105662,-58.399357348627,4,,0,1088,2
+1089N,,Callao,,-34.604457527748,-58.392845615810,4,,0,1089,1
+1089S,,Callao,,-34.604457527748,-58.392845615810,4,,0,1089,1
+1090N,,Uruguay,,-34.604046341872,-58.387106358997,4,,0,1090,1
+1090S,,Uruguay,,-34.604046341872,-58.387106358997,4,,0,1090,1
+1091N,,Carlos Pellegrini,,-34.603701386103,-58.381378501576,4,,0,1091,2
+1091S,,Carlos Pellegrini,,-34.603701386103,-58.381378501576,4,,0,1091,2
+1092N,,Florida,,-34.603301786393,-58.374534845324,4,,0,1092,2
+1092S,,Florida,,-34.603301786393,-58.374534845324,4,,0,1092,2
+1093N,,Leandro N. Alem,,-34.602967313448,-58.369956314500,4,,0,1093,2
+1093S,,Leandro N. Alem,,-34.602967313448,-58.369956314500,4,,0,1093,2
+1094E,,Constitucion,,-34.627276542920,-58.381431475198,4,,0,1094,1
+1094O,,Constitucion,,-34.627276542920,-58.381431475198,4,,0,1094,1
+1095E,,San Juan,,-34.622676270600,-58.379951566484,4,,0,1095,2
+1095O,,San Juan,,-34.622676270600,-58.379951566484,4,,0,1095,2
+1096E,,Independencia,,-34.618060292427,-58.380236216020,4,,0,1096,2
+1096O,,Independencia,,-34.618060292427,-58.380236216020,4,,0,1096,2
+1097E,,Moreno,,-34.612434686061,-58.380517847867,4,,0,1097,2
+1097O,,Moreno,,-34.612434686061,-58.380517847867,4,,0,1097,2
+1098E,,Avenida de Mayo,,-34.608990925758,-58.380681462661,4,,0,1098,2
+1098O,,Avenida de Mayo,,-34.608990925758,-58.380681462661,4,,0,1098,2
+1099E,,Diagonal Norte,,-34.604795306773,-58.379235416539,4,,0,1099,2
+1099O,,Diagonal Norte,,-34.604795306773,-58.379235416539,4,,0,1099,2
+1100E,,Lavalle,,-34.601776224270,-58.378115594396,4,,0,1100,2
+1100O,,Lavalle,,-34.601776224270,-58.378115594396,4,,0,1100,2
+1101E,,General San Martin,,-34.594872221186,-58.377256616835,4,,0,1101,2
+1101O,,General San Martin,,-34.594872221186,-58.377256616835,4,,0,1101,2
+1102E,,Retiro,,-34.591873756182,-58.374748081035,4,,0,1102,2
+1102O,,Retiro,,-34.591873756182,-58.374748081035,4,,0,1102,2
+1103N,,Congreso de Tucuman,,-34.555987572378,-58.462078124285,4,,0,1103,1
+1103S,,Congreso de Tucuman,,-34.555987572378,-58.462078124285,4,,0,1103,1
+1104N,,Juramento,,-34.562410402122,-58.456280529496,4,,0,1104,1
+1104S,,Juramento,,-34.562410402122,-58.456280529496,4,,0,1104,1
+1105N,,Jose Hernandez,,-34.566267592324,-58.451968878529,4,,0,1105,1
+1105S,,Jose Hernandez,,-34.566267592324,-58.451968878529,4,,0,1105,1
+1106N,,Olleros,,-34.570246506058,-58.444336652709,4,,0,1106,1
+1106S,,Olleros,,-34.570246506058,-58.444336652709,4,,0,1106,1
+1107N,,Ministro Carranza,,-34.575205802166,-58.434726297831,4,,0,1107,2
+1107S,,Ministro Carranza,,-34.575205802166,-58.434726297831,4,,0,1107,2
+1108N,,Palermo,,-34.578413560940,-58.425869643601,4,,0,1108,2
+1108S,,Palermo,,-34.578413560940,-58.425869643601,4,,0,1108,2
+1109N,,Plaza Italia,,-34.581660946057,-58.420978635617,4,,0,1109,2
+1109S,,Plaza Italia,,-34.581660946057,-58.420978635617,4,,0,1109,2
+1110N,,Scalabrini Ortiz,,-34.585185336263,-58.415824770871,4,,0,1110,2
+1110S,,Scalabrini Ortiz,,-34.585185336263,-58.415824770871,4,,0,1110,2
+1111N,,Bulnes,,-34.588258565847,-58.411264344992,4,,0,1111,2
+1111S,,Bulnes,,-34.588258565847,-58.411264344992,4,,0,1111,2
+1112N,,Agüero,,-34.591698218136,-58.407092839478,4,,0,1112,2
+1112S,,Agüero,,-34.591698218136,-58.407092839478,4,,0,1112,2
+1113N,,Pueyrredon,,-34.594988137797,-58.403226435199,4,,0,1113,2
+1113S,,Pueyrredon,,-34.594988137797,-58.403226435199,4,,0,1113,2
+1114N,,Facultad de Medicina,,-34.599719656814,-58.397433534301,4,,0,1114,1
+1114S,,Facultad de Medicina,,-34.599719656814,-58.397433534301,4,,0,1114,1
+1115N,,Callao,,-34.599602641978,-58.392240107111,4,,0,1115,2
+1115S,,Callao,,-34.599602641978,-58.392240107111,4,,0,1115,1
+1116N,,Tribunales,,-34.601770705188,-58.384459018730,4,,0,1116,1
+1116S,,Tribunales,,-34.601770705188,-58.384459018730,4,,0,1116,1
+1117N,,9 de Julio,,-34.604348245572,-58.380351886286,4,,0,1117,2
+1117S,,9 de Julio,,-34.604348245572,-58.380351886286,4,,0,1117,2
+1118N,,Catedral,,-34.607624420959,-58.374257236745,4,,0,1118,0
+1118S,,Catedral,,-34.607624420959,-58.374257236745,4,,0,1118,0
+1119N,,Bolivar,,-34.609575380822,-58.374049365518,4,,0,1119,0
+1119S,,Bolivar,,-34.609575380822,-58.374049365518,4,,0,1119,0
+1120N,,Belgrano,,-34.613410392420,-58.378220200429,4,,0,1120,2
+1120S,,Belgrano,,-34.613410392420,-58.378220200429,4,,0,1120,2
+1121N,,Independencia,,-34.618001797393,-58.380904421063,4,,0,1121,2
+1121S,,Independencia,,-34.618001797393,-58.380904421063,4,,0,1121,2
+1122N,,San Jose,,-34.622367261066,-58.385392427497,4,,0,1122,2
+1122S,,San Jose,,-34.622367261066,-58.385392427497,4,,0,1122,2
+1123N,,Entre Rios,,-34.622759595691,-58.391514569428,4,,0,1123,2
+1123S,,Entre Rios,,-34.622759595691,-58.391514569428,4,,0,1123,2
+1124N,,Pichincha,,-34.623133717895,-58.397111669159,4,,0,1124,2
+1124S,,Pichincha,,-34.623133717895,-58.397111669159,4,,0,1124,2
+1125N,,Jujuy,,-34.623878647026,-58.402829468279,4,,0,1125,2
+1125S,,Jujuy,,-34.623878647026,-58.402829468279,4,,0,1125,2
+1126N,,General Urquiza,,-34.624681784582,-58.409617468688,4,,0,1126,2
+1126S,,General Urquiza,,-34.624681784582,-58.409617468688,4,,0,1126,2
+1127N,,Boedo,,-34.625545058485,-58.416628092456,4,,0,1127,2
+1127S,,Boedo,,-34.625545058485,-58.416628092456,4,,0,1127,2
+1128N,,La Plata,,-34.626836228126,-58.425610810552,4,,0,1128,2
+1128S,,La Plata,,-34.626836228126,-58.425610810552,4,,0,1128,2
+1129N,,Jose Maria Moreno,,-34.628084339372,-58.434297814982,4,,0,1129,2
+1129S,,Jose Maria Moreno,,-34.628084339372,-58.434297814982,4,,0,1129,2
+1130N,,Emilio Mitre,,-34.631632139071,-58.442524820568,4,,0,1130,2
+1130S,,Emilio Mitre,,-34.631632139071,-58.442524820568,4,,0,1130,2
+1131N,,Medalla Milagrosa,,-34.636250121811,-58.450398445176,4,,0,1131,2
+1131S,,Medalla Milagrosa,,-34.636250121811,-58.450398445176,4,,0,1131,2
+1132N,,Varela,,-34.639566964307,-58.457848280500,4,,0,1132,2
+1132S,,Varela,,-34.639566964307,-58.457848280500,4,,0,1132,2
+1133N,,Plaza de los Virreyes,,-34.642770031936,-58.461445122984,4,,0,1133,2
+1133S,,Plaza de los Virreyes,,-34.642770031936,-58.461445122984,4,,0,1133,2
+1134E,,Hospitales,,-34.641752739715,-58.412673175271,4,,0,1134,1
+1134O,,Hospitales,,-34.641752739715,-58.412673175271,4,,0,1134,1
+1135E,,Parque Patricios,,-34.638460262593,-58.406328409852,4,,0,1135,1
+1135O,,Parque Patricios,,-34.638460262593,-58.406328409852,4,,0,1135,1
+1136E,,Caseros,,-34.635265854589,-58.399158865153,4,,0,1136,1
+1136O,,Caseros,,-34.635265854589,-58.399158865153,4,,0,1136,1
+1137E,,Inclan,,-34.629351188776,-58.400986790654,4,,0,1137,1
+1137O,,Inclan,,-34.629351188776,-58.400986790654,4,,0,1137,1
+1138E,,Humberto 1,,-34.623116366744,-58.402322201144,4,,0,1138,1
+1138O,,Humberto 1,,-34.623116366744,-58.402322201144,4,,0,1138,1
+1139E,,Venezuela,,-34.615227118506,-58.404758647205,4,,0,1139,1
+1139O,,Venezuela,,-34.615227118506,-58.404758647205,4,,0,1139,1
+1140E,,Once,,-34.609147664305,-58.406046778011,4,,0,1140,1
+1140O,,Once,,-34.609147664305,-58.406046778011,4,,0,1140,1
+1141E,,Corrientes,,-34.603923811372,-58.405317217086,4,,0,1141,1
+1141O,,Corrientes,,-34.603923811372,-58.405317217086,4,,0,1141,1
+1142N,,Intendente Saguier,,-34.643258552263,-58.461524902887,5,,0,1142,
+1142S,,Intendente Saguier,,-34.643258552263,-58.461524902887,5,,0,1142,
+1143N,,Balbastro,,-34.649265520265,-58.455640019357,5,,0,1143,
+1143S,,Balbastro,,-34.649265520265,-58.455640019357,5,,0,1143,
+1144N,,Mariano Acosta,,-34.654438435230,-58.456492782087,5,,0,1144,
+1144S,,Mariano Acosta,,-34.654438435230,-58.456492782087,5,,0,1144,
+1145N,,Somellera,,-34.656449351476,-58.453907455721,5,,0,1145,
+1145S,,Somellera,,-34.656449351476,-58.453907455721,5,,0,1145,
+1146N,,Ana Maria Janer,,-34.659486340020,-58.450007979109,5,,0,1146,
+1146S,,Ana Maria Janer,,-34.659486340020,-58.450007979109,5,,0,1146,
+1147N,,Ntra. Sra. de Fatima,,-34.660447642203,-58.448783417607,5,,0,1147,
+1147S,,Ntra. Sra. de Fatima,,-34.660447642203,-58.448783417607,5,,0,1147,
+1148N,,Fernandez de la Cruz,,-34.662234999302,-58.446598243041,5,,0,1148,
+1148S,,Fernandez de la Cruz,,-34.662234999302,-58.446598243041,5,,0,1148,
+1149N,,Presidente Illia,,-34.665073164022,-58.448562240935,5,,0,1149,
+1149S,,Presidente Illia,,-34.665275116459,-58.448497772341,5,,0,1149,
+1150N,,Parque de la Ciudad,,-34.669865267294,-58.455109152349,5,,0,1150,
+1150S,,Parque de la Ciudad,,-34.669865267294,-58.455109152349,5,,0,1150,
+1151N,,Cecilia Grierson,,-34.672189284049,-58.457543347854,5,,0,1151,
+1151S,,Cecilia Grierson,,-34.672189284049,-58.457543347854,5,,0,1151,
+1152N,,Escalada,,-34.674558787808,-58.460167171717,5,,0,1152,
+1152S,,Escalada,,-34.674558787808,-58.460167171717,5,,0,1152,
+1153N,,Pola,,-34.678110629633,-58.464412206378,5,,0,1153,
+1153S,,Pola,,-34.678110629633,-58.464412206378,5,,0,1153,
+1154N,,Ana Diaz,,-34.680577977821,-58.466877924815,5,,0,1154,
+1154S,,Ana Diaz,,-34.680577977821,-58.466877924815,5,,0,1154,
+1155N,,Centro Civico,,-34.683539244591,-58.465152180426,5,,0,1155,
+1155S,,Centro Civico,,-34.683539244591,-58.465152180426,5,,0,1155,
+1156N,,Larrazabal,,-34.680602280154,-58.465343409012,5,,0,1156,
+1156S,,Larrazabal,,-34.680602280154,-58.465343409012,5,,0,1156,
+1157N,,Nicolas Descalzi,,-34.682798871351,-58.462343924707,5,,0,1157,
+1157S,,Nicolas Descalzi,,-34.682798871351,-58.462343924707,5,,0,1157,
+1158N,,Gabino Ezeiza,,-34.685968042754,-58.458103459038,5,,0,1158,
+1158S,,Gabino Ezeiza,,-34.685968042754,-58.458103459038,5,,0,1158,
+1159N,,General Savio,,-34.689597318341,-58.460816625841,5,,0,1159,
+1159S,,General Savio,,-34.689597318341,-58.460816625841,5,,0,1159,
+1160E,,Cordoba,,-34.598686142195,-58.403805105041,4,,0,1160,1
+1160O,,Cordoba,,-34.598686142195,-58.403805105041,4,,0,1160,1
+1161E,,Santa Fe,,-34.594856588906,-58.402459654070,4,,0,1161,1
+1161O,,Santa Fe,,-34.594856588906,-58.402459654070,4,,0,1161,1
+1162E,,Las Heras,,-34.588062575386,-58.39804479425,4,,0,1162,1
+1162O,,Las Heras,,-34.588062575386,-58.39804479425,4,,0,1162,1
+1163E,,Facultad de Derecho,,-34.583194029760,-58.391207324196,4,,0,1163,1
+1163O,,Facultad de Derecho,,-34.583194029760,-58.391207324196,4,,0,1163,1
+10982,,Av.de Mayo a Retiro y Constitucion - B.Irigoyen 72,Vestibulo intermedio - Escalera pedestre,-34.609276140460,-58.380585890297,,,2,1098,2
+10983,,Av.de Mayo a Retiro y Constitucion - Av.Mayo 981,Vestibulo intermedio - Escalera pedestre,-34.608955287063,-58.380368495408,,,2,1098,2
+10984,,Av.de Mayo a Retiro y Constitucion - Av.Mayo 984,Vestibulo intermedio - Escalera pedestre,-34.609096626554,-58.380359224420,,,2,1098,2
+10751,,Peru a Plaza de Mayo - Av. De Mayo 591,Salida unicamente  - Anden/Exterior,-34.608475,-58.37457222,,,2,1075,2
+10743,,Piedras a Plaza de Mayo - Av. De Mayo 839,Salida unicamente - Anden/Exterior,-34.60872778,-58.37816389,,,2,1074,2
+10733,,Lima a Plaza de Mayo - Av. De Mayo 1129,Salida unicamente - Anden/Exterior,-34.60907222,-58.38239167,,,2,1073,2
+10723,,S. Peña a Pza de Mayo - Av. De Mayo 1431,Salida unicamente - Anden/Exterior,-34.60936944,-58.38655,,,2,1072,2
+10722,,S. Peña a San Pedrito - Av. De Mayo 1480,Salida unicamente - Anden/Exterior,-34.60950833,-58.386825,,,2,1072,2
+10713,,Congreso a Plaza de Mayo - Rivadavia 1815,Salida unicamente - Anden/Exterior,-34.60918889,-58.39233889,,,2,1071,2
+10712,,Congreso a San Pedrito - Rivadavia 1864,Salida unicamente - Anden/Exterior,-34.60938056,-58.39299722,,,2,1071,2
+10672,,Loria a San Pedrito - Rivadavia 3466,Salida unicamente - Anden/Exterior,-34.610975,-58.41526944,,,2,1067,2
+10664,,Castro Barros a San Pedrito - Rivadavia 3928,Salida unicamente - Anden/Exterior,-34.61178611,-58.42134722,,,2,1066,2
+10613,,Carabobo a P.de Mayo y S.Pedrito - Rivadavia 6327,Salida unicamente - Vestibulo/Exterior,-34.626225,-58.45569444,,,2,1061,2
+10601,,S.J.Flores a P.Mayo y S.Pedrito - Rivadavia 6989,Salida unicamente - Vestibulo/Exterior,-34.6291,-58.46392222,,,2,1060,2
+10604,,S.J.Flores a P.Mayo y S.Pedrito - Rivadavia 6920,Salida unicamente - Vestibulo/Exterior,-34.62903333,-58.46296111,,,2,1060,2
+10595,,San Pedrito a Plaza de Mayo - Rivadavia 7425,Salida unicamente - Vestibulo/Exterior,-34.63079444,-58.47028889,,,2,1059,2
+10935,,Leandro N. Alem a Juan M.de Rosas - Corrientes 161,Salida unicamente - Vestibulo/Exterior,-34.60291944,-58.36960278,,,2,1093,2
+10901,,Uruguay a L.N.Alem y J.M.Rosas - Corrientes 1463,Salida unicamente - Vestibulo/Exterior,-34.60405833,-58.38746667,,,2,1090,2
+10891,,Callao a L.N.Alem y J.M.Rosas - Corrientes 1833,Salida unicamente - Vestibulo/Exterior,-34.60442222,-58.39290833,,,2,1089,2
+10873,,Pueyrredon a Alem y Rosas - Corrientes 2795,Salida unicamente - Vestibulo/Exterior,-34.60457778,-58.40524167,,,2,1087,2
+10854,,Medrano a J. M. de Rosas - Corrientes 3990,Salida unicamente - Anden/Exterior,-34.60331667,-58.42083611,,,2,1085,2
+10832,,Angel Gallardo a J.M. de Rosas - Corrientes 4658,Salida unicamente - Anden/Exterior,-34.60226944,-58.43127222,,,2,1083,2
+10844,,Malabia a J. M. de Rosas - Corrientes 5290,Salida unicamente - Anden/Exterior,-34.59915,-58.43976111,,,2,1084,2
+10824,,Dorrego a J. M. de Rosas - Corrientes 6192,Salida unicamente - Anden/Exterior,-34.59191667,-58.44759167,,,2,1082,2
+10814,,Federico Lacroze a Rosas - Guzman 900,Salida unicamente - Vestibulo/Exterior,-34.58708056,-58.45560556,,,2,1081,2
+10793,,Los Incas a Alem y Rosas - Triunvirato 3695,Salida unicamente - Vestibulo/Exterior,-34.58167222,-58.47381944,,,2,1079,2
+11621,,Las Heras a F.Derecho y Hospitales - Pza E.Mitre,Escalera pedestre mecanica y ascensor - Accesible,-34.587811,-58.3973779,,,2,1162,1
+11302,,Emilio Mitre a Virreyes y Retiro - Eva Peron 119,Vestibulo intermedio - Escalera pedestre,-34.6307928,-58.4420453,,,2,1130,2
+10783,,Echeverria a Alem y Rosas - Triunvirato 4235,Salida unicamente - Vestibulo/Exterior,-34.57803611,-58.48045278,,,2,1078,2
+10981,,Av.De Mayo a Retiro y Constitucion - B.Irigoyen 18,Salida unicamente - Vestibulo/Exterior,-34.60885556,-58.38063056,,,2,1098,2
+10991,,D.Norte a Retiro y Constitucion - R.S.Peña 917,Salida unicamente - Vestibulo/Exterior,-34.60468611,-58.37963056,,,2,1099,2
+10633,,Pra Junta a San Pedrito y Pza Mayo - Centenera 13,Escalera pedestre y mecanica,-34.62076263,-58.44126643,,,2,1063,2
+11281,,La Plata a Virreyes y Retiro - Directorio 11,Anden central - Escalera pedestre,-34.626981681974,-58.426981306588,,,2,1128,2
+11282,,La Plata a Virreyes y Retiro - Directorio 12,Anden central - Escalera pedestre,-34.627198888793,-58.426976656068,,,2,1128,2
+11283,,La Plata a Virreyes y Retiro - San Juan 4397,Anden central - Escalera pedestre,-34.626933756637,-58.426538306761,,,2,1128,2
+11284,,La Plata a Virreyes y Retiro - San Juan 4390,Anden central - Escalera pedestre,-34.627136006265,-58.426575505931,,,2,1128,2
+11285,,La Plata a Virreyes y Retiro - San Juan 4361,Anden central - Escalera pedestre,-34.626865905740,-58.426128819241,,,2,1128,2
+11286,,La Plata a Virreyes y Retiro - San Juan 4370,Anden central - Escalera pedestre,-34.627094945162,-58.426149942570,,,2,1128,2
+11201,,Belgrano a Virreyes y Retiro - Belgrano 835,Vestibulo intermedio - Escalera pedestre,-34.612865270989,-58.378024066914,,,2,1120,2
+11202,,Belgrano a Virreyes y Retiro- Belgrano 836,Vestibulo intermedio - Escalera pedestre,-34.612958671988,-58.378041624269,,,2,1120,2
+11203,,Belgrano a Virreyes y Retiro - Belgrano 805,Vestibulo intermedio - Escalera pedestre,-34.612849568786,-58.377724964156,,,2,1120,2
+11204,,Belgrano a Virreyes y Retiro - Belgrano 806,Vestibulo intermedio - Escalera pedestre,-34.612962607206,-58.377702178316,,,2,1120,2
+11271,,Boedo a Virreyes y Retiro - Boedo 987,Anden central - Escalera pedestre,-34.625420316776,-58.416218409784,,,2,1127,2
+11272,,Boedo a Virreyes y Retiro - Boedo 1014,Anden central - Escalera pedestre,-34.625667493006,-58.41599546735,,,2,1127,2
+11273,,Boedo a Virreyes y Retiro - Boedo 986,Anden central - Escalera pedestre,-34.625412404659,-58.415992542202,,,2,1127,2
+11274,,Boedo a Virreyes y Retiro - Boedo 1015,Anden central - Escalera pedestre,-34.625750166988,-58.416155474857,,,2,1127,2
+11191,,Bolivar a Virreyes y Retiro - H.Yrigoyen 498,Escalera pedestre,-34.609139312073,-58.373266882167,,,2,1119,2
+11192,,Bolivar a Virreyes y Retiro - H.Yrigoyen 501,Escalera pedestre,-34.608943114460,-58.373529178309,,,2,1119,2
+11194,,Bolivar a Virreyes y Retiro - Peru 198,Escalera pedestre,-34.610097035549,-58.374794231655,,,2,1119,2
+11195,,Bolivar a Virreyes y Retiro - Roca 598,Escalera pedestre,-34.610294015779,-58.374535509885,,,2,1119,2
+11197,,Bolivar a Virreyes y Retiro - Roca 602,Escalera pedestre,-34.610679860966,-58.374975803426,,,2,1119,2
+11031,,Congreso de Tucuman a Catedral - Cabildo 2869,Vestibulo intermedio - Escalera pedestre,-34.555753074317,-58.462137790944,,,2,1103,2
+11032,,Congreso de Tucuman a Catedral - Cabildo 2928,Vestibulo intermedio - Escalera pedestre,-34.555343213078,-58.462935614304,,,2,1103,2
+11034,,Congreso de Tucuman a Catedral - Cabildo 2860,Escalera pedestre y mecanica,-34.555957653818,-58.462390187071,,,2,1103,2
+11036,,Congreso de Tucuman a Catedral - Cabildo 2832,Vestibulo intermedio - Ascensor - Accesible,-34.556066955111,-58.462254600394,,,2,1103,1
+11038,,Congreso de Tucuman a Catedral - Cabildo 2812,Vestibulo intermedio - Escalera pedestre,-34.556224044317,-58.462141869727,,,2,1103,2
+11030,,Congreso de Tucuman a Catedral - Cabildo 2772,Vestibulo intermedio - Escalera pedestre,-34.556585893487,-58.461797636853,,,2,1103,2
+11052,,J.Hernandez a Catedral y C.Tucuman - Cabildo 1590,Vestibulo intermedio - Escalera pedestre,-34.56631884604,-58.452234517899,,,2,1105,2
+11053,,J.Hernandez a Catedral y C.Tucuman - Cabildo 1577,Vestibulo intermedio - Escalera pedestre,-34.566297673317,-58.451857604834,,,2,1105,2
+11054,,J.Hernandez a Catedral y C.Tucuman - Cabildo 1574,Escalera pedestre,-34.566434732059,-58.452006388025,,,2,1105,2
+11041,,Juramento a Catedral y C.Tucuman - Cabildo 2077,Escalera pedestre y mecanica,-34.562298168236,-58.456327966459,,,2,1104,2
+11042,,Juramento a Catedral y C.Tucuman - Cabildo 2070,Escalera pedestre y mecanica,-34.562352425054,-58.456594626244,,,2,1104,2
+11043,,Juramento a Catedral y C.Tucuman - Cabildo 2051,Vestibulo intermedio - Ascensor - Accesible,-34.562509482616,-58.456138019162,,,2,1104,1
+11301,,Emilio Mitre a Virreyes y Retiro - E. Mitre 855,Vestibulo intermedio - Escalera pedestre,-34.631405779235,-58.442067696105,,,2,1130,2
+11231,,Entre Rios a Virreyes y Retiro - San Juan 1809,Vestibulo intermedio - Escalera pedestre,-34.622733968812,-58.391679175645,,,2,1123,2
+11232,,Entre Rios a Virreyes y Retiro - E. Rios 1207,Vestibulo intermedio - Escalera pedestre,-34.622911095209,-58.391620171183,,,2,1123,2
+11233,,Entre Rios a Virreyes y Retiro - E. Rios 1184,Vestibulo intermedio - Escalera pedestre,-34.622710789591,-58.391362483220,,,2,1123,2
+11234,,Entre Rios a Virreyes y Retiro - E. Rios 1206,Vestibulo intermedio - Escalera pedestre,-34.622913048387,-58.391424071590,,,2,1123,2
+11071,,M.Carranza a Catedral y C.Tucuman - Sta Fe 5349,Vestibulo intermedio - Escalera pedestre y rampa,-34.575107329862,-58.434964355394,,,2,1107,2
+11072,,M.Carranza a Catedral y C.Tucuman - Sta Fe 5376,Vestibulo intermedio - Escalera pedestre y rampa,-34.575282555448,-58.435154211890,,,2,1107,2
+11073,,M.Carranza a Catedral y C.Tucuman - Sta Fe 5329,Vestibulo intermedio - Escalera pedestre,-34.575218474877,-58.434754181831,,,2,1107,2
+11074,,M.Carranza a Catedral y C.Tucuman - Arevalo 2400,Vestibulo intermedio - Escalera pedestre,-34.575705267120,-58.434389557141,,,2,1107,2
+11075,,M.Carranza a Catedral y C.Tucuman - Sta Fe 5319,Vestibulo intermedio - Escalera pedestre,-34.575453926999,-58.434440501161,,,2,1107,2
+11077,,M.Carranza a Catedral y C.Tucuman - Sta Fe 5279,Vestibulo intermedio - Escalera pedestre,-34.575447397354,-58.434086731761,,,2,1107,2
+11061,,Olleros a Catedral y C. de Tucuman - Cabildo 749,Vestibulo intermedio - Escalera pedestre,-34.570179191156,-58.444421593025,,,2,1106,2
+11062,,Olleros a Catedral y C. de Tucuman - Cabildo 790,Vestibulo intermedio - Escalera pedestre,-34.570247045545,-58.444634034806,,,2,1106,2
+11063,,Olleros a Catedral y C. de Tucuman - Cabildo 705,Vestibulo intermedio - Escalera pedestre,-34.570306050055,-58.444243104176,,,2,1106,2
+11064,,Olleros a Catedral y C. de Tucuman - Cabildo 714,Vestibulo intermedio - Escalera pedestre,-34.570478586401,-58.444146204320,,,2,1106,2
+11081,,Palermo a Catedral y C. de Tucuman - Sta Fe 4651,Anden central - Escalera pedestre,-34.578350808037,-58.425895740101,,,2,1108,2
+11082,,Palermo a Catedral y C. de Tucuman - Sta Fe 4700,Anden central - Escalera pedestre,-34.578474797734,-58.426410041386,,,2,1108,2
+10641,,Acoyte a Plaza de Mayo - Rivadavia 4995,Solo anden a Plaza de Mayo - Escalera pedestre,-34.618138210291,-58.436278369268,,,2,1064,2
+10643,,Acoyte a Plaza de Mayo - Rivadavia 4965,Solo anden a Plaza de Mayo - Escalera pedestre,-34.617972078675,-58.435884012012,,,2,1064,2
+10645,,Acoyte a Plaza de Mayo - Rivadavia 4963,Solo anden a Plaza de Mayo - Ascensor,-34.617872491879,-58.435636995227,,,2,1064,1
+10642,,Acoyte a San Pedrito - Rivadavia 4994,Solo anden a San Pedrito - Escalera mecanica,-34.618324085783,-58.436162892389,,,2,1064,2
+10644,,Acoyte a San Pedrito - Rivadavia 4976,Solo anden a San Pedrito - Escalera pedestre,-34.618185144614,-58.435797106301,,,2,1064,2
+10646,,Acoyte a San Pedrito - Rivadavia 4960,Solo anden a San Pedrito - Ascensor - Accesible,-34.618034540643,-58.435535663636,,,2,1064,1
+10692,,Alberti a San Pedrito - Rivadavia 2450,Solo anden a San Pedrito - Escalera pedestre,-34.609967678559,-58.401029619757,,,2,1069,2
+10694,,Alberti a San Pedrito - Rivadavia 2408,Solo anden a San Pedrito - Escalera pedestre,-34.609945308637,-58.400712723797,,,2,1069,2
+11183,,Catedral a C. de Tucuman - R.S.Peña 585,Salida unicamente - Anden/Exterior,-34.60730278,-58.37476667,,,2,1118,2
+11171,,9 de Julio a Catedral - R.S.Peña 979,Salida unicamente - Vestibulo/Exterior,-34.60419722,-58.38060833,,,2,1117,2
+11161,,Tribunales a Catedral y C.Tucuman - Talcahuano 639,Salida unicamente - Vestibulo/Exterior,-34.60122778,-58.38523056,,,2,1116,2
+11151,,Callao a C. de Tucuman - Cordoba 1807,Salida unicamente - Vestibulo/Exterior,-34.59958333,-58.39304444,,,2,1115,2
+11141,,F.Medicina a Catedral y C.Tucuman - Cordoba 2135,Salida unicamente - Vestibulo/Exterior,-34.59966944,-58.39796944,,,2,1114,2
+11132,,Pueyrredon a Catedral y C. Tucuman - Santa Fe 2510,Salida unicamente - Vestibulo/Exterior,-34.59450278,-58.40258333,,,2,1113,2
+11121,,Agüero a Catedral y C. Tucuman - Santa Fe 2911,Salida unicamente - Vestibulo/Exterior,-34.59153889,-58.40715556,,,2,1112,2
+11114,,Bulnes a C. de Tucuman - Santa Fe 3256,Salida unicamente - Vestibulo/Exterior,-34.58860278,-58.41098889,,,2,1111,2
+11094,,P.Italia a Catedral y C.Tucuman - Santa Fe 4018,Salida unicamente - Vestibulo/Exterior,-34.58216111,-58.42044722,,,2,1109,2
+11084,,Palermo a Catedral y C.Tucuman - Santa Fe 4636,Salida unicamente - Vestibulo/Exterior,-34.578575,-58.42603889,,,2,1108,2
+11051,,J.Hernandez  a Catedral y C.Tucuman - Cabildo 1621,Salida unicamente - Vestibulo/Exterior,-34.56600556,-58.45235833,,,2,1105,2
+11044,,Juramento a Catedral y C. Tucuman - Cabildo 2020,Salida unicamente - Vestibulo/Exterior,-34.56229722,-58.45632778,,,2,1104,2
+11045,,Juramento a Catedral y C. Tucuman - Cabildo 2015,Salida unicamente - Vestibulo/Exterior,-34.56235278,-58.45659444,,,2,1104,2
+11193,,Bolivar a Virreyes y Retiro - Pte J.Roca 512,Salida unicamente - Vestibulo/Exterior,-34.60948611,-58.37373333,,,2,1119,2
+11214,,Independencia a Virreyes y Retiro - Lima 875,Salida unicamente - Vestibulo/Exterior,-34.61831944,-58.38153333,,,2,1121,2
+11361,,Caseros a F.Derecho y Hospitales - Jujuy 2112,Salida unicamente - Vestibulo/Exterior,-34.63505833,-58.399075,,,2,1136,2
+11363,,Caseros a F.Derecho y Hospitales - Jujuy 2182,Salida unicamente - Vestibulo/Exterior,-34.63561389,-58.39886389,,,2,1136,2
+11412,,Corrientes a F.Derecho y Htes - Pueyrredon 589,Salida unicamente - Vestibulo/Exterior,-34.60354444,-58.405075,,,2,1141,2
+11414,,Corrientes a F.Derecho y Htes - Pueyrredon 576,Salida unicamente - Vestibulo/Exterior,-34.60376111,-58.40538889,,,2,1141,2
+11383,,H.Primo a F.Derecho y Hospitales - Jujuy 1148,Salida unicamente - Vestibulo/Exterior,-34.62318333,-58.40221944,,,2,1138,2
+11371,,Inclan a F.Derecho y Hospitales - Jujuy 1602,Salida unicamente - Vestibulo/Exterior,-34.62897222,-58.40089444,,,2,1137,2
+11376,,Inclan a F.Derecho y Hospitales - Jujuy 1691,Salida unicamente - Vestibulo/Exterior,-34.62989722,-58.401075,,,2,1137,2
+11391,,Venezuela a F.Derecho y Htes - Jujuy 422,Salida unicamente - Vestibulo/Exterior,-34.61505556,-58.40472778,,,2,1139,2
+11392,,Venezuela a F.Derecho y Htes - Jujuy 425,Salida unicamente - Vestibulo/Exterior,-34.61509444,-58.40495278,,,2,1139,2
+E8,,Constitucion a Retiro - Juan de Garay 1122,Ascensor y escalera pedestre,-34.62659722,-58.38125,,,2,1094,1
+10892,,Callao a L.N.Alem y J.M.de Rosas - Corrientes 1832,Vestibulo intermedio - Escalera pedestre,-34.604529944008,-58.392859484727,,,2,1089,2
+10893,,Callao a L.N.Alem y J.M.de Rosas - Corrientes 1811,Vestibulo intermedio - Ascensor - Accesible,-34.604441845885,-58.392624261650,,,2,1089,1
+10894,,Callao a L.N.Alem y J.M.de Rosas - Corrientes 1802,Vestibulo intermedio - Escalera pedestre,-34.604530710004,-58.392543268383,,,2,1089,2
+10895,,Callao a L. N. Alem y J. M. de Rosas - Callao 402,Vestibulo intermedio - Escalera pedestre,-34.604373206339,-58.392437759432,,,2,1089,2
+10896,,Callao a L.N.Alem y J.M.de Rosas - Corrientes 1792,Vestibulo intermedio - Escalera pedestre,-34.604536179836,-58.392195695332,,,2,1089,2
+10897,,Callao a L. N. Alem y J. M. de Rosas - Callao 415,Vestibulo intermedio - Escalera pedestre,-34.604381538767,-58.392212640643,,,2,1089,2
+10861,,C.Gardel a L.N.Alem y J.M.Rosas - Corrientes 3315,Vestibulo intermedio - Escalera pedestre,-34.604074747441,-58.411911679790,,,2,1086,2
+10862,,C.Gardel a L.N.Alem y J.M.Rosas - Corrientes 3314,Vestibulo intermedio - Escalera pedestre,-34.604227255024,-58.411922776380,,,2,1086,2
+10863,,C.Gardel a L.N.Alem y J.M.Rosas - Corrientes 3295,Vestibulo intermedio - Escalera pedestre,-34.604082395326,-58.411690228083,,,2,1086,2
+10864,,C.Gardel a L.N.Alem y J.M.Rosas - Corrientes 3290,Vestibulo intermedio - Escalera pedestre,-34.604215333788,-58.411531086349,,,2,1086,2
+10865,,C.Gardel a L.N.Alem y J.M.Rosas - Corrientes 3251,Vestibulo intermedio - Escalera pedestre,-34.604060882470,-58.410808863531,,,2,1086,2
+10911,,C.Pellegrini a Alem y Rosas - Pellegrini 401,Anden central - Escalera pedestre,-34.603638568906,-58.380939248081,,,2,1091,2
+10912,,C.Pellegrini a Alem y Rosas - Pellegrini 385,Anden central - Escalera pedestre,-34.603910183608,-58.380924013486,,,2,1091,2
+10913,,C.Pellegrini a Alem y Rosas - Pellegrini 411,Anden central - Escalera pedestre,-34.603522829007,-58.380939520575,,,2,1091,2
+10914,,C.Pellegrini a Alem y Rosas - Pellegrini 385,Anden central - Escalera pedestre,-34.603812924451,-58.380924192375,,,2,1091,2
+10791,,Los Incas a Alem y Rosas - Triunvirato 3741,Anden central - Escalera pedestre,-34.581476649649,-58.474073002262,,,2,1079,2
+10792,,Los Incas a Alem y Rosas - Triunvirato 3700,Anden central - Ascensor - Accesible,-34.58183611,-58.47376389,,,2,1079,1
+10794,,Los Incas a Alem y Rosas - C.de Malvinas 3287,Anden central - Escalera pedestre y mecanica,-34.581935134143,-58.473715023212,,,2,1079,2
+10822,,Dorrego a J. M. de Rosas - Corrientes 6210,Anden a Juan M. de Rosas - Escalera pedestre,-34.591728115794,-58.447859270297,,,2,1082,2
+10821,,Dorrego a L. N. Alem - Corrientes 6211,Anden a Leandro N. Alem - Escalera pedestre,-34.591616438141,-58.447627851708,,,2,1082,2
+10823,,Dorrego a L. N. Alem - Corrientes 6185,Anden a Leandro N. Alem - Escalera pedestre,-34.591795000773,-58.447397700303,,,2,1082,2
+10781,,Echeverria a Alem y Rosas - Triunvirato 4265,Vestibulo intermedio - Escalera pedestre,-34.577735595390,-58.480851035003,,,2,1078,2
+10782,,Echeverria a Alem y Rosas - Triunvirato 4272,Vestibulo intermedio - Escalera pedestre,-34.578008249087,-58.481121200300,,,2,1078,2
+10784,,Echeverria a Alem y Rosas - Triunvirato 4260,Vestibulo intermedio - Ascensor - Accesible,-34.578160044445,-58.480922623314,,,2,1078,1
+10786,,Echeverria a Alem y Rosas - Triunvirato 4250,Vestibulo intermedio - Escalera pedestre,-34.578311211075,-58.480701316533,,,2,1078,2
+10812,,Federico Lacroze a J. M. de Rosas - F.Lacroze 4200,Anden a Juan M. de Rosas - Escalera pedestre,-34.586971819204,-58.455545062645,,,2,1081,2
+10815,,Federico Lacroze a J.M.Rosas - Corrientes 6890,Anden a Juan M. de Rosas - Escalera pedestre,-34.587352744326,-58.455081675668,,,2,1081,2
+10816,,Federico Lacroze a J.M.Rosas - Corrientes 6880,Anden a Juan M. de Rosas - Escalera pedestre,-34.587481220050,-58.454740533234,,,2,1081,2
+10811,,Federico Lacroze a L. N. Alem - F.Lacroze 4200,Escalera pedestre y mecanica,-34.586925,-58.45549167,,,2,1081,2
+10810,,Federico Lacroze a L. N. Alem - Corrientes 6860,Anden a Leandro N. Alem - Escalera mecanica,-34.58751944,-58.45460833,,,2,1081,2
+10813,,Federico Lacroze a L. N. Alem - F.Lacroze 4200,Anden a Leandro N. Alem - Escalera pedestre,-34.587025269623,-58.455171237943,,,2,1081,2
+10817,,Federico Lacroze a L. N. Alem - Corrientes 6895,Anden a Leandro N. Alem - Escalera pedestre,-34.587075765714,-58.454918943910,,,2,1081,2
+10818,,Federico Lacroze a L. N. Alem - Corrientes 6870,Anden a Leandro N. Alem - Escalera pedestre,-34.587205957860,-58.454956567897,,,2,1081,2
+10819,,Federico Lacroze a L. N. Alem - Corrientes 6870,Anden a Leandro N. Alem - Escalera pedestre,-34.587186658777,-58.455018050406,,,2,1081,2
+10921,,Florida a L.N.Alem y J.M.de Rosas - Corrientes 593,Anden central - Escalera pedestre,-34.603295089595,-58.375082741503,,,2,1092,2
+10922,,Florida a L.N.Alem y J.M.de Rosas - Corrientes 590,Anden central - Escalera pedestre,-34.603463343429,-58.374931693934,,,2,1092,2
+10923,,Florida a L.N.Alem y J.M.de Rosas - Corrientes 535,Anden central - Escalera pedestre,-34.60325639113,-58.374251849617,,,2,1092,2
+10771,,Juan Manuel de Rosas a L.N.Alem  - Roosevelt 5155,Vestibulo intermedio - Ascensor - Accesible,-34.573887892977,-58.487477827195,,,2,1077,1
+10772,,Juan Manuel de Rosas a L.N.Alem  - Roosevelt 5160,Anden central - Escalera pedestre y mecanica,-34.57392222,-58.4874,,,2,1077,2
+10773,,Juan Manuel de Rosas a L.N.Alem  - Roosevelt 5115,Anden central - Escalera pedestre,-34.573831862977,-58.487379072528,,,2,1077,2
+10774,,Juan Manuel de Rosas a L.N.Alem  - Roosevelt 5110,Anden central - Escalera pedestre y mecanica,-34.573855572097,-58.487304743184,,,2,1077,2
+10775,,Juan Manuel de Rosas a L. N. Alem  - Monroe 5115,Anden central - Escalera pedestre,-34.57445278,-58.48664444,,,2,1077,2
+10776,,J. M. de Rosas a L.N.Alem  - Triunvirato 4680,Anden central - Escalera pedestre y mecanica,-34.57452222,-58.48619444,,,2,1077,2
+10777,,Juan Manuel de Rosas a L. N. Alem  - Monroe 5165,Vestibulo intermedio - Ascensor - Accesible,-34.574425,-58.48654722,,,2,1077,1
+10931,,Leandro N. Alem a J. M. de Rosas - Corrientes 219,Anden central - Escalera pedestre,-34.602975001424,-58.370488913481,,,2,1093,2
+10932,,Leandro N. Alem a J. M. de Rosas - L.N.Alem 399,Anden central - Escalera pedestre,-34.603090901422,-58.369977185444,,,2,1093,2
+10933,,Leandro N. Alem a J. M. de Rosas - L.N.Alem 401,Anden central - Escalera pedestre,-34.602914532842,-58.369991014555,,,2,1093,2
+10934,,Leandro N. Alem a J. M. de Rosas - Corrientes 150,Anden central - Escalera pedestre,-34.603026823993,-58.369546654394,,,2,1093,2
+10842,,Malabia a J. M. de Rosas - Corrientes 5310,Anden a Juan M. de Rosas - Escalera pedestre,-34.598999718395,-58.439919968955,,,2,1084,2
+10841,,Malabia a L. N. Alem - Corrientes 5321,Anden a Leandro N. Alem - Escalera pedestre,-34.598865436709,-58.439761655203,,,2,1084,2
+10843,,Malabia a L. N. Alem - Corrientes 5283,Anden a Leandro N. Alem - Escalera pedestre,-34.599084383127,-58.439583014988,,,2,1084,2
+10852,,Medrano a J. M. de Rosas - Medrano 598,Anden a Juan M. de Rosas - Escalera pedestre,-34.603364962827,-58.421062308529,,,2,1085,2
+10851,,Medrano a L. N. Alem - Corrientes 4019,Anden a Leandro N. Alem - Escalera pedestre,-34.602981899999,-58.4212147,,,2,1085,2
+10853,,Medrano a L. N. Alem - Corrientes 3995,Anden a Leandro N. Alem - Escalera pedestre,-34.603147466466,-58.420755419519,,,2,1085,2
+10881,,Pasteur a L.N.Alem y J.M.Rosas - Corrientes 2311,Vestibulo intermedio - Escalera pedestre,-34.604593321235,-58.399658752919,,,2,1088,2
+10882,,Pasteur a L.N.Alem y J.M.Rosas - Corrientes 2306,Vestibulo intermedio - Escalera pedestre,-34.604759601763,-58.399547435476,,,2,1088,2
+10883,,Pasteur a L.N.Alem y J.M.Rosas - Corrientes 2289,Vestibulo intermedio - Escalera pedestre,-34.604581789948,-58.399299972776,,,2,1088,2
+10884,,Pasteur a L.N.Alem y J.M.Rosas - Corrientes 2280,Vestibulo intermedio - Escalera pedestre,-34.604758690381,-58.399376954075,,,2,1088,2
+10871,,Pueyrredon a L.N.Alem y J.M.Rosas - Pueyrredon 510,Vestibulo intermedio - Escalera pedestre,-34.604475916022,-58.405540138021,,,2,1087,2
+10872,,Pueyrredon a L.N.Alem y J.M.Rosas - Pueyrredon 496,Vestibulo intermedio - Escalera pedestre,-34.604769335903,-58.405587388055,,,2,1087,2
+10874,,Pueyrredon a Alem y Rosas - Corrientes 2786,Vestibulo intermedio - Escalera pedestre,-34.604743155615,-58.405326758114,,,2,1087,2
+10875,,Pueyrredon a Alem y Rosas - Corrientes 2791,Vestibulo intermedio - Escalera pedestre,-34.604610344925,-58.405061899950,,,2,1087,2
+10876,,Pueyrredon a Alem y Rosas - Corrientes 2744,Vestibulo intermedio - Escalera pedestre,-34.604771085520,-58.405043954445,,,2,1087,2
+10801,,Tronador a L.N.Alem y J.M.Rosas - Triunvirato 3101,Anden central - Escalera pedestre y mecanica,-34.584036124567,-58.466513208064,,,2,1080,2
+10802,,Tronador a L.N.Alem y J.M.Rosas - Triunvirato 3174,Anden central - Escalera pedestre,-34.584153827628,-58.466557833311,,,2,1080,2
+10803,,Tronador a L.N.Alem y J.M.Rosas - Triunvirato 3101,Anden central - Ascensor - Accesible,-34.584047925332,-58.466417590582,,,2,1080,1
+10804,,Tronador a L.N.Alem y J.M.de Rosas - Tronador 690,Anden central - Escalera pedestre,-34.584301540777,-58.466450137058,,,2,1080,2
+10902,,Uruguay a L.N.Alem y J.M.Rosas - Corrientes 1460,Vestibulo intermedio - Escalera pedestre,-34.604179185560,-58.387232023167,,,2,1090,2
+10903,,Uruguay a L.N.Alem y J.M.Rosas - Corrientes 1411,Vestibulo intermedio - Escalera pedestre,-34.604043290888,-58.387063373480,,,2,1090,2
+10904,,Uruguay a L.N.Alem y J.M.Rosas - Corrientes 1410,Vestibulo intermedio - Escalera pedestre,-34.604150438148,-58.386825357784,,,2,1090,2
+10905,,Uruguay a L.N.Alem y J.M.de Rosas - Uruguay 400,Vestibulo intermedio - Ascensor - Accesible,-34.60393056,-58.38707222,,,2,1090,1
+10907,,Uruguay a L.N.Alem y J.M.Rosas - Corrientes 1399,Vestibulo intermedio - Escalera pedestre,-34.604028123788,-58.386762635496,,,2,1090,2
+10834,,Angel Gallardo a J. M. de Rosas - Corrientes 4648,Anden a Juan M. de Rosas - Escalera pedestre,-34.602341073395,-58.430900081000,,,2,1083,2
+10831,,Angel Gallardo a L. N. Alem - Corrientes 4667,Anden a Leandro N. Alem - Escalera pedestre,-34.6019436,-58.431358499999,,,2,1083,2
+10833,,Angel Gallardo a L. N. Alem - Corrientes 4641,Anden a Leandro N. Alem - Escalera pedestre,-34.602077096089,-58.430794163414,,,2,1083,2
+11362,,Caseros a Ftad Derecho y Hospitales - Jujuy 2129,Vestibulo intermedio - Escalera pedestre,-34.635133898736,-58.399377370610,,,2,1136,2
+11364,,Caseros a Ftad Derecho y Hospitales - Jujuy 2169,Vestibulo intermedio - Ascensor - Accesible,-34.635360757619,-58.399281051856,,,2,1136,1
+11366,,Caseros a Ftad Derecho y Hospitales - Jujuy 2185,Vestibulo intermedio - Escalera pedestre,-34.635672179279,-58.399182386661,,,2,1136,2
+11411,,Ctes a F.Derecho y Hospitales - Pueyrredon 588,Vestibulo intermedio - Escalera pedestre,-34.603582952638,-58.405363877669,,,2,1141,2
+11413,,Ctes a F.Derecho y Hospitales - Pueyrredon 539,Vestibulo intermedio - Escalera pedestre,-34.604164527719,-58.405204855268,,,2,1141,2
+11416,,Ctes a F.Derecho y Hospitales - Pueyrredon 558,Vestibulo intermedio - Ascensor - Accesible,-34.603940922296,-58.405450267929,,,2,1141,1
+11601,,Cordoba a F.Derecho y Hospitales - Pueyrredon 984,Escalera pedestre mecanica y ascensor - Accesible,-34.598789544474,-58.403908445358,,,2,1160,1
+11602,,Cordoba a F.Derecho y Hospitales - Cordoba 2572,Escalera pedestre y mecanica,-34.598810484869,-58.403354589868,,,2,1160,2
+11631,,Facultad de Derecho a Hospitales - F.Alcorta 2200,Escalera pedestre mecanica y ascensor - Accesible,-34.583295554354,-58.391243933583,,,2,1163,1
+11341,,Hospitales a Facultad de Derecho - Almafuerte 270,Escalera pedestre y mecanica,-34.64163889,-58.41231667,,,2,1134,2
+11342,,Hospitales a Facultad de Derecho - Almafuerte 279,Vestibulo intermedio - Escalera pedestre,-34.641623539131,-58.412735928031,,,2,1134,2
+11343,,Hospitales a Facultad de Derecho - Almafuerte 286,Vestibulo intermedio - Ascensor - Accesible,-34.641752829864,-58.412411050484,,,2,1134,1
+11345,,Hospitales a Facultad de Derecho - Almafuerte 302,Vestibulo intermedio - Escalera pedestre,-34.641966357009,-58.412509491663,,,2,1134,2
+11381,,H.Primo a F.Derecho y Hospitales - H.Primo 2666,Vestibulo intermedio - Escalera pedestre,-34.622554754704,-58.402182823080,,,2,1138,2
+11382,,H.Primo a F.Derecho y Hospitales - Jujuy 1143,Vestibulo intermedio - Escalera pedestre,-34.623014319398,-58.402531444803,,,2,1138,2
+11385,,H.Primo a F.Derecho y Hospitales - Jujuy 1194,Vestibulo intermedio - Ascensor - Accesible,-34.623462659524,-58.402141013775,,,2,1138,1
+11387,,H.Primo a F.Derecho y Hospitales - San Juan 2647,Vestibulo intermedio - Escalera pedestre,-34.623712007472,-58.401699576884,,,2,1138,2
+11372,,Inclan a Ftad de Derecho y Hospitales - Jujuy 1615,Vestibulo intermedio - Escalera pedestre,-34.629076120915,-58.401185371916,,,2,1137,2
+11373,,Inclan a Ftad de Derecho y Hospitales - Jujuy 1690,Vestibulo intermedio - Escalera pedestre,-34.629812475969,-58.400723124205,,,2,1137,2
+11374,,Inclan a Ftad de Derecho y Hospitales - Jujuy 1633,Vestibulo intermedio - Ascensor - Accesible,-34.629422506948,-58.401120268544,,,2,1137,1
+11401,,Once a F.Derecho y Hospitales - Pueyrredon 99,Vestibulo intermedio - Escalera pedestre,-34.609097210889,-58.405952896889,,,2,1140,2
+11402,,Once a F.Derecho y Hospitales - Pueyrredon 98,Escalera pedestre y mecanica,-34.609086225956,-58.406156172271,,,2,1140,2
+11403,,Once a F.Derecho y Hospitales - Pueyrredon 79,Vestibulo intermedio - Ascensor - Accesible,-34.609447439287,-58.405925779667,,,2,1140,1
+11405,,Once a F.Derecho y Hospitales - Pueyrredon 59,Vestibulo intermedio - Escalera pedestre,-34.609254532193,-58.405947249168,,,2,1140,2
+11351,,P.Patricios a F.Dcho y Hospitales - Caseros 3000,Escalera pedestre y mecanica,-34.637115219623,-58.405100407634,,,2,1135,2
+11352,,P.Patricios a F.Dcho y Hospitales - Monteagudo 45,Vestibulo intermedio - Ascensor - Accesible,-34.637907113768,-58.405564725518,,,2,1135,1
+11611,,Santa Fe a F.Derecho y Hospitales - Sta Fe 2517,Vestibulo intermedio - Escalera pedestre,-34.594330279226,-58.402623207921,,,2,1161,2
+11613,,Santa Fe a F.Derecho y Hospitales - Sta Fe 2491,Escalera pedestre mecanica y ascensor - Accesible,-34.594474812748,-58.402138019211,,,2,1161,1
+11615,,Sta Fe a F.Derecho y Hospitales - Pueyrredon 1332,Escalera pedestre mecanica y ascensor - Accesible,-34.595191124877,-58.402724187631,,,2,1161,1
+11393,,Venezuela a Ftad Derecho y Hospitales - Jujuy 482,Vestibulo intermedio - Escalera pedestre,-34.615495279789,-58.404581272983,,,2,1139,2
+11394,,Venezuela a Ftad Derecho y Hospitales - Jujuy 447,Vestibulo intermedio - Ascensor - Accesible,-34.615353671380,-58.404852845458,,,2,1139,1
+11396,,Venezuela a Ftad Derecho y Hospitales - Jujuy 477,Vestibulo intermedio - Escalera pedestre,-34.615499651510,-58.404804606436,,,2,1139,2
+10941,,Constitucion a Retiro - Brasil 1146,Escalera pedestre mecanica y ascensor,-34.62703333,-58.38123611,,,2,1094,1
+10944,,Constitucion a Retiro - Brasil 1128,Escalera pedestre,-34.62805278,-58.38123056,,,2,1094,2
+10992,,D.Norte a Retiro y Constitucion - R.S.Peña 924,Vestibulo intermedio - Escalera pedestre,-34.604991501146,-58.379636797746,,,2,1099,2
+10994,,D.Norte a Retiro y Constitucion - R.S.Peña 910,Vestibulo intermedio - Escalera pedestre,-34.604743779760,-58.379930062103,,,2,1099,2
+11145,,Facultad de Medicina a Catedral - Cordoba 2155,Anden a Catedral - Ascensor - Accesible,-34.599666938260,-58.398347875866,,,2,1114,1
+10961,,Independcia a Retiro y Constitucion - Irigoyen 816,Vestibulo intermedio - Escalera pedestre,-34.617897234802,-58.380217297030,,,2,1096,2
+11001,,Lavalle a Retiro y Constitucion - Esmeralda 573,Vestibulo intermedio - Escalera pedestre,-34.601622015543,-58.378110747340,,,2,1100,2
+11002,,Lavalle a Retiro y Constitucion - Esmeralda 482,Escalera pedestre y mecanica,-34.602597058524,-58.378203161386,,,2,1100,2
+10971,,Moreno a Retiro y Constitucion - B.Irigoyen 336,Vestibulo intermedio - Escalera pedestre,-34.612250499368,-58.380605202322,,,2,1097,2
+10973,,Moreno a Retiro y Constitucion - B.Irigoyen 356,Vestibulo intermedio - Escalera pedestre,-34.612416180724,-58.380609538284,,,2,1097,2
+11212,,Independencia a Virreyes y Retiro - Lima 845,Vestibulo intermedio - Escalera pedestre,-34.618110294628,-58.381545211588,,,2,1121,2
+11291,,J.M.Moreno a Virreyes y Retiro - J.M.Moreno 793,Vestibulo intermedio - Escalera pedestre,-34.627912680603,-58.433951983898,,,2,1129,2
+11021,,Retiro a Constitucion - R.Mejia 1390,Anden central - Escalera pedestre,-34.591066722694,-58.374151760272,,,2,1102,2
+11022,,Retiro a Constitucion - Pza. FFAA Argentina,Anden central - Escalera pedestre,-34.591140281748,-58.373990039917,,,2,1102,2
+11023,,Retiro a Constitucion - R.Mejia 1360,Anden central - Escalera mecanica,-34.591514243742,-58.374689617519,,,2,1102,2
+11024,,Retiro a Constitucion -  Pza. FFAA Argentina,Anden central - Escalera pedestre,-34.591056544264,-58.373751035691,,,2,1102,2
+11025,,Retiro a Constitucion - R.Mejia 1360,Anden central - Escalera pedestre,-34.59147778,-58.37478889,,,2,1102,2
+10951,,San Juan a Retiro y Constitucion - B.Irigoyen 1190,Vestibulo intermedio - Escalera pedestre,-34.621865027460,-58.379915936068,,,2,1095,2
+10953,,San Juan a Retiro y Constitucion - B.Irigoyen 1220,Vestibulo intermedio - Escalera pedestre,-34.622404065222,-58.379855382681,,,2,1095,2
+11011,,San Martin a Retiro y Constitucion - Sta Fe 720,Vestibulo intermedio - Escalera pedestre,-34.595713630711,-58.377165384846,,,2,1101,2
+11012,,San Martin a Retiro y Constitucion - Sta Fe 778,Vestibulo intermedio - Escalera pedestre,-34.595164462648,-58.377794574535,,,2,1101,2
+10611,,Carabobo a Pza Mayo y San Pedrito - Rivadavia 6383,Vestibulo intermedio - Escalera pedestre,-34.626489317767,-58.456448236714,,,2,1061,2
+10612,,Carabobo a San Pedrito y Pza Mayo - Rivadavia 6868,Vestibulo intermedio - Escalera pedestre,-34.626671642578,-58.456236934272,,,2,1061,2
+10614,,Carabobo a San Pedrito y Pza Mayo - Rivadavia 6354,Vestibulo intermedio - Ascensor - Accesible,-34.626598308698,-58.455991445881,,,2,1061,1
+10616,,Carabobo a San Pedrito y Pza Mayo - Rivadavia 6330,Vestibulo intermedio - Escalera pedestre,-34.626454594539,-58.455724404097,,,2,1061,2
+11292,,J.M.Moreno a Virreyes y Retiro - J.M.Moreno 813,Vestibulo intermedio - Escalera pedestre,-34.628253728206,-58.433850422598,,,2,1129,2
+11293,,J.M.Moreno a Virreyes y Retiro - J.M.Moreno 790,Vestibulo intermedio - Escalera pedestre,-34.627908455179,-58.433772482852,,,2,1129,2
+11294,,J.M.Moreno a Virreyes y Retiro - Directorio 486,Vestibulo intermedio - Escalera pedestre,-34.628139207652,-58.433609514456,,,2,1129,2
+11251,,Jujuy a Virreyes y Retiro - San Juan 2743,Vestibulo intermedio - Escalera pedestre,-34.623875562772,-58.402871699340,,,2,1125,2
+11252,,Jujuy a Virreyes y Retiro - San Juan 2764,Vestibulo intermedio - Escalera pedestre,-34.624043005366,-58.402959830508,,,2,1125,2
+11253,,Jujuy a Virreyes y Retiro - San Juan 2705,Vestibulo intermedio - Escalera pedestre,-34.623839833796,-58.402598336309,,,2,1125,2
+11254,,Jujuy a Virreyes y Retiro - San Juan 2730,Vestibulo intermedio - Escalera pedestre,-34.623993018642,-58.402643142691,,,2,1125,2
+10661,,Castro Barros a Plaza de Mayo - Rivadavia 3959,Solo anden a Plaza de Mayo - Escalera pedestre,-34.611714868401,-58.421789772193,,,2,1066,2
+10663,,Castro Barros a Plaza de Mayo - Rivadavia 3929,Solo anden a Plaza de Mayo - Escalera pedestre,-34.611576363333,-58.421521993390,,,2,1066,2
+10662,,Castro Barros a San Pedrito - Rivadavia 3960,Solo anden a San Pedrito - Escalera pedestre,-34.611945972549,-58.421657479466,,,2,1066,2
+10666,,Castro Barros a San Pedrito - Rivadavia 3906,Solo anden a San Pedrito - Ascensor - Accesible,-34.611738246781,-58.421203125374,,,2,1066,1
+10711,,Congreso a Plaza de Mayo - Rivadavia 1835,Solo anden a Plaza de Mayo - Escalera pedestre,-34.609188049462,-58.392602271472,,,2,1071,2
+10715,,Congreso a Plaza de Mayo - Rivadavia 1851,Solo anden a Plaza de Mayo - Ascensor - Accesibl,-34.609188995165,-58.392790437164,,,2,1071,1
+10714,,Congreso a San Pedrito - Rivadavia 1820,Solo anden a San Pedrito - Escalera pedestre,-34.609362967978,-58.392428315044,,,2,1071,2
+10716,,Congreso a San Pedrito - Rivadavia 1810,Solo anden a San Pedrito - Ascensor - Accesible,-34.609373678319,-58.392260843596,,,2,1071,1
+11091,,Plaza Italia a Catedral y C.Tucuman - Sta Fe 4193,Anden central - Escalera pedestre,-34.581245946786,-58.421512751068,,,2,1109,2
+11092,,Plaza Italia a Catedral y C.Tucuman - Sta Fe 4196,Anden central - Escalera pedestre,-34.581387801603,-58.421667983046,,,2,1109,2
+11093,,Plaza Italia a Catedral y C.Tucuman - Sta Fe 4183,Anden central - Escalera pedestre,-34.581338376432,-58.421384086383,,,2,1109,2
+11095,,Plaza Italia a Catedral y C.Tucuman - J.Botanico,Anden central - Escalera pedestre,-34.581854300232,-58.420329294229,,,2,1109,2
+11096,,Plaza Italia a Catedral y C.Tucuman - Sta Fe 4002,Anden central - Escalera pedestre,-34.582376725737,-58.420183468795,,,2,1109,2
+11131,,Pueyrredon a Catedral y C.Tucuman - Sta Fe 2517,Anden central - Escalera pedestre,-34.594367293166,-58.402507186904,,,2,1113,2
+11133,,Pueyrredon a Catedral y C.Tucuman-Pueyrredon 1340,Anden central - Escalera pedestre,-34.595279474080,-58.402773001117,,,2,1113,2
+11134,,Pueyrredon a Catedral y C.Tucuman - Sta Fe 2570,Anden central - Escalera pedestre,-34.594249157317,-58.403317645402,,,2,1113,2
+11101,,Scalabrini Ortiz a Catedral - Sta Fe 3711,Anden a Catedral - Escalera pedestre,-34.585070385117,-58.416009864497,,,2,1110,2
+11103,,S. Ortiz a Catedral y C. de Tucuman - Sta Fe 3679,Pasillo intermedio - Escalera pedestre,-34.585225223686,-58.415746042524,,,2,1110,2
+11104,,S. Ortiz a Catedral y C. de Tucuman - Sta Fe 3680,Pasillo intermedio - Escalera pedestre,-34.585320497660,-58.415882578595,,,2,1110,2
+11102,,Scalabrini Ortiz a C. de Tucuman - S.Ortiz 2489,Anden a C. de Tucuman - Escalera pedestre,-34.585435832527,-58.416094751701,,,2,1110,2
+11162,,Tribunales a Catedral y C.Tucuman - Talcahuano 638,Anden central - Escalera pedestre,-34.601225886838,-58.385360916101,,,2,1116,2
+11163,,Tribunales a Catedral y C.Tucuman - Tucuman 1289,Anden central - Ascensor - Accesible,-34.601594039404,-58.385128943257,,,2,1116,1
+11164,,Tribunales a Catedral y C.Tucuman - Talcahuano 580,Anden central - Escalera pedestre,-34.601892907094,-58.385304829684,,,2,1116,2
+11165,,Tribunales a Catedral y C.Tucuman - Lavalle 1221,Anden central - Escalera pedestre,-34.602639714931,-58.384148612326,,,2,1116,2
+11166,,Tribunales a Catedral y C.Tucuman - Libertad 556,Anden central - Escalera pedestre,-34.602190645189,-58.383894403768,,,2,1116,2
+10731,,Lima a Plaza de Mayo - Av.de Mayo 1159,Solo anden a Plaza de Mayo - Escalera pedestre,-34.609073208361,-58.382687957649,,,2,1073,2
+10732,,Lima a San Pedrito - Av.de Mayo 1160,Solo anden a San Pedrito - Escalera pedestre,-34.609243451914,-58.382678050278,,,2,1073,2
+10734,,Lima a San Pedrito - Av.de Mayo 1130,Solo anden a San Pedrito - Escalera pedestre,-34.609228600156,-58.382382299013,,,2,1073,2
+10671,,Loria a Plaza de Mayo - Rivadavia 3463,Solo anden a Plaza de Mayo - Escalera pedestre,-34.610771268544,-58.415340469091,,,2,1067,2
+10673,,Loria a Plaza de Mayo - Rivadavia 3431,Solo anden a Plaza de Mayo - Escalera pedestre,-34.610730678888,-58.414928566721,,,2,1067,2
+10675,,Loria a Plaza de Mayo - Rivadavia 3429,Solo anden a Plaza de Mayo - Ascensor,-34.610737455312,-58.414774298267,,,2,1067,1
+10674,,Loria a San Pedrito - Rivadavia 3434,Solo anden a San Pedrito - Escalera pedestre,-34.610919735633,-58.414869368563,,,2,1067,2
+11173,,9 de Julio a Catedral - R.S.Peña 943,Anden a Catedral - Escalera pedestre,-34.604562907607,-58.379927642119,,,2,1117,2
+11175,,9 de Julio a Catedral y C.Tucuman - Pellegrini 341,Galeria Obelisco Sur - Escalera pedestre,-34.604568949644,-58.380955961661,,,2,1117,2
+11176,,9 de Julio a Catedral y C.Tucuman - R.S.Peña 970,Galeria Obelisco Sur - Escalera pedestre,-34.60466667,-58.380625,,,2,1117,2
+11177,,9 de Julio a Congreso de Tucuman - Pellegrini 341,Anden a C. de Tucuman - Escalera pedestre,-34.60476389,-58.38092778,,,2,1117,2
+11122,,Agüero a Catedral y C. de Tucuman - Sta Fe 2910,Pasillo intermedio - Escalera pedestre,-34.591677841439,-58.407296286050,,,2,1112,2
+11123,,Agüero a Catedral y C. de Tucuman - Sta Fe 2885,Pasillo intermedio - Escalera pedestre,-34.591769464264,-58.406955372310,,,2,1112,2
+11124,,Agüero a Catedral y C. de Tucuman - Sta Fe 2888,Pasillo intermedio - Escalera pedestre,-34.591889332950,-58.407085244111,,,2,1112,2
+11111,,Bulnes a Catedral - Sta Fe 3291,Anden a Catedral - Escalera pedestre,-34.588140308059,-58.411368834402,,,2,1111,2
+11113,,Bulnes a Catedral - Sta Fe 3253,Anden a Catedral - Escalera pedestre y mecanica,-34.588452821106,-58.410892294942,,,2,1111,2
+11112,,Bulnes a Congreso de Tucuman - Sta Fe 3290,Anden a C. de Tucuman - Escalera pedestre,-34.588276165612,-58.411462404783,,,2,1111,2
+11153,,Callao a Catedral - Callao 819,Anden a Catedral - Escalera pedestre,-34.599517801017,-58.392910612767,,,2,1115,2
+11158,,Callao a Catedral y C. de Tucuman - Cordoba 1702,Pasillo intermedio - Escalera pedestre,-34.599708304174,-58.391815449153,,,2,1115,2
+11152,,Callao a Congreso de Tucuman - Callao 792,Anden a C. de Tucuman - Escalera pedestre,-34.599820866219,-58.393031851272,,,2,1115,2
+11154,,Callao a Congreso de Tucuman - Cordoba 1800,Anden a C. de Tucuman - Escalera pedestre,-34.599767233620,-58.393046039506,,,2,1115,2
+11156,,Callao a Congreso de Tucuman - Cordoba 1702,Anden a C. de Tucuman - Ascensor - Accesible,-34.599699124751,-58.391730642269,,,2,1115,1
+11181,,Catedral a Congreso de Tucuman - R.S.Peña 589,Anden a C. de Tucuman - Escalera pedestre,-34.607271423192,-58.374885086561,,,2,1118,2
+11182,,Catedral a Congreso de Tucuman - R.S.Peña 606,Anden a C. de Tucuman - Escalera pedestre,-34.607312260679,-58.375189455922,,,2,1118,2
+11184,,Catedral a Congreso de Tucuman - R.S.Peña 572,Anden a C. de Tucuman - Escalera pedestre,-34.607455289803,-58.374824508809,,,2,1118,2
+11185,,Catedral a Congreso de Tucuman - R.S.Peña 505,Anden a C. de Tucuman - Escalera pedestre,-34.607831950914,-58.373793964814,,,2,1118,2
+11186,,Catedral a Congreso de Tucuman - Florida 45,Anden a C. de Tucuman - Escalera pedestre,-34.607534393449,-58.374981335200,,,2,1118,2
+11188,,Catedral a Congreso de Tucuman - R.S.Peña 530,Anden a C. de Tucuman - Ascensor - Accesible,-34.607839647850,-58.374122116256,,,2,1118,1
+11180,,Catedral a Congreso de Tucuman - R.S.Peña 510,Anden a C. de Tucuman - Escalera pedestre,-34.607910890994,-58.373928920627,,,2,1118,2
+11033,,Congreso de Tucuman a Catedral - Cabildo 2831,Escalera pedestre y mecanica,-34.556042908215,-58.461854811311,,,2,1103,2
+10701,,Pasco a Plaza de Mayo - Rivadavia 2283,Solo anden a Plaza de Mayo - Escalera pedestre,-34.609649950083,-58.398873600121,,,2,1070,2
+10703,,Pasco a Plaza de Mayo - Rivadavia 2243,Solo anden a Plaza de Mayo - Escalera pedestre,-34.609653168582,-58.398443952040,,,2,1070,2
+10753,,Peru a Plaza de Mayo - Av.de Mayo 549,Solo anden a Plaza de Mayo - Escalera pedestre,-34.608470928801,-58.374287790113,,,2,1075,2
+10755,,Peru a Plaza de Mayo - Av.de Mayo 591,Solo anden a Plaza de Mayo - Ascensor,-34.608483132442,-58.374862404931,,,2,1075,1
+10752,,Peru a San Pedrito - Av.de Mayo 580,Solo anden a San Pedrito - Escalera pedestre,-34.608679672621,-58.374553107387,,,2,1075,2
+10754,,Peru a San Pedrito - Av.de Mayo 550,Solo anden a San Pedrito - Escalera mecanica,-34.608625414069,-58.374294563290,,,2,1075,2
+10756,,Peru a San Pedrito - Av.de Mayo 580,Solo anden a San Pedrito - Ascensor - Accesible,-34.608653128524,-58.374816802668,,,2,1075,1
+10741,,Piedras a Plaza de Mayo - Av.de Mayo 869,Solo anden a Plaza de Mayo - Escalera pedestre,-34.6087255,-58.378743699999,,,2,1074,2
+10742,,Piedras a San Pedrito - Av.de Mayo 870,Solo anden a San Pedrito - Escalera pedestre,-34.609015374208,-58.378676244534,,,2,1074,2
+10744,,Piedras a San Pedrito - Av.de Mayo 840,Solo anden a San Pedrito - Escalera pedestre,-34.608943224903,-58.378194330876,,,2,1074,2
+10761,,Plaza de Mayo a San Pedrito - H.Yrigoyen 399,Anden central - Escalera pedestre,-34.608915999999,-58.3721221,,,2,1076,2
+10762,,Plaza de Mayo a San Pedrito - H.Yrigoyen 250,Anden central - Escalera pedestre,-34.608885814299,-58.370233198878,,,2,1076,2
+10763,,Plaza de Mayo a San Pedrito - H.Yrigoyen 299,Escalera pedestre y ascensor - Accesible,-34.608814132476,-58.370652382566,,,2,1076,1
+10683,,P.Miserere a P.Mayo y San Pedrito - Rivadavia 2801,Vestibulo intermedio - Escalera pedestre,-34.609989477356,-58.406378661907,,,2,1068,2
+10684,,P.Miserere a P.Mayo y San Pedrito - Rivadavia 2835,Vestibulo intermedio - Escalera pedestre,-34.609966647243,-58.406753148913,,,2,1068,2
+10685,,P.Miserere a P.Mayo y San Pedrito - Rivadavia 2802,Vestibulo intermedio - Escalera pedestre,-34.609446377764,-58.406281997766,,,2,1068,2
+10687,,P.Miserere a P.Mayo y San Pedrito - Pueyrredon 129,Vestibulo intermedio - Escalera pedestre,-34.608758690925,-58.405989606637,,,2,1068,2
+10688,,P.Miserere a P.Mayo y San Pedrito - Pueyrredon 136,Vestibulo intermedio - Escalera pedestre,-34.608775933976,-58.407308609775,,,2,1068,2
+10689,,P.Miserere a P.Mayo y San Pedrito - FFCC Est.Once,Escalera pedestre y mecanica,-34.608850867247,-58.406165964289,,,2,1068,2
+10681,,P.Miserere a P.Mayo y San Pedrito - Rivadavia 2836,Vestibulo intermedio - Escalera pedestre,-34.610228834184,-58.406227030194,,,2,1068,2
+10682,,P.Miserere a P.Mayo y San Pedrito - Rivadavia 2860,Vestibulo intermedio - Escalera pedestre,-34.610258057418,-58.406548904431,,,2,1068,2
+10631,,P.Junta a Pza Mayo y San Pedrito - Rivadavia 5399,Vestibulo intermedio - Escalera pedestre,-34.620402916366,-58.441329435685,,,2,1063,2
+10632,,Primera Junta a San Pedrito - Centenera 13,Vestibulo intermedio - Ascensor - Accesible,-34.620691214081,-58.441290844828,,,2,1063,1
+10634,,P.Junta a San Pedrito y Pza Mayo - Centenera 10,Vestibulo intermedio - Escalera pedestre,-34.620671083836,-58.441076025818,,,2,1063,2
+10621,,Puan a Pza de Mayo y San Pedrito - Rivadavia 5951,Vestibulo intermedio - Ascensor - Accesible,-34.623533017897,-58.448955051275,,,2,1062,1
+10623,,Puan a Pza de Mayo y San Pedrito - Rivadavia 5927,Vestibulo intermedio - Escalera pedestre,-34.623444694524,-58.448661037174,,,2,1062,2
+10622,,Puan a San Pedrito y Pza de Mayo - Rivadavia 5922,Vestibulo intermedio - Escalera pedestre,-34.623751119707,-58.44884281811,,,2,1062,2
+10624,,Puan a San Pedrito y Pza de Mayo - Rivadavia 5892,Escalera pedestre y mecanica,-34.623601001320,-58.448420541632,,,2,1062,2
+10651,,Rio de Janeiro a Plaza de Mayo - Rivadavia 4541,Solo anden a Plaza de Mayo - Escalera pedestre,-34.615154308155,-58.429504253481,,,2,1065,2
+10653,,Rio de Janeiro a Plaza de Mayo - Rivadavia 4503,Solo anden a Plaza de Mayo - Escalera pedestre,-34.615031176860,-58.429169877106,,,2,1065,2
+10652,,Rio de Janeiro a San Pedrito - Rivadavia 4502,Solo anden a San Pedrito - Escalera pedestre,-34.615395,-58.429380999999,,,2,1065,2
+10603,,S.J.Flores a San Pedrito y P.Mayo - Rivadavia 6979,Vestibulo intermedio - Ascensor - Accesible,-34.629045072909,-58.463735842779,,,2,1060,1
+10605,,S.J.Flores a San Pedrito y P.Mayo - Rivadavia 6969,Vestibulo intermedio - Escalera pedestre,-34.628994424440,-58.463639659416,,,2,1060,2
+10607,,S.J.Flores a San Pedrito y P.Mayo - Rivadavia 6939,Vestibulo intermedio - Escalera pedestre,-34.628910356864,-58.463285813004,,,2,1060,2
+10602,,S.J.Flores a San Pedrito y P.Mayo - Rivadavia 6980,Vestibulo intermedio - Escalera pedestre,-34.629248535549,-58.463699059715,,,2,1060,2
+10591,,San Pedrito a Plaza de Mayo - Rivadavia 7475,Vestibulo intermedio - Escalera pedestre,-34.630917412359,-58.470744955725,,,2,1059,2
+10592,,San Pedrito a Plaza de Mayo - Rivadavia 7490,Vestibulo intermedio - Escalera pedestre,-34.6311999,-58.470878299999,,,2,1059,2
+10593,,San Pedrito a Plaza de Mayo - Rivadavia 7455,Vestibulo intermedio - Ascensor - Accesible,-34.630858164250,-58.470471307634,,,2,1059,1
+10594,,San Pedrito a Plaza de Mayo - Rivadavia 7428,Vestibulo intermedio - Escalera pedestre,-34.631011618827,-58.470181423943,,,2,1059,2
+10721,,Saenz Peña a Plaza de Mayo - Av.de Mayo 1481,Solo anden a Plaza de Mayo - Escalera pedestre,-34.609388030257,-58.386872136374,,,2,1072,2
+10724,,Saenz Peña a San Pedrito - Av.de Mayo 1430,Solo anden a San Pedrito - Escalera pedestre,-34.609502957331,-58.386600552119,,,2,1072,2
+11311,,M. Milagrosa a Virreyes y Retiro - Eva Peron 1953,Vestibulo intermedio - Escalera pedestre,-34.636304395743,-58.449627748331,,,2,1131,2
+11241,,Pichincha a Virreyes y Retiro - San Juan 2277,Vestibulo intermedio - Escalera pedestre,-34.623117880961,-58.397281204520,,,2,1124,2
+11242,,Pichincha a Virreyes y Retiro - San Juan 2274,Vestibulo intermedio - Escalera pedestre,-34.623288776612,-58.397266860085,,,2,1124,2
+11243,,Pichincha a Virreyes y Retiro - San Juan 2245,Vestibulo intermedio - Escalera pedestre,-34.623099134488,-58.396996471419,,,2,1124,2
+11244,,Pichincha a Virreyes y Retiro - San Juan 2254,Vestibulo intermedio - Escalera pedestre,-34.623263647487,-58.397028498630,,,2,1124,2
+11331,,Plaza de los Virreyes a Retiro - Lafuente 1150,Anden a Retiro - Escalera pedestre,-34.643233854726,-58.461453500093,,,2,1133,2
+11221,,San Jose a Virreyes y Retiro - San Juan 1369,Vestibulo intermedio - Escalera pedestre,-34.622364611653,-58.385574838252,,,2,1122,2
+11223,,San Jose a Virreyes y Retiro - San Juan 1339,Vestibulo intermedio - Escalera pedestre,-34.622373893389,-58.385352882709,,,2,1122,2
+11261,,Urquiza a Virreyes y Retiro - San Juan 3165,Vestibulo intermedio - Escalera pedestre,-34.624695762254,-58.409910146876,,,2,1126,2
+11262,,Urquiza a Virreyes y Retiro - San Juan 3144,Vestibulo intermedio - Escalera pedestre,-34.624832024418,-58.409529392758,,,2,1126,2
+11263,,Urquiza a Virreyes y Retiro - San Juan 3151,Vestibulo intermedio - Escalera pedestre,-34.624700632319,-58.409655842496,,,2,1126,2
+11321,,Varela a Virreyes y Retiro - Varela 950,Vestibulo intermedio - Escalera pedestre,-34.639844058844,-58.458210735960,,,2,1132,2
+1059,,San Pedrito,,-34.630922591443,-58.470433205504,,,1,,0
+1060,,San Jose de Flores,,-34.629054501979,-58.463536343831,,,1,,0
+1061,,Carabobo,,-34.626422392738,-58.456044495010,,,1,,0
+1062,,Puan,,-34.623571847053,-58.448787778687,,,1,,0
+1063,,Primera Junta,,-34.620460192436,-58.441400975016,,,1,,0
+1064,,Acoyte,,-34.618036012360,-58.435862213379,,,1,,0
+1065,,Rio de Janeiro,,-34.615111439413,-58.429285879212,,,1,,0
+1066,,Castro Barros,,-34.611763606902,-58.421728313005,,,1,,0
+1067,,Loria,,-34.610811060554,-58.415152877453,,,1,,1
+1068,,Plaza Miserere,,-34.609688,-58.406813889700,,,1,,0
+1069,,Alberti,,-34.609832012885,-58.400719910883,,,1,,0
+1070,,Pasco,,-34.609664444429,-58.398340314029,,,1,,0
+1071,,Congreso,,-34.609241487037,-58.392670601487,,,1,,0
+1072,,Saenz Peña,,-34.609416989391,-58.386668153102,,,1,,0
+1073,,Lima,,-34.609105721538,-58.382521122784,,,1,,0
+1074,,Piedras,,-34.608837932068,-58.378502407734,,,1,,0
+1075,,Peru,,-34.608559343180,-58.374563008418,,,1,,0
+1076,,Plaza de Mayo,,-34.608695109514,-58.371493220293,,,1,,0
+1077,,Juan Manuel de Rosas,,-34.574011003989,-58.486718237493,,,1,,0
+1078,,Echeverria,,-34.577998380396,-58.480763733193,,,1,,0
+1079,,De Los Incas - Parque Chas,,-34.581941400922,-58.472949117288,,,1,,0
+1080,,Tronador - Villa Ortuzar,,-34.584319159038,-58.465676307586,,,1,,0
+1081,,Federico Lacroze,,-34.587565207891,-58.454097211372,,,1,,0
+1082,,Dorrego,,-34.591692697391,-58.447618335534,,,1,,0
+1083,,angel Gallardo,,-34.602156515827,-58.431022167144,,,1,,0
+1084,,Malabia,,-34.599048472974,-58.439674973441,,,1,,0
+1085,,Medrano,,-34.603139517524,-58.421303182836,,,1,,0
+1086,,Carlos Gardel,,-34.604103190729,-58.411704897892,,,1,,0
+1087,,Pueyrredon,,-34.604613170616,-58.405234068657,,,1,,0
+1088,,Pasteur,,-34.604623105662,-58.399357348627,,,1,,0
+1089,,Callao,,-34.604457527748,-58.392845615810,,,1,,0
+1090,,Uruguay,,-34.604046341872,-58.387106358997,,,1,,0
+1091,,Carlos Pellegrini,,-34.603701386103,-58.381378501576,,,1,,0
+1092,,Florida,,-34.603301786393,-58.374534845324,,,1,,0
+1093,,Leandro N. Alem,,-34.602967313448,-58.369956314500,,,1,,0
+1094,,Constitucion,,-34.627276542920,-58.381431475198,,,1,,0
+1095,,San Juan,,-34.622676270600,-58.379951566484,,,1,,0
+1096,,Independencia,,-34.618060292427,-58.380236216020,,,1,,0
+1097,,Moreno,,-34.612434686061,-58.380517847867,,,1,,0
+1098,,Avenida de Mayo,,-34.608990925758,-58.380681462661,,,1,,0
+1099,,Diagonal Norte,,-34.604795306773,-58.379235416539,,,1,,0
+1100,,Lavalle,,-34.601776224270,-58.378115594396,,,1,,0
+1101,,General San Martin,,-34.594872221186,-58.377256616835,,,1,,0
+1102,,Retiro,,-34.591873756182,-58.374748081035,,,1,,0
+1103,,Congreso de Tucuman,,-34.555987572378,-58.462078124285,,,1,,0
+1104,,Juramento,,-34.562410402122,-58.456280529496,,,1,,0
+1105,,Jose Hernandez,,-34.566267592324,-58.451968878529,,,1,,0
+1106,,Olleros,,-34.570246506058,-58.444336652709,,,1,,0
+1107,,Ministro Carranza,,-34.575205802166,-58.434726297831,,,1,,0
+1108,,Palermo,,-34.578413560940,-58.425869643601,,,1,,0
+1109,,Plaza Italia,,-34.581660946057,-58.420978635617,,,1,,0
+1110,,Scalabrini Ortiz,,-34.585185336263,-58.415824770871,,,1,,0
+1111,,Bulnes,,-34.588258565847,-58.411264344992,,,1,,0
+1112,,Agüero,,-34.591698218136,-58.407092839478,,,1,,0
+1113,,Pueyrredon,,-34.594988137797,-58.403226435199,,,1,,0
+1114,,Facultad de Medicina,,-34.599719656814,-58.397433534301,,,1,,0
+1115,,Callao,,-34.599602641978,-58.392240107111,,,1,,0
+1116,,Tribunales,,-34.601770705188,-58.384459018730,,,1,,0
+1117,,9 de Julio,,-34.604348245572,-58.380351886286,,,1,,0
+1118,,Catedral,,-34.607624420959,-58.374257236745,,,1,,0
+1119,,Bolivar,,-34.609575380822,-58.374049365518,,,1,,0
+1120,,Belgrano,,-34.613410392420,-58.378220200429,,,1,,0
+1121,,Independencia,,-34.618001797393,-58.380904421063,,,1,,0
+1122,,San Jose,,-34.622367261066,-58.385392427497,,,1,,0
+1123,,Entre Rios,,-34.622759595691,-58.391514569428,,,1,,0
+1124,,Pichincha,,-34.623133717895,-58.397111669159,,,1,,0
+1125,,Jujuy,,-34.623878647026,-58.402829468279,,,1,,0
+1126,,General Urquiza,,-34.624681784582,-58.409617468688,,,1,,0
+1127,,Boedo,,-34.625545058485,-58.416628092456,,,1,,0
+1128,,La Plata,,-34.626836228126,-58.425610810552,,,1,,0
+1129,,Jose Maria Moreno,,-34.628084339372,-58.434297814982,,,1,,0
+1130,,Emilio Mitre,,-34.631632139071,-58.442524820568,,,1,,0
+1131,,Medalla Milagrosa,,-34.636250121811,-58.450398445176,,,1,,0
+1132,,Varela,,-34.639566964307,-58.457848280500,,,1,,0
+1133,,Plaza de los Virreyes,,-34.642770031936,-58.461445122984,,,1,,0
+1134,,Hospitales,,-34.641752739715,-58.412673175271,,,1,,0
+1135,,Parque Patricios,,-34.638460262593,-58.406328409852,,,1,,0
+1136,,Caseros,,-34.635265854589,-58.399158865153,,,1,,0
+1137,,Inclan,,-34.629351188776,-58.400986790654,,,1,,0
+1138,,Humberto 1,,-34.623116366744,-58.402322201144,,,1,,0
+1139,,Venezuela,,-34.615227118506,-58.404758647205,,,1,,0
+1140,,Once,,-34.609147664305,-58.406046778011,,,1,,0
+1141,,Corrientes,,-34.603923811372,-58.405317217086,,,1,,0
+1142,,Intendente Saguier,,-34.643258552263,-58.461524902887,,,1,,0
+1143,,Balbastro,,-34.649265520265,-58.455640019357,,,1,,0
+1144,,Mariano Acosta,,-34.654438435230,-58.456492782087,,,1,,0
+1145,,Somellera,,-34.656449351476,-58.453907455721,,,1,,0
+1146,,Ana Maria Janer,,-34.659486340020,-58.450007979109,,,1,,0
+1147,,Ntra. Sra. de Fatima,,-34.660447642203,-58.448783417607,,,1,,0
+1148,,Fernandez de la Cruz,,-34.662234999302,-58.446598243041,,,1,,0
+1149,,Presidente Illia,,-34.665176579075,-58.448533126284,,,1,,0
+1150,,Parque de la Ciudad,,-34.669865267294,-58.455109152349,,,1,,0
+1151,,Cecilia Grierson,,-34.672189284049,-58.457543347854,,,1,,0
+1152,,Escalada,,-34.674558787808,-58.460167171717,,,1,,0
+1153,,Pola,,-34.678110629633,-58.464412206378,,,1,,0
+1154,,Ana Diaz,,-34.680577977821,-58.466877924815,,,1,,0
+1155,,Centro Civico,,-34.683539244591,-58.465152180426,,,1,,0
+1156,,Larrazabal,,-34.680602280154,-58.465343409012,,,1,,0
+1157,,Nicolas Descalzi,,-34.682798871351,-58.462343924707,,,1,,0
+1158,,Gabino Ezeiza,,-34.685968042754,-58.458103459038,,,1,,0
+1159,,General Savio,,-34.689597318341,-58.460816625841,,,1,,0
+1160,,Cordoba,,-34.598686142195,-58.403805105041,,,1,,0
+1161,,Santa Fe,,-34.594856588906,-58.402459654070,,,1,,0
+1162,,Las Heras,,-34.588062575386,-58.39804479425,,,1,,0
+1163,,Facultad de Derecho,,-34.583194029760,-58.391207324196,,,1,,0
+1164,,Retiro,,-34.59240278,-58.37627222,,,1,,
+1165,,Catalinas,,-34.59664167,-58.37190833,,,1,,
+1166,,Correo Central,,-34.603125,-58.37019444,,,1,,

@@ -1,0 +1,49 @@
+﻿route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,block_id,shape_id
+LineaC,5,C11,Retiro,,1,,C1
+LineaC,6,C12,Retiro,,1,,C1
+LineaC,7,C13,Retiro,,1,,C1
+LineaC,5,C01,Constitución,,0,,C0
+LineaC,6,C02,Constitución,,0,,C0
+LineaC,7,C03,Constitución,,0,,C0
+LineaA,5,A11,Plaza de Mayo,,1,,A1
+LineaA,6,A12,Plaza de Mayo,,1,,A1
+LineaA,7,A13,Plaza de Mayo,,1,,A1
+LineaA,5,A01,San Pedrito,,0,,E0
+LineaA,6,A02,San Pedrito,,0,,A0
+LineaA,7,A03,San Pedrito,,0,,A0
+LineaB,5,B11,Leandro N. Alem,,1,,B1
+LineaB,6,B12,Leandro N. Alem,,1,,B1
+LineaB,7,B13,Leandro N. Alem,,1,,B1
+LineaB,5,B01,Juan Manuel de Rosas,,0,,B0
+LineaB,6,B02,Juan Manuel de Rosas,,0,,B0
+LineaB,7,B03,Juan Manuel de Rosas,,0,,B0
+LineaD,5,D11,Catedral,,1,,D1
+LineaD,6,D12,Catedral,,1,,D1
+LineaD,7,D13,Catedral,,1,,D1
+LineaD,5,D01,Congreso de Tucumán,,0,,D0
+LineaD,6,D02,Congreso de Tucumán,,0,,D0
+LineaD,7,D03,Congreso de Tucumán,,0,,D0
+LineaE,5,E11,Retiro,,1,,E1
+LineaE,6,E12,Retiro,,1,,E1
+LineaE,7,E13,Retiro,,1,,E1
+LineaE,5,E01,Plaza de los Virreyes,,0,,E0
+LineaH,5,H11,Facultad de Derecho,,1,,H1
+LineaH,6,H12,Facultad de Derecho,,1,,H1
+LineaH,7,H13,Facultad de Derecho,,1,,H1
+LineaH,5,H01,Hospitales,,0,,H0
+LineaH,6,H02,Hospitales,,0,,H0
+LineaH,7,H03,Hospitales,,0,,H0
+LineaE,6,E02,Plaza de los Virreyes,,0,,E0
+LineaE,7,E03,Plaza de los Virreyes,,0,,E0
+PM-Civico,5,P1-01,Centro Cívico,,0,,P1-0
+PM-Civico,6,P1-02,Centro Cívico,,0,,P1-0
+PM-Civico,7,P1-03,Centro Cívico,,0,,P1-0
+PM-Civico,5,P1-11,Saguier,,1,,P1-1
+PM-Civico,6,P1-12,Saguier,,1,,P1-1
+PM-Civico,7,P1-13,Saguier,,1,,P1-1
+PM-Savio,5,P2-01,General Savio,,0,,P2-0
+PM-Savio,6,P2-02,General Savio,,0,,P2-0
+PM-Savio,7,P2-03,General Savio,,0,,P2-0
+PM-Savio,5,P2-11,Saguier,,1,,P2-1
+PM-Savio,6,P2-12,Saguier,,1,,P2-1
+PM-Savio,7,P2-13,Saguier,,1,,P2-1

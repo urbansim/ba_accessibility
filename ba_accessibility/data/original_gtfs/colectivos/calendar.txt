@@ -1,0 +1,5 @@
+service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
+HI,1,1,1,1,1,0,0,20180101,20191231
+SI,0,0,0,0,0,1,0,20180101,20191231
+DI,0,0,0,0,0,0,1,20180101,20191231
+FI,0,0,0,0,0,0,0,20180101,20191231

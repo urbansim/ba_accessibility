@@ -1,0 +1,28 @@
+route_id,route_short_name,route_long_name,route_type
+1,Sarmiento,Sarmiento / Once - Moreno,2
+5,Mitre,Mitre / Retiro - Tigre,2
+7,Mitre,Mitre / Retiro - Mitre,2
+9,Mitre,Mitre / Retiro - J. L. Suárez,2
+11,Roca,Roca / Plaza Constitución - La Plata,2
+13,Roca,Roca / Plaza Constitución - Bosques-Q,2
+15,Roca,Roca / Plaza Constitución - Bosques-T,2
+17,Roca,Roca / Plaza Constitución - Alejandro Korn,2
+19,Roca,Roca / Plaza Constitución - Ezeiza,2
+21,Belgrano Sur,Belgrano Sur / Buenos Aires - M.C.G. Belgrano,2
+25,Belgrano Sur,Belgrano Sur / Buenos Aires - Gonzalez Catán,2
+27,Roca,Roca / Temperley - Haedo,2
+29,Roca,Roca / Temperley - Gutiérrez,2
+33,Mitre,Mitre / Victoria - Capilla del Señor,2
+35,Mitre,Mitre / Villa Ballester - Zárate,2
+37,Roca,Roca / Ezeiza - Cañuelas (Eza),2
+39,Roca,Roca / La Plata - Policlínico,2
+41,Linea Mitre,Tren de la Costa / Maipú - Delta,2
+43,Roca,Roca / Plaza Constitución - Cañuelas (Pza),2
+49,Roca,Roca / Plaza Constitución - Monte,2
+51,Sarmiento,Sarmiento / Moreno - Mercedes,2
+53,Sarmiento,Sarmiento / Merlo - Lobos,2
+55,Roca,Roca / Plaza Constitución - Lobos,2
+57,Roca,Roca / Plaza Constitución - Chascomús,2
+63,Belgrano Sur,Belgrano Sur / Apeadero Km 12 - Libertad,2
+65,San Martin,San Martín / Retiro (LSM) - Cabred,2
+67,Belgrano Sur,Belgrano Sur / Gonzalez Catán - 20 de Junio,2

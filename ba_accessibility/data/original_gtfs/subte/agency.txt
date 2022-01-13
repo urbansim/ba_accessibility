@@ -1,0 +1,2 @@
+﻿agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone,agency_fare_url
+3,Subte de Buenos Aires,http://www.buenosaires.gob.ar/subte,America/Argentina/Buenos_Aires,es,(+5411) 4555-1616,http://www.buenosaires.gob.ar/subte/tarifas-pases-y-abonos

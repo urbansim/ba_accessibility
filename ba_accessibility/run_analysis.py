@@ -148,7 +148,6 @@ def export_outputs(mode, stop_times, trips, expanded_stop_times, expanded_trips,
 
 def run(start_time, end_time, weekday):
     create_ua_network(start_time, end_time, weekday)
-    create_pandana_network()
     net = create_pandana_network()
     net, zones = read_process_zones(net)
     calculate_indicators(net, zones)

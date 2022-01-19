@@ -16,42 +16,72 @@ from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
 
 def process_gtfs():
     print('Processing all GTFS feeds to required input format')
-    for mode in ['subte', 'trenes', 'colectivos']:
+    copy_files()
+    for dir in sorted(os.listdir('data/processed_gtfs')):
         print('---------------------------')
-        print('Formatting', mode)
+        print('Formatting', dir)
         s_time = time.time()
-        copy_files(mode)
-        frequencies = glob.glob('./data/original_gtfs/%s/frequencies.txt' % mode)
+        frequencies = glob.glob('./data/processed_gtfs/%s/frequencies.txt' % dir)
         if len(frequencies) > 0:
-            frequencies, stop_times, trips, routes, agencies = read_files(mode)
-            frequencies, stop_times, routes, agencies = format_inputs(frequencies, stop_times, routes, agencies)
+            frequencies, stop_times, trips, routes, agencies = read_files(dir)
+            frequencies, stop_times = format_inputs(frequencies, stop_times)
             expanded_stop_times, unique_trips = expand_stop_times(frequencies, stop_times)
             expanded_trips = expand_trips(trips, unique_trips)
-            export_outputs(mode, stop_times, trips, expanded_stop_times, expanded_trips, routes, agencies)
-        print('Took %s seconds to process %s' %(time.time() - s_time, mode))
+            export_outputs(dir, stop_times, trips, expanded_stop_times, expanded_trips)
+        print('Took %s seconds to process %s' %(time.time() - s_time, dir))
 
 
-
-def copy_files(mode):
-    if not os.path.exists('data/processed_gtfs/%s' % mode):
-        os.makedirs('./data/processed_gtfs/%s' % mode)
-    gtfs_files = ['agency', 'calendar', 'feed_info', 'routes', 'shapes', 'stop_times', 'stops', 'trips']
-    for file in gtfs_files:
-        shutil.copy('./data/original_gtfs/%s/%s.txt' % (mode, file),
-                    './data/processed_gtfs/%s/%s.txt' % (mode, file))
+def copy_files():
+    for mode in ['subte', 'trenes', 'colectivos']:
+        original_path = ('data/original_gtfs/%s' % mode)
+        processed_path = ('data/processed_gtfs/%s' % mode)
+        agencies = pd.read_csv('%s/agency.txt' % original_path)
+        if len(agencies.index) == 1:
+            if not os.path.exists('data/processed_gtfs/%s' % mode):
+                os.makedirs('./data/processed_gtfs/%s' % mode)
+            gtfs_files = ['agency', 'calendar', 'feed_info', 'routes', 'stop_times', 'stops', 'trips']  # 'shapes',
+            for file in gtfs_files:
+                shutil.copy('./data/original_gtfs/%s/%s.txt' % (mode, file),
+                           './data/processed_gtfs/%s/%s.txt' % (mode, file))
+        else:
+            feed_info = pd.read_csv('%s/feed_info.txt' % original_path)
+            calendar = pd.read_csv('%s/calendar.txt' % original_path)
+            agencies = pd.read_csv('%s/agency.txt' % original_path)
+            routes = pd.read_csv('%s/routes.txt' % original_path)
+            trips = pd.read_csv('%s/trips.txt' % original_path)
+            stops = pd.read_csv('%s/stops.txt' % original_path)
+            stop_times = pd.read_csv('%s/stop_times.txt' % original_path)
+            frequencies = glob.glob('./%s/frequencies.txt' % original_path)
+            frequencies = pd.read_csv('%s/frequencies.txt' % original_path) if len(frequencies) > 0 else None
+            for agency in agencies.agency_id.unique():
+                subset = {}
+                subset['feed_info'] = feed_info.copy()
+                subset['agency'] = agencies[agencies['agency_id'] == agency].copy()
+                subset['routes'] = routes[routes['agency_id'] == agency].copy()
+                subset['trips'] = trips[trips['route_id'].isin(subset['routes'].route_id)].copy()
+                subset['calendar'] = calendar[calendar['service_id'].isin(subset['trips'].service_id)].copy()
+                subset['stop_times'] = stop_times[stop_times['trip_id'].isin(subset['trips'].trip_id)].copy()
+                subset['stops'] = stops[stops['stop_id'].isin(subset['stop_times'].stop_id)].copy()
+                if len(subset['routes'].index) > 0:
+                    if not os.path.exists('%s_%s' % (processed_path, agency)):
+                        os.makedirs('./%s_%s' % (processed_path, agency))
+                    if frequencies is not None:
+                        subset['frequencies'] = frequencies[frequencies['trip_id'].isin(subset['trips'].trip_id)].copy()
+                    for key in subset.keys():
+                        subset[key].to_csv('./%s_%s/%s.txt' % (processed_path, agency, key), index=False)
 
 
 def read_files(mode):
     print('Reading files')
-    frequencies = pd.read_csv('data/original_gtfs/%s/frequencies.txt' % mode)
-    stop_times = pd.read_csv('data/original_gtfs/%s/stop_times.txt' % mode)
-    trips = pd.read_csv('data/original_gtfs/%s/trips.txt' % mode)
-    routes = pd.read_csv('data/original_gtfs/%s/routes.txt' % mode)
-    agencies = pd.read_csv('data/original_gtfs/%s/agency.txt' % mode)
+    frequencies = pd.read_csv('data/processed_gtfs/%s/frequencies.txt' % mode)
+    stop_times = pd.read_csv('data/processed_gtfs/%s/stop_times.txt' % mode)
+    trips = pd.read_csv('data/processed_gtfs/%s/trips.txt' % mode)
+    routes = pd.read_csv('data/processed_gtfs/%s/routes.txt' % mode)
+    agencies = pd.read_csv('data/processed_gtfs/%s/agency.txt' % mode)
     return frequencies, stop_times, trips, routes, agencies
 
 
-def format_inputs(frequencies, stop_times, routes, agencies):
+def format_inputs(frequencies, stop_times):
     print('Formatting inputs')
     frequencies = time_to_seconds(frequencies, ['start_time', 'end_time'])
     stop_times = time_to_seconds(stop_times, ['arrival_time', 'departure_time'])
@@ -60,9 +90,7 @@ def format_inputs(frequencies, stop_times, routes, agencies):
         stop_times['arrival_time'] = stop_times['arrival_time'].interpolate()
         stop_times['departure_time'] = stop_times['departure_time'].interpolate()
     stop_times['stop_duration'] = stop_times['departure_time'] - stop_times['arrival_time']
-    routes['agency_id'] = routes['agency_id'].min()
-    agencies = agencies.head(1).copy()
-    return frequencies, stop_times, routes, agencies
+    return frequencies, stop_times
 
 
 def time_to_seconds(df, cols):
@@ -84,7 +112,7 @@ def expand_stop_times(frequencies, stop_times):
     frequencies['start_time_idx'] = frequencies['start_time_idx'].interpolate().astype('int')
     trip_ids = frequencies.trip_id.unique()
     len_batch = 25
-    num_batches = round(len(trip_ids)/len_batch)
+    num_batches = max(round(len(trip_ids)/len_batch), 1)
     results = {}
     unique_trips = []
     lower_bound = 0
@@ -125,6 +153,7 @@ def expand_stop_times(frequencies, stop_times):
     print('Stop times expansion done')
     return stop_times, unique_trips
 
+
 def expand_trips(trips, unique_trips):
     print('Expanding_trips')
     unique_trips = pd.DataFrame(unique_trips, columns=['complete_trip_id'])
@@ -135,15 +164,12 @@ def expand_trips(trips, unique_trips):
     return expanded_trips
 
 
-def export_outputs(mode, stop_times, trips, expanded_stop_times, expanded_trips, routes, agencies):
+def export_outputs(mode, stop_times, trips, expanded_stop_times, expanded_trips):
     print('Exporting stop times')
     expanded_stop_times[stop_times.columns].to_csv('./data/processed_gtfs/%s/stop_times.txt' % mode, index=False)
     print('Exporting trips')
     expanded_trips[trips.columns].to_csv('./data/processed_gtfs/%s/trips.txt' % mode, index=False)
-    print('Exporting routes')
-    routes.to_csv('./data/processed_gtfs/%s/routes.txt' % mode, index=False)
-    print('Exporting agencies')
-    agencies.to_csv('./data/processed_gtfs/%s/agency.txt' % mode, index=False)
+    print('Output export done')
 
 
 def run(start_time, end_time, weekday):
@@ -156,29 +182,27 @@ def run(start_time, end_time, weekday):
 def create_ua_network(start_time, end_time, weekday):
     print('Creating UrbanAccess Network')
     gtfs_path = './data/processed_gtfs'
-    bbox = (-59.3201, -35.1845, -57.7988, -34.2464)
+    bbox = (-60.8755, -36.2946, -57.0025,-33.3997)
     loaded_feeds = ua.gtfs.load.gtfsfeed_to_df(gtfsfeed_path=gtfs_path, bbox=bbox, validation=True,
                                                verbose=True, remove_stops_outsidebbox=True,
                                                append_definitions=True)
-
-    #loaded_feeds.stops.plot(kind='scatter', x='stop_lon', y='stop_lat', s=0.1)
-
+    nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
+    ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
     ua.gtfs.network.create_transit_net(gtfsfeeds_dfs=loaded_feeds,
                                        day=weekday,
                                        timerange=[start_time, end_time],
-                                       calendar_dates_lookup=None)
-
-    nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox,remove_lcn=True)
-    ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
-    ua_net = ua.network.ua_network
-    ua.network.integrate_network(urbanaccess_network=ua_net, headways=False)
-    ua.network.save_network(urbanaccess_network=ua_net, filename='final_net.h5', overwrite_key = True)
+                                       calendar_dates_lookup=None,
+                                       time_aware=True,
+                                       simplify=True)
+    loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
+    ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
+    ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='final_net.h5', overwrite_key=True)
 
 
 def create_pandana_network():
     print('Loading Precomputed UrbanAccess Network')
     ua_net = ua.network.load_network(filename='final_net.h5')
-    export_shp(ua_net.net_nodes, ua_net.net_edges)
+    #export_shp(ua_net.net_nodes, ua_net.net_edges)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -189,11 +213,11 @@ def create_pandana_network():
                        ua_net.net_edges[["weight"]],
                        twoway=False)
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
-    precompute_time = 45
-    print('Precomputing network for distance %s.' % precompute_time)
-    print('Network precompute starting.')
-    net.precompute(precompute_time)
-    print('Network precompute done.')
+    #precompute_time = 45
+    #print('Precomputing network for distance %s.' % precompute_time)
+    #print('Network precompute starting.')
+    #net.precompute(precompute_time)
+    #print('Network precompute done.')
     return net
 
 

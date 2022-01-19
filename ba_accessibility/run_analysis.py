@@ -39,10 +39,11 @@ def copy_files():
         if len(agencies.index) == 1:
             if not os.path.exists('data/processed_gtfs/%s' % mode):
                 os.makedirs('./data/processed_gtfs/%s' % mode)
-            gtfs_files = ['agency', 'calendar', 'feed_info', 'routes', 'stop_times', 'stops', 'trips']  # 'shapes',
+            gtfs_files = ['agency', 'calendar', 'feed_info', 'routes', 'stop_times', 'stops', 'trips', 'frequencies']  # 'shapes',
             for file in gtfs_files:
-                shutil.copy('./data/original_gtfs/%s/%s.txt' % (mode, file),
-                           './data/processed_gtfs/%s/%s.txt' % (mode, file))
+                if os.path.isfile('data/original_gtfs/%s/%s.txt' % (mode, file)):
+                    shutil.copy('./data/original_gtfs/%s/%s.txt' % (mode, file),
+                                './data/processed_gtfs/%s/%s.txt' % (mode, file))
         else:
             feed_info = pd.read_csv('%s/feed_info.txt' % original_path)
             calendar = pd.read_csv('%s/calendar.txt' % original_path)

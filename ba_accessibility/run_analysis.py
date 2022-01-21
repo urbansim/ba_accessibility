@@ -246,7 +246,7 @@ def create_gtfs_with_project():
 def run(start_time, end_time, weekday):
     for scenario in ['baseline', 'project']:
         create_ua_network(scenario, start_time, end_time, weekday)
-        net = create_pandana_network()
+        net = create_pandana_network(scenario)
         net, zones = read_process_zones(net)
         calculate_indicators(scenario, net, zones)
     compare_indicators(zones)
@@ -310,7 +310,7 @@ def export_shp(nodes, edges, name_shp='test', df=None):
 
 
 def read_process_zones(net):
-    zones = gpd.read_file('data/jobs_processed/jobs_hexagons.shp')
+    zones = gpd.read_file('data/processed/jobs/jobs_hexagons.shp')
     zones['centroid'] = zones['geometry'].centroid
     zones = zones.set_geometry('centroid')
     zones = zones.to_crs(4326)

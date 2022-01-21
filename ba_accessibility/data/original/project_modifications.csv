@@ -1,0 +1,43 @@
+﻿project_id,mode,route_id,dirección,stop_id,stop_name,min_since_prev
+1,trenes,5,ascendente,332,Retiro,
+1,trenes,5,ascendente,229,L. De La Torre,8
+1,trenes,5,ascendente,34,Belgrano C.,2
+1,trenes,5,ascendente,287,Nuñez,3
+1,trenes,5,ascendente,337,Rivadavia,3
+1,trenes,5,ascendente,408,V. Lopez,3
+1,trenes,5,ascendente,291,Olivos,3
+1,trenes,5,ascendente,212,La Lucila,2
+1,trenes,5,ascendente,262,Martinez,2
+1,trenes,5,ascendente,5,Acassuso,2
+1,trenes,5,ascendente,357,San Isidro,3
+1,trenes,5,ascendente,32,Beccar,3
+1,trenes,5,ascendente,409,Victoria,3
+1,trenes,5,ascendente,428,Virreyes,2
+1,trenes,5,ascendente,355,San Fernando,2
+1,trenes,5,ascendente,65,Carupá,2
+1,trenes,5,ascendente,389,Tigre,5
+1,trenes,5,descendente,389,Tigre,
+1,trenes,5,descendente,65,Carupá,4
+1,trenes,5,descendente,355,San Fernando,2
+1,trenes,5,descendente,428,Virreyes,2
+1,trenes,5,descendente,409,Victoria,3
+1,trenes,5,descendente,32,Beccar,3
+1,trenes,5,descendente,357,San Isidro,3
+1,trenes,5,descendente,5,Acassuso,2
+1,trenes,5,descendente,262,Martinez,2
+1,trenes,5,descendente,212,La Lucila,2
+1,trenes,5,descendente,291,Olivos,3
+1,trenes,5,descendente,408,V. Lopez,3
+1,trenes,5,descendente,337,Rivadavia,2
+1,trenes,5,descendente,287,Nuñez,3
+1,trenes,5,descendente,34,Belgrano C.,3
+1,trenes,5,descendente,229,L. De La Torre,2
+1,trenes,5,descendente,332,Retiro,9
+1,trenes,,ascendente,409,Victoria,
+1,trenes,,ascendente,118,Dr. A. Schweitzer,5
+1,trenes,,ascendente,29,Emp. Bancalari,4
+1,trenes,,ascendente,128,El Talar,4
+1,trenes,,descendente,128,El Talar,
+1,trenes,,descendente,29,Emp. Bancalari,4
+1,trenes,,descendente,118,Dr. A. Schweitzer,5
+1,trenes,,descendente,409,Victoria,5

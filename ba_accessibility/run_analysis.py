@@ -23,13 +23,13 @@ def process_update_jobs():
     hexagons['hex_area'] = hexagons.geometry.area
     zone_area = hexagons.groupby('ID')['hex_area'].sum().reset_index()
     zone_area = zone_area.rename(columns={'hex_area': 'zone_area'})
-    hexagons = hexagons.merge(zone_area, on='ID', how='left')
+    hexagons = hexagons.reset_index().merge(zone_area, on='ID', how='left')
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
     for col in job_cols:
         hexagons[col] = round(hexagons[col].fillna(0).astype('int') * hexagons['hex_area'] / hexagons['zone_area'])
     if not os.path.exists('data/processed/jobs'):
         os.makedirs('./data/processed/jobs')
-    hexagons[['geometry'] + job_cols].to_file('data/processed/jobs/jobs_hexagons.shp')
+    hexagons[['h3_polyfill', 'ID', 'geometry'] + job_cols].to_file('data/processed/jobs/jobs_hexagons.shp')
     print('Took {:,.2f} seconds to process jobs shapefile'.format(time.time() - s_time))
 
 
@@ -276,7 +276,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
 def create_pandana_network(scenario):
     print('Loading Precomputed UrbanAccess Network')
     ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
-    export_shp(ua_net.net_nodes, ua_net.net_edges)
+    #export_shp(ua_net.net_nodes, ua_net.net_edges)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -313,11 +313,14 @@ def read_process_zones(net):
     zones = gpd.read_file('data/processed/jobs/jobs_hexagons.shp')
     zones['centroid'] = zones['geometry'].centroid
     zones = zones.set_geometry('centroid')
+    zones = zones.rename(columns={'geometry': 'polygon_geometry', 'centroid': 'geometry'})
+    zones = zones.set_geometry('geometry')
     zones = zones.to_crs(4326)
-    zones['x'] = zones['geometry'].centroid.x
-    zones['y'] = zones['geometry'].centroid.y
+    zones['x'] = zones.geometry.x
+    zones['y'] = zones.geometry.y
     zones['node_id'] = net.get_node_ids(zones['x'], zones['y'])
     zones = zones.to_crs(22192)
+    zones = zones.rename(columns={'geometry': 'centroid', 'polygon_geometry': 'geometry'})
     zones = zones.set_geometry('geometry').drop(columns='centroid')
     net.set(zones.node_id, variable=zones.jobs, name='jobs')
     zones = zones.set_index('node_id')
@@ -334,12 +337,21 @@ def calculate_indicators(scenario, net, zones):
     #zones.plot('jobtotal', cmap='gist_heat_r', edgecolor='none', figsize=(20,20), legend=True)
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones['jobs_15', 'jobs_30', 'jobs_45'].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'ID', 'jobs_15', 'jobs_30', 'jobs_45']].to_csv('results/%s.csv' % scenario)
 
 
 def compare_indicators(zones):
-    baseline = pd.read_csv('results/baseline.csv')
-    project = pd.read_csv('results/project.csv')
+    baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
+    project = pd.read_csv('results/project.csv').set_index('h3_polyfil')
+    job_cols = [col for col in baseline.columns if 'jobs' in col]
+    project = project[job_cols]
+    for col in job_cols:
+        project = project.rename(columns={col: col+'_p'})
+    comparison = baseline[job_cols].join(project)
+    for col in job_cols:
+        comparison[col + '_diff'] = comparison[col + '_p'] - comparison[col]
+        comparison['pct_change_' + col] = (comparison[col + '_diff']) / comparison[col]
+    comparison = comparison.fillna(0)
     breakpoint()
 
 

@@ -329,14 +329,12 @@ def read_process_zones(net):
 def calculate_indicators(scenario, net, zones):
     s_time = time.time()
     print('Aggregating variables')
-    for i in [15, 30, 45]:
-        zones['jobs_' + str(i)] = net.aggregate(i, type='sum', decay='linear', name='jobs')
+    for i in [15, 30, 45, 60]:
+        zones['jobs_' + str(i)] = net.aggregate(i, type='sum', decay='flat', name='jobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
-    #zones.plot('jobs_45', cmap='gist_heat_r', edgecolor='none', figsize=(20,20), legend=True)
-    #zones.plot('jobtotal', cmap='gist_heat_r', edgecolor='none', figsize=(20,20), legend=True)
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'ID', 'jobs_15', 'jobs_30', 'jobs_45']].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
 def compare_indicators(zones):

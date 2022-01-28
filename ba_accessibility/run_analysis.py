@@ -255,8 +255,7 @@ def run(start_time, end_time, weekday):
 def create_ua_network(scenario, start_time, end_time, weekday):
     print('Creating UrbanAccess Network')
     gtfs_path = './data/processed/gtfs_%s' % scenario
-    bbox = (-60.8755, -36.2946, -57.0025, -33.3997)
-    bbox = (-58.4747, -34.6404, -58.4143, -34.5997)  # CABALLITO
+    bbox = (-59.3177426256,-35.3267410094,-57.6799695705,-34.1435770646)
     nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
     ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
     loaded_feeds = ua.gtfs.load.gtfsfeed_to_df(gtfsfeed_path=gtfs_path, bbox=bbox, validation=True,
@@ -349,9 +348,11 @@ def compare_indicators(zones):
         project = project.rename(columns={col: col+'_p'})
     comparison = baseline[job_cols].join(project)
     for col in job_cols:
-        comparison[col + '_diff'] = comparison[col + '_p'] - comparison[col]
-        comparison['pct_change_' + col] = (comparison[col + '_diff']) / comparison[col]
+        comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
+        comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
     comparison = comparison.fillna(0)
+    comparison = zones.set_index('h3_polyfil')[['geometry']].join(comparison)
+    comparison.to_file('results.shp')
     breakpoint()
 
 

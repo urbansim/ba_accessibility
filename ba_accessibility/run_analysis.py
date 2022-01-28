@@ -17,7 +17,7 @@ import h3pandas
 def process_update_jobs():
     s_time = time.time()
     zones = gpd.read_file('data/original/jobs/Empleo.shp')
-    resolution=10
+    resolution=8 #10
     hexagons = zones.h3.polyfill_resample(resolution)
     hexagons = hexagons.to_crs(22192)
     hexagons['hex_area'] = hexagons.geometry.area

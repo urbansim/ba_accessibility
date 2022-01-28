@@ -346,6 +346,8 @@ def compare_indicators(zones):
         project = project.rename(columns={col: col+'_p'})
     comparison = baseline[job_cols].join(project)
     for col in job_cols:
+        comparison['pct' + col.replace('jobs', '')] = comparison[col] / comparison['jobs'].sum()
+        comparison['pct' + col.replace('jobs', '') + '_p'] = comparison[col + '_p'] / comparison['jobs_p'].sum()
         comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
         comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
     comparison = comparison.fillna(0)

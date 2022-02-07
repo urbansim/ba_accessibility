@@ -35,7 +35,7 @@ def process_update_jobs():
 
 def process_update_gtfs():
     print('Processing all GTFS feeds to required input format')
-    copy_files()
+    copy_baseline_files()
     for dir in sorted(os.listdir('data/processed/gtfs_baseline')):
         print('---------------------------')
         print('Formatting', dir)
@@ -51,7 +51,7 @@ def process_update_gtfs():
     create_gtfs_with_project()
 
 
-def copy_files():
+def copy_baseline_files():
     for mode in ['subte', 'trenes', 'colectivos']:
         original_path = ('data/original/gtfs_baseline/%s' % (mode))
         processed_path = ('data/processed/gtfs_baseline/%s' % (mode))
@@ -194,62 +194,92 @@ def export_outputs( mode, stop_times, trips, expanded_stop_times, expanded_trips
 
 
 def create_gtfs_with_project():
+    stop_updates = pd.read_csv('data/original/project_updates/modified_stops.csv').fillna(0)
+    travel_time_updates = pd.read_csv('data/original/project_updates/modified_times_between_stops.csv').fillna(0)
+    for mode in travel_time_updates['mode'].unique():
+        original_path = ('data/processed/gtfs_baseline/%s' % mode)
+        trips = pd.read_csv('%s/trips.txt' % original_path, dtype={'trip_id': object})
+        stop_times = pd.read_csv('%s/stop_times.txt' % original_path, dtype={'trip_id': object})
+        projects = travel_time_updates[travel_time_updates['mode'] == mode]['project_id'].unique()
+        for project_id in projects:
+            copy_with_project_files(project_id)
+            updated_stop_times, updated_trips = update_frequencies(stop_times, trips, stop_updates, travel_time_updates, project_id)
+            updated_stop_times.to_csv('data/processed/gtfs_project_%s/%s/stop_times.txt' % (project_id, mode), index=False)
+            updated_trips.to_csv('data/processed/gtfs_project_%s/%s/trips.txt' % (project_id, mode), index=False)
+
+
+def copy_with_project_files(project_id):
     for dir in sorted(os.listdir('data/processed/gtfs_baseline')):
-        if not os.path.exists('data/processed/gtfs_project/%s' % (dir)):
-            os.makedirs('./data/processed/gtfs_project/%s' % (dir))
+        if not os.path.exists('data/processed/gtfs_project_%s/%s' % (project_id, dir)):
+            os.makedirs('./data/processed/gtfs_project_%s/%s' % (project_id, dir))
         gtfs_files = ['agency', 'calendar', 'feed_info', 'routes', 'stop_times', 'stops', 'trips', 'frequencies']
         for file in gtfs_files:
             if os.path.isfile('data/processed/gtfs_baseline/%s/%s.txt' % (dir, file)):
                 shutil.copy('./data/processed/gtfs_baseline/%s/%s.txt' % (dir, file),
-                            './data/processed/gtfs_project/%s/%s.txt' % (dir, file))
-    updates = pd.read_csv('data/original/project_modifications.csv')
-    updates = updates.fillna(0)
-    updates['stop_id'] = updates['stop_id'].astype('int')
-    updates['cumsum'] = updates['min_since_prev'].cumsum()
-    updates.loc[updates['min_since_prev'] == 0, 'restart'] = -1 * updates['cumsum']
-    updates['restart'] = updates['restart'].fillna(0).cumsum()
-    updates['cumsum'] = updates['cumsum'] + updates['restart']
-    updated_stop_times = pd.DataFrame()
-    for project in updates.project_id.unique():
-        updates_project = updates[updates['project_id'] == project]
-        mode = updates_project['mode'].unique()[0]
-        original_path = ('data/processed/gtfs_baseline/%s' % mode)
-        trips = pd.read_csv('%s/trips.txt' % original_path)
-        stop_times = pd.read_csv('%s/stop_times.txt' % original_path)
-        stop_times_routes = stop_times.merge(trips[['trip_id', 'route_id', 'service_id']], on='trip_id', how='left')
-        for route in updates_project['route_id'].unique():
-            updates_project_route = updates_project[updates_project['route_id'] == route]
-            updates_project_route['prev_stop_id'] = updates_project_route['stop_id'].shift().fillna(0).astype('int')
-            updates_project_route['to_from'] = updates_project_route['prev_stop_id'].astype('str') + '_' + updates_project_route['stop_id'].astype('str')
-            stop_times_route = stop_times_routes[stop_times_routes['route_id'] == route]
-            stop_times_route = stop_times_route.sort_values(by=['trip_id', 'service_id', 'stop_sequence'])
-            stop_times_route = time_to_seconds(stop_times_route, ['arrival_time', 'departure_time'])
-            arrival_min = stop_times_route.groupby('trip_id')['arrival_time'].min()
-            departure_min = stop_times_route.groupby('trip_id')['departure_time'].min()
-            stop_times_route = stop_times_route.set_index('trip_id')
-            stop_times_route['arrival_min'] = arrival_min
-            stop_times_route['departure_min'] = departure_min
-            stop_times_route['prev_stop_id'] = stop_times_route['stop_id'].shift().fillna(0).astype('int')
-            stop_times_route['to_from'] = stop_times_route['prev_stop_id'].astype('str') + '_' + stop_times_route['stop_id'].astype('str')
-            stop_times_route = stop_times_route.reset_index()
-            stop_times_route = stop_times_route.merge(updates_project_route[['to_from', 'cumsum']], on=['to_from'], how='left')
-            stop_times_route['arrival_time'] = stop_times_route['arrival_min'] + stop_times_route['cumsum'].fillna(0) * 60
-            stop_times_route['departure_time'] = stop_times_route['departure_min'] + stop_times_route['cumsum'].fillna(0) * 60
-            stop_times_route['arrival_time'] = pd.to_datetime(stop_times_route['arrival_time'].round(), unit='s').dt.time
-            stop_times_route['departure_time'] = pd.to_datetime(stop_times_route['departure_time'].round(), unit='s').dt.time
-            stop_times_route = stop_times_route[list(stop_times.columns)]
-            updated_stop_times = updated_stop_times.append(stop_times_route)
-    equal_stop_times = stop_times_routes[~stop_times_routes['route_id'].isin(updates['route_id'])][list(stop_times.columns)]
-    updated_stop_times.append(equal_stop_times).to_csv('data/processed/gtfs_project/%s/stop_times.txt' % mode)
+                            './data/processed/gtfs_project_%s/%s/%s.txt' % (project_id, dir, file))
 
 
-def run(start_time, end_time, weekday):
-    for scenario in ['baseline', 'project']:
+def update_frequencies(stop_times, trips, stop_updates, travel_time_updates, project_id):
+    stop_times = time_to_seconds(stop_times, ['arrival_time', 'departure_time'])
+    stop_times_routes = stop_times.merge(trips[['trip_id', 'route_id', 'service_id', 'direction_id']], on='trip_id', how ='left')
+    routes_to_update = travel_time_updates[travel_time_updates['project_id'] == project_id]['route_id'].unique()
+    unchanged_trips = stop_times_routes[~stop_times_routes['route_id'].isin(routes_to_update)]['trip_id'].unique()
+    stop_times_routes = stop_times_routes[stop_times_routes['route_id'].isin(routes_to_update)]
+
+    headways = travel_time_updates[['route_id', 'headway_min']].groupby('route_id').min().reset_index()
+    headways['headway_secs'] = headways['headway_min'] * 60
+    start_times = pd.DataFrame(stop_times_routes.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].min()).rename(columns={'arrival_time': 'start_time'})
+    end_times = pd.DataFrame(stop_times_routes.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].max()).rename(columns={'arrival_time': 'end_time'})
+    frequencies = start_times.join(end_times)
+    frequencies = frequencies.reset_index().merge(headways[['route_id', 'headway_secs']], on='route_id', how='left')
+    frequencies['exact_times'] = 1
+    updated_stop_times, updated_trips = update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_updates, travel_time_updates)
+
+    unchanged_stop_times = stop_times[stop_times['trip_id'].isin(unchanged_trips)]
+    unchanged_stop_times['arrival_time'] = pd.to_datetime(unchanged_stop_times['arrival_time'].round(), unit='s').dt.time
+    unchanged_stop_times['departure_time'] = pd.to_datetime(unchanged_stop_times['departure_time'].round(), unit='s').dt.time
+    stop_times = unchanged_stop_times.append(updated_stop_times)[list(stop_times.columns)]
+    trips = trips[trips['trip_id'].isin(unchanged_trips)].append(updated_trips)
+    return stop_times, trips
+
+
+def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_updates, travel_time_updates):
+    modified_stop_times = pd.DataFrame()
+    for route in routes_to_update:
+        i = 1
+        for service_id in frequencies.service_id.unique():
+            for direction in frequencies.direction_id.unique():
+                selection = (stop_times_routes['route_id'] == route) & (stop_times_routes['service_id'] == service_id) & (stop_times_routes['direction_id'] == direction)
+                start_trip_id = stop_times_routes[selection]['trip_id'].min()
+                start_arrival_time = frequencies[frequencies['route_id']==route].start_time.min()
+                stop_times_route = stop_updates[(stop_updates['route_id'] == route) & (stop_updates['direction_id']==direction)]
+                stop_times_route['arrival_min'] = start_arrival_time
+                stop_times_route['departure_min'] = start_arrival_time
+                stop_times_route['prev_stop_id'] = stop_times_route['stop_id'].shift().fillna(0).astype('int')
+                stop_times_route['from_to'] = stop_times_route['prev_stop_id'].astype('str') + '_'+ stop_times_route['stop_id'].astype('str')
+                stop_times_route = stop_times_route.merge(travel_time_updates[['from_to', 'delta']], on=['from_to'], how='left')
+                stop_times_route['arrival_time'] = stop_times_route['arrival_min'] + stop_times_route['delta'].fillna(0) * 60
+                stop_times_route['departure_time'] = stop_times_route['departure_min'] + stop_times_route['delta'].fillna(0) * 60
+                stop_times_route['stop_duration'] = 0
+                stop_times_route['service_id'] = service_id
+                stop_times_route['trip_id'] = str(start_trip_id) + '_' + str(i)
+                selection = (frequencies['route_id']==route) & (frequencies['service_id']==service_id) & (frequencies['direction_id']==direction)
+                frequencies.loc[selection, 'trip_id'] = str(start_trip_id) + '_' + str(i)
+                stop_times_route['shape_dist_traveled'] = 0
+                modified_stop_times = modified_stop_times.append(stop_times_route)
+                i += 1
+    expanded_stop_times, unique_trips = expand_stop_times(frequencies, modified_stop_times.drop(columns=['route_id', 'service_id', 'direction_id']))
+    expanded_trips = expanded_stop_times.groupby('trip_id').min()[['route_id', 'service_id', 'direction_id']].reset_index()
+    return expanded_stop_times, expanded_trips
+
+
+def run(project_id, start_time, end_time, weekday):
+    for scenario in ['baseline', 'project_' + project_id]:
         create_ua_network(scenario, start_time, end_time, weekday)
         net = create_pandana_network(scenario)
         net, zones = read_process_zones(net)
         calculate_indicators(scenario, net, zones)
-    compare_indicators(zones)
+    compare_indicators(zones, 'project_' + project_id)
 
 
 def create_ua_network(scenario, start_time, end_time, weekday):
@@ -275,7 +305,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
 def create_pandana_network(scenario):
     print('Loading Precomputed UrbanAccess Network')
     ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
-    #export_shp(ua_net.net_nodes, ua_net.net_edges)
+    export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -337,22 +367,22 @@ def calculate_indicators(scenario, net, zones):
     zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones):
+def compare_indicators(zones, scenario):
     baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
-    project = pd.read_csv('results/project.csv').set_index('h3_polyfil')
+    project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
     job_cols = [col for col in baseline.columns if 'jobs' in col]
     project = project[job_cols]
     for col in job_cols:
         project = project.rename(columns={col: col+'_p'})
     comparison = baseline[job_cols].join(project)
     for col in job_cols:
-        comparison['pct' + col.replace('jobs', '')] = comparison[col] / comparison['jobs'].sum()
-        comparison['pct' + col.replace('jobs', '') + '_p'] = comparison[col + '_p'] / comparison['jobs_p'].sum()
+        comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
+        comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
         comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
         comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
     comparison = comparison.fillna(0)
     comparison = zones.set_index('h3_polyfil')[['geometry']].join(comparison)
-    comparison.to_file('results.shp')
+    comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 
 
@@ -361,6 +391,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-uj", "--update_jobs", action="store_true", default=False, help="update_jobs")
     parser.add_argument("-ug", "--update_gtfs", action="store_true", default=False, help="update_gtfs")
+    parser.add_argument("-p", "--project_id", type=str, default=False, help="project_id to evaluate")
     parser.add_argument("-st", "--start_time", type=str, default=False, help="start time for_analysis in 24 hr format (ej 07:00)")
     parser.add_argument("-et", "--end_time", type=str, default=False, help="end time for analysis in 24 hr format (ej 08:00)")
     parser.add_argument("-d", "--weekday", type=str, default=False, help="week day for analysis in 24 hr format (ej monday)")
@@ -368,6 +399,7 @@ if __name__ == '__main__':
 
     update_jobs = args.update_jobs if args.update_jobs else False
     update_gtfs = args.update_gtfs if args.update_gtfs else False
+    project_id = args.project_id if args.project_id else '1'
     start_time = args.start_time if args.start_time else '07:00:00'
     end_time = args.end_time if args.end_time else '08:00:00'
     weekday = args.weekday if args.weekday else 'monday'
@@ -376,6 +408,6 @@ if __name__ == '__main__':
         process_update_jobs()
     if update_gtfs:
         process_update_gtfs()
-    run(start_time, end_time, weekday)
+    run(project_id, start_time, end_time, weekday)
 
 

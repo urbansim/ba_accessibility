@@ -1,0 +1,183 @@
+project_id,mode,route_id,direction_id,stop_id_from,stop_id_to,stop_name_from,stop_name_to,from_to,min_since_prev,delta,headway_min,frequency
+1,trenes,5,0,332,229,Retiro,L. De La Torre,332_229,8,8,12,5
+1,trenes,5,0,229,34,L. De La Torre,Belgrano C.,229_34,2,10,12,5
+1,trenes,5,0,34,287,Belgrano C.,Nuñez,34_287,3,13,12,5
+1,trenes,5,0,287,337,Nuñez,Rivadavia,287_337,3,16,12,5
+1,trenes,5,0,337,408,Rivadavia,V. Lopez,337_408,3,19,12,5
+1,trenes,5,0,408,291,V. Lopez,Olivos,408_291,3,22,12,5
+1,trenes,5,0,291,212,Olivos,La Lucila,291_212,2,24,12,5
+1,trenes,5,0,212,262,La Lucila,Martinez,212_262,2,26,12,5
+1,trenes,5,0,262,5,Martinez,Acassuso,262_5,2,28,12,5
+1,trenes,5,0,5,357,Acassuso,San Isidro,5_357,3,31,12,5
+1,trenes,5,0,357,32,San Isidro,Beccar,357_32,3,34,12,5
+1,trenes,5,0,32,409,Beccar,Victoria,32_409,3,37,12,5
+1,trenes,5,0,409,428,Victoria,Virreyes,409_428,2,39,12,5
+1,trenes,5,0,428,355,Virreyes,San Fernando,428_355,2,41,12,5
+1,trenes,5,0,355,65,San Fernando,Carupá,355_65,2,43,12,5
+1,trenes,5,0,65,389,Carupá,Tigre,65_389,5,48,12,5
+1,trenes,5,1,389,65,Tigre,Carupá,389_65,4,4,12,5
+1,trenes,5,1,65,355,Carupá,San Fernando,65_355,2,6,12,5
+1,trenes,5,1,355,428,San Fernando,Virreyes,355_428,2,8,12,5
+1,trenes,5,1,428,409,Virreyes,Victoria,428_409,3,11,12,5
+1,trenes,5,1,409,32,Victoria,Beccar,409_32,3,14,12,5
+1,trenes,5,1,32,357,Beccar,San Isidro,32_357,3,17,12,5
+1,trenes,5,1,357,5,San Isidro,Acassuso,357_5,2,19,12,5
+1,trenes,5,1,5,262,Acassuso,Martinez,5_262,2,21,12,5
+1,trenes,5,1,262,212,Martinez,La Lucila,262_212,2,23,12,5
+1,trenes,5,1,212,291,La Lucila,Olivos,212_291,3,26,12,5
+1,trenes,5,1,291,408,Olivos,V. Lopez,291_408,3,29,12,5
+1,trenes,5,1,408,337,V. Lopez,Rivadavia,408_337,2,31,12,5
+1,trenes,5,1,337,287,Rivadavia,Nuñez,337_287,3,34,12,5
+1,trenes,5,1,287,34,Nuñez,Belgrano C.,287_34,3,37,12,5
+1,trenes,5,1,34,229,Belgrano C.,L. De La Torre,34_229,2,39,12,5
+1,trenes,5,1,229,332,L. De La Torre,Retiro,229_332,9,48,12,5
+1,trenes,33,0,409,118,Victoria,Dr. A. Schweitzer,409_118,5,5,30,2
+1,trenes,33,0,118,29,Dr. A. Schweitzer,Emp. Bancalari,118_29,4,9,30,2
+1,trenes,33,0,29,128,Emp. Bancalari,El Talar,29_128,4,13,30,2
+1,trenes,33,0,128,240,El Talar,Lopez Camelo,128_240,5,18,30,2
+1,trenes,33,0,240,147,Lopez Camelo,Garín,240_147,8,26,30,2
+1,trenes,33,0,147,253,Garín,Maq. Savio,147_253,5,31,30,2
+1,trenes,33,0,253,264,Maq. Savio,Matheu,253_264,8,39,30,2
+1,trenes,33,0,264,436,Matheu,Zelaya,264_436,6,45,30,2
+1,trenes,33,0,436,243,Zelaya,Los Cardales,436_243,14,59,30,2
+1,trenes,33,0,243,61,Los Cardales,Cap. Del Señor,243_61,12,71,30,2
+1,trenes,33,1,61,243,Cap. Del Señor,Los Cardales,61_243,12,12,30,2
+1,trenes,33,1,243,436,Los Cardales,Zelaya,243_436,14,26,30,2
+1,trenes,33,1,436,264,Zelaya,Matheu,436_264,6,32,30,2
+1,trenes,33,1,264,253,Matheu,Maq. Savio,264_253,8,40,30,2
+1,trenes,33,1,253,147,Maq. Savio,Garín,253_147,5,45,30,2
+1,trenes,33,1,147,240,Garín,Lopez Camelo,147_240,8,53,30,2
+1,trenes,33,1,240,128,Lopez Camelo,El Talar,240_128,5,58,30,2
+1,trenes,33,1,128,29,El Talar,Emp. Bancalari,128_29,4,62,30,2
+1,trenes,33,1,29,118,Emp. Bancalari,Dr. A. Schweitzer,29_118,4,66,30,2
+1,trenes,33,1,118,409,Dr. A. Schweitzer,Victoria,118_409,5,71,30,2
+1,trenes,9,0,332,1,Retiro,3 de Febrero,332_1,7,7,10,6
+1,trenes,9,0,1,272,3 de Febrero,Mtro. Carranza,1_272,2,9,10,6
+1,trenes,9,0,272,91,Mtro. Carranza,Colegiales,272_91,3,12,10,6
+1,trenes,9,0,91,35,Colegiales,Belgrano R,91_35,3,15,10,6
+1,trenes,9,0,35,236,Belgrano R,L. M. Drago,35_236,4,19,10,6
+1,trenes,9,0,236,150,L. M. Drago,Gral. Urquiza,236_150,2,21,10,6
+1,trenes,9,0,150,318,Gral. Urquiza,Pueyrredon,150_318,3,24,10,6
+1,trenes,9,0,318,271,Pueyrredon,Miguelete,318_271,3,27,10,6
+1,trenes,9,0,271,360,Miguelete,San Martín,271_360,3,30,10,6
+1,trenes,9,0,360,353,San Martín,San Andrés,360_353,3,33,10,6
+1,trenes,9,0,353,249,San Andrés,Malaver,353_249,2,35,10,6
+1,trenes,9,0,249,412,Malaver,V. Ballester,249_412,2,37,10,6
+1,trenes,9,0,412,79,V. Ballester,Chilavert,412_79,3,40,10,6
+1,trenes,9,0,79,190,Chilavert,J L Suárez,79_190,3,43,10,6
+1,trenes,9,1,190,79,J L Suárez,Chilavert,190_79,3,3,10,6
+1,trenes,9,1,79,412,Chilavert,V. Ballester,79_412,3,6,10,6
+1,trenes,9,1,412,249,V. Ballester,Malaver,412_249,2,8,10,6
+1,trenes,9,1,249,353,Malaver,San Andrés,249_353,2,10,10,6
+1,trenes,9,1,353,360,San Andrés,San Martín,353_360,3,13,10,6
+1,trenes,9,1,360,271,San Martín,Miguelete,360_271,3,16,10,6
+1,trenes,9,1,271,318,Miguelete,Pueyrredon,271_318,3,19,10,6
+1,trenes,9,1,318,150,Pueyrredon,Gral. Urquiza,318_150,3,22,10,6
+1,trenes,9,1,150,236,Gral. Urquiza,L. M. Drago,150_236,2,24,10,6
+1,trenes,9,1,236,35,L. M. Drago,Belgrano R,236_35,4,28,10,6
+1,trenes,9,1,35,91,Belgrano R,Colegiales,35_91,3,31,10,6
+1,trenes,9,1,91,272,Colegiales,Mtro. Carranza,91_272,3,34,10,6
+1,trenes,9,1,272,1,Mtro. Carranza,3 de Febrero,272_1,2,36,10,6
+1,trenes,9,1,1,332,3 de Febrero,Retiro,1_332,7,43,10,6
+1,trenes,7,0,332,1,Retiro,3 de Febrero,332_1,7,7,20,3
+1,trenes,7,0,1,272,3 de Febrero,Mtro. Carranza,1_272,2,9,20,3
+1,trenes,7,0,272,91,Mtro. Carranza,Colegiales,272_91,3,12,20,3
+1,trenes,7,0,91,35,Colegiales,Belgrano R,91_35,3,15,20,3
+1,trenes,7,0,35,90,Belgrano R,Coghlan,35_90,4,19,20,3
+1,trenes,7,0,90,346,Coghlan,L. M. Saavedra,90_346,3,22,20,3
+1,trenes,7,0,346,200,L. M. Saavedra,J. B. Justo,346_200,3,25,20,3
+1,trenes,7,0,200,141,J. B. Justo,Florida,200_141,2,27,20,3
+1,trenes,7,0,141,119,Florida,Dr. Cetrángolo,141_119,2,29,20,3
+1,trenes,7,1,119,273,Dr. Cetrángolo,B. Mitre,119_273,4,33,20,3
+1,trenes,7,1,273,119,B. Mitre,Dr. Cetrángolo,273_119,4,4,20,3
+1,trenes,7,1,119,141,Dr. Cetrángolo,Florida,119_141,2,6,20,3
+1,trenes,7,1,141,200,Florida,J. B. Justo,141_200,2,8,20,3
+1,trenes,7,1,200,346,J. B. Justo,L. M. Saavedra,200_346,3,11,20,3
+1,trenes,7,1,346,90,L. M. Saavedra,Coghlan,346_90,3,14,20,3
+1,trenes,7,1,90,35,Coghlan,Belgrano R,90_35,4,18,20,9
+1,trenes,7,1,35,91,Belgrano R,Colegiales,35_91,3,21,20,9
+1,trenes,7,1,91,272,Colegiales,Mtro. Carranza,91_272,3,24,20,9
+1,trenes,7,1,272,1,Mtro. Carranza,3 de Febrero,272_1,2,26,20,9
+1,trenes,7,1,1,332,3 de Febrero,Retiro,1_332,7,33,20,9
+1,trenes,35,0,190,29,J. L. SUAREZ,BANCALARI,190_29,7,7,30,2
+1,trenes,35,0,29,296,BANCALARI,GRAL. PACHECO,29_296,4,11,30,2
+1,trenes,35,0,296,37,GRAL. PACHECO,BENAVIDEZ,296_37,7,18,30,2
+1,trenes,35,0,37,263,BENAVIDEZ,ING. MASCHWITZ,37_263,6,24,30,2
+1,trenes,35,0,263,130,ING. MASCHWITZ,ESCOBAR,263_130,6,30,30,2
+1,trenes,35,0,130,335,ESCOBAR,RIO LUJAN,130_335,9,39,30,2
+1,trenes,35,0,335,294,RIO LUJAN,ING. OTAMENDI,335_294,6,45,30,2
+1,trenes,35,0,294,55,ING. OTAMENDI,CAMPANA,294_55,8,53,30,2
+1,trenes,35,0,55,204,CAMPANA,Kilometro 83,55_204,4,49,30,2
+1,trenes,35,0,204,434,Kilometro 83,ZARATE,204_434,5,58,30,2
+1,trenes,35,1,434,204,ZARATE,Kilometro 83,434_204,5,5,30,2
+1,trenes,35,1,204,55,Kilometro 83,CAMPANA,204_55,4,9,30,2
+1,trenes,35,1,55,294,CAMPANA,ING. OTAMENDI,55_294,8,17,30,2
+1,trenes,35,1,294,335,ING. OTAMENDI,RIO LUJAN,294_335,6,23,30,2
+1,trenes,35,1,335,130,RIO LUJAN,ESCOBAR,335_130,10,33,30,2
+1,trenes,35,1,130,263,ESCOBAR,ING. MASCHWITZ,130_263,6,39,30,2
+1,trenes,35,1,263,37,ING. MASCHWITZ,BENAVIDEZ,263_37,6,45,30,2
+1,trenes,35,1,37,296,BENAVIDEZ,GRAL. PACHECO,37_296,7,52,30,2
+1,trenes,35,1,296,29,GRAL. PACHECO,BANCALARI,296_29,4,56,30,2
+1,trenes,35,1,29,190,BANCALARI,J. L. SUAREZ,29_190,6,62,30,2
+2,trenes,25,0,93,48,PLAZA CONSTITUCION,BUENOS AIRES,93_48,3.97,4,14,4
+2,trenes,25,0,48,525,BUENOS AIRES,DR. A. SÁENZ,48_525,4.98,9,14,4
+2,trenes,25,0,525,427,DR. A. SÁENZ,VILLA SOLDATI,525_427,5.03,14,14,4
+2,trenes,25,0,427,313,VILLA SOLDATI,PTE. ILLIA,427_313,3.04,17,14,4
+2,trenes,25,0,313,422,PTE. ILLIA,LUGANO,313_422,3.94,21,14,4
+2,trenes,25,0,422,424,LUGANO,VILLA MADERO,422_424,4.06,25,14,4
+2,trenes,25,0,424,260,VILLA MADERO,MNOS. DEL FOURNIER,424_260,2.94,28,14,4
+2,trenes,25,0,260,385,MNOS. DEL FOURNIER,TAPIALES,260_385,5.07,33,14,4
+2,trenes,25,0,385,181,TAPIALES,ING. CASTELLO,385_181,2.92,36,14,4
+2,trenes,25,0,181,321,ING. CASTELLO,QUERANDÍ,181_321,4.01,40,14,4
+2,trenes,25,0,321,209,QUERANDÍ,LAFERRERE,321_209,6.02,46,14,4
+2,trenes,25,0,209,256,LAFERRERE,MARÍA E. DUARTE,209_256,4.00,50,14,4
+2,trenes,25,0,256,178,MARÍA E. DUARTE,PDA. INDEPENDENCIA,256_178,4.00,54,14,4
+2,trenes,25,0,178,154,PDA. INDEPENDENCIA,GONZALEZ CATAN,178_154,4.15,58,14,4
+2,trenes,25,1,154,178,GONZALEZ CATAN,PDA. INDEPENDENCIA,154_178,4.15,4,14,4
+2,trenes,25,1,178,256,PDA. INDEPENDENCIA,MARÍA E. DUARTE,178_256,4.00,8,14,4
+2,trenes,25,1,256,209,MARÍA E. DUARTE,LAFERRERE,256_209,4.00,12,14,4
+2,trenes,25,1,209,321,LAFERRERE,QUERANDÍ,209_321,6.02,18,14,4
+2,trenes,25,1,321,181,QUERANDÍ,ING. CASTELLO,321_181,4.01,22,14,4
+2,trenes,25,1,181,385,ING. CASTELLO,TAPIALES,181_385,2.92,25,14,4
+2,trenes,25,1,385,260,TAPIALES,MNOS. DEL FOURNIER,385_260,5.07,30,14,4
+2,trenes,25,1,260,424,MNOS. DEL FOURNIER,VILLA MADERO,260_424,2.94,33,14,4
+2,trenes,25,1,424,422,VILLA MADERO,LUGANO,424_422,4.06,37,14,4
+2,trenes,25,1,422,313,LUGANO,PTE. ILLIA,422_313,3.94,41,14,4
+2,trenes,25,1,313,427,PTE. ILLIA,VILLA SOLDATI,313_427,3.04,44,14,4
+2,trenes,25,1,427,525,VILLA SOLDATI,DR. A. SÁENZ,427_525,5.03,49,14,4
+2,trenes,25,1,525,48,DR. A. SÁENZ,BUENOS AIRES,525_48,4.98,54,14,4
+2,trenes,25,1,48,93,BUENOS AIRES,PLAZA CONSTITUCION,48_93,3.97,58,14,4
+2,trenes,21,0,93,48,PLAZA CONSTITUCION,BUENOS AIRES,93_48,3.98,4,14,4
+2,trenes,21,0,48,121,BUENOS AIRES,DR. A. SÁENZ,48_121,4.98,9,14,4
+2,trenes,21,0,121,427,DR. A. SÁENZ,VILLA SOLDATI,121_427,5.03,14,14,4
+2,trenes,21,0,427,313,VILLA SOLDATI,PTE. ILLIA,427_313,3.04,17,14,4
+2,trenes,21,0,313,422,PTE. ILLIA,LUGANO,313_422,3.94,21,14,4
+2,trenes,21,0,422,424,LUGANO,VILLA MADERO,422_424,4.06,25,14,4
+2,trenes,21,0,424,260,VILLA MADERO,MNOS. DEL FOURNIER,424_260,2.94,28,14,4
+2,trenes,21,0,260,385,MNOS. DEL FOURNIER,TAPIALES,260_385,5.07,33,14,4
+2,trenes,21,0,385,12,TAPIALES,ALDO BONZI,385_12,4.00,37,14,4
+2,trenes,21,0,12,354,ALDO BONZI,M. S. MENDEVILLE,12_354,2.83,40,14,4
+2,trenes,21,0,354,195,M. S. MENDEVILLE,JOSÉ INGENIEROS,354_195,3.12,43,14,4
+2,trenes,21,0,195,203,JOSÉ INGENIEROS,JUSTO VILLEGAS,195_203,3.03,46,14,4
+2,trenes,21,0,203,184,JUSTO VILLEGAS,ISIDRO CASANOVA,203_184,4.93,51,14,4
+2,trenes,21,0,184,325,ISIDRO CASANOVA,RAFAEL CASTILLO,184_325,5.09,56,14,4
+2,trenes,21,0,325,270,RAFAEL CASTILLO,MERLO GÓMEZ,325_270,3.09,59,14,4
+2,trenes,21,0,270,232,MERLO GÓMEZ,LIBERTAD,270_232,5.84,65,14,4
+2,trenes,21,0,232,259,LIBERTAD,M. C. G. BELGRANO,232_259,5.67,71,14,4
+2,trenes,21,1,259,232,M. C. G. BELGRANO,LIBERTAD,259_232,5.67,6,14,4
+2,trenes,21,1,232,270,LIBERTAD,MERLO GÓMEZ,232_270,5.84,12,14,4
+2,trenes,21,1,270,325,MERLO GÓMEZ,RAFAEL CASTILLO,270_325,3.09,15,14,4
+2,trenes,21,1,325,184,RAFAEL CASTILLO,ISIDRO CASANOVA,325_184,5.09,20,14,4
+2,trenes,21,1,184,203,ISIDRO CASANOVA,JUSTO VILLEGAS,184_203,4.93,25,14,4
+2,trenes,21,1,203,195,JUSTO VILLEGAS,JOSÉ INGENIEROS,203_195,3.03,28,14,4
+2,trenes,21,1,195,354,JOSÉ INGENIEROS,M. S. MENDEVILLE,195_354,3.12,31,14,4
+2,trenes,21,1,354,12,M. S. MENDEVILLE,ALDO BONZI,354_12,2.83,34,14,4
+2,trenes,21,1,12,385,ALDO BONZI,TAPIALES,12_385,4.00,38,14,4
+2,trenes,21,1,385,260,TAPIALES,MNOS. DEL FOURNIER,385_260,5.07,43,14,4
+2,trenes,21,1,260,424,MNOS. DEL FOURNIER,VILLA MADERO,260_424,2.94,46,14,4
+2,trenes,21,1,424,422,VILLA MADERO,LUGANO,424_422,4.06,50,14,4
+2,trenes,21,1,422,313,LUGANO,PTE. ILLIA,422_313,3.94,54,14,4
+2,trenes,21,1,313,427,PTE. ILLIA,VILLA SOLDATI,313_427,3.04,57,14,4
+2,trenes,21,1,427,121,VILLA SOLDATI,DR. A. SÁENZ,427_121,5.03,62,14,4
+2,trenes,21,1,121,48,DR. A. SÁENZ,BUENOS AIRES,121_48,4.98,67,14,4
+2,trenes,21,1,48,93,BUENOS AIRES,PLAZA CONSTITUCION,48_93,3.98,71,14,4

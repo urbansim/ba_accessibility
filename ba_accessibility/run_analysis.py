@@ -313,7 +313,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
 def create_pandana_network(ua_net, scenario):
     print('Loading Precomputed UrbanAccess Network')
     ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
-    export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
+    #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
     s_time = time.time()

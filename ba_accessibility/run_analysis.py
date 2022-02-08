@@ -9,6 +9,7 @@ import pandana as pdna
 import geopandas as gpd
 import urbanaccess as ua
 from geopandas import GeoDataFrame
+from scipy.spatial import distance
 from shapely.geometry import Point
 from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
@@ -16,20 +17,23 @@ import h3pandas
 
 def process_update_jobs():
     s_time = time.time()
-    zones = gpd.read_file('data/original/jobs/Empleo.shp')
+    zones = gpd.read_file('data/original/jobs/empleo_ejemplo.shp')
     resolution=8 #10
-    hexagons = zones.h3.polyfill_resample(resolution)
-    hexagons = hexagons.to_crs(22192)
-    hexagons['hex_area'] = hexagons.geometry.area
-    zone_area = hexagons.groupby('ID')['hex_area'].sum().reset_index()
-    zone_area = zone_area.rename(columns={'hex_area': 'zone_area'})
-    hexagons = hexagons.reset_index().merge(zone_area, on='ID', how='left')
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
-    for col in job_cols:
-        hexagons[col] = round(hexagons[col].fillna(0).astype('int') * hexagons['hex_area'] / hexagons['zone_area'])
     if not os.path.exists('data/processed/jobs'):
         os.makedirs('./data/processed/jobs')
-    hexagons[['h3_polyfill', 'ID', 'geometry'] + job_cols].to_file('data/processed/jobs/jobs_hexagons.shp')
+    if divide_zones == True:
+        hexagons = zones.h3.polyfill_resample(resolution)
+        hexagons = hexagons.to_crs(22192)
+        hexagons['hex_area'] = hexagons.geometry.area
+        zone_area = hexagons.groupby('ID')['hex_area'].sum().reset_index()
+        zone_area = zone_area.rename(columns={'hex_area': 'zone_area'})
+        hexagons = hexagons.reset_index().merge(zone_area, on='ID', how='left')
+        for col in job_cols:
+            hexagons[col] = round(hexagons[col].fillna(0).astype('int') * hexagons['hex_area'] / hexagons['zone_area'])
+        hexagons[['h3_polyfill', 'ID', 'geometry'] + job_cols].to_file('data/processed/jobs/jobs.shp')
+    else:
+        zones[['ID', 'geometry'] + job_cols].to_file('data/processed/jobs/jobs.shp')
     print('Took {:,.2f} seconds to process jobs shapefile'.format(time.time() - s_time))
 
 
@@ -52,7 +56,7 @@ def process_update_gtfs():
 
 
 def copy_baseline_files():
-    for mode in ['subte', 'trenes', 'colectivos']:
+    for mode in ['trenes']: #['subte', 'trenes', 'colectivos']:
         original_path = ('data/original/gtfs_baseline/%s' % (mode))
         processed_path = ('data/processed/gtfs_baseline/%s' % (mode))
         agencies = pd.read_csv('%s/agency.txt' % original_path)
@@ -275,9 +279,11 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
 
 def run(project_id, start_time, end_time, weekday):
     for scenario in ['baseline', 'project_' + project_id]:
-        create_ua_network(scenario, start_time, end_time, weekday)
-        net = create_pandana_network(scenario)
-        net, zones = read_process_zones(net)
+        ua_net = create_ua_network(scenario, start_time, end_time, weekday)
+        net = create_pandana_network(ua_net, scenario)
+        net, zones, nodes_clean = read_process_zones(net)
+        #travel_data = calculate_distance_matrix(zones, 'ID')
+        #travel_data = calculate_pandana_distances(travel_data, net, nodes_clean, zones, 'ID')
         calculate_indicators(scenario, net, zones)
     compare_indicators(zones, 'project_' + project_id)
 
@@ -286,6 +292,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
     print('Creating UrbanAccess Network')
     gtfs_path = './data/processed/gtfs_%s' % scenario
     bbox = (-59.3177426256,-35.3267410094,-57.6799695705,-34.1435770646)
+    bbox= (-59.001938,-34.623898,-58.377333,-34.141375) #Ejemplo
     nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
     ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
     loaded_feeds = ua.gtfs.load.gtfsfeed_to_df(gtfsfeed_path=gtfs_path, bbox=bbox, validation=True,
@@ -300,9 +307,10 @@ def create_ua_network(scenario, start_time, end_time, weekday):
     loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
     ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
     ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='final_%s_net.h5' % scenario, overwrite_key=True)
+    return ua.ua_network
 
 
-def create_pandana_network(scenario):
+def create_pandana_network(ua_net, scenario):
     print('Loading Precomputed UrbanAccess Network')
     ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
     export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
@@ -317,6 +325,46 @@ def create_pandana_network(scenario):
                        twoway=False)
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     return net
+
+
+def calculate_distance_matrix(df, id_col):
+    coords = [coords for coords in zip(df['y_proj'], df['x_proj'])]
+    distances = distance.cdist(coords, coords, 'euclidean')
+    df = pd.DataFrame(distances, columns=df[id_col].unique(), index=df[id_col].unique())
+    df = df.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
+    return df
+
+
+def calculate_pandana_distances(travel_data, net, nodes, df, df_id):
+    df_from = df.reset_index().rename(columns={df_id: 'from_id', 'node_id': 'node_from'})[['from_id', 'node_from']]
+    df_to = df.reset_index().rename(columns={df_id: 'to_id', 'node_id': 'node_to'})[['to_id', 'node_to']]
+    travel_data = travel_data.merge(df_from, on='from_id', how='left')
+    travel_data = travel_data.merge(df_to, on='to_id', how='left')
+    travel_data['pandana_distance'] = net.shortest_path_lengths(list(travel_data['node_from']), list(travel_data['node_to']))
+    if travel_data['pandana_distance'].max() > 4000000:
+        print('WARNING: NO PATH BETWEEN SOME OD PAIRS')
+    print('Pandana shortest paths done')
+    #net.shortest_path(10632, 11260)
+    travel_data = add_connectors(nodes, df, df_id, travel_data)
+    return travel_data
+
+
+def add_connectors(nodes, df, df_id, travel_data):
+    nodes = nodes.rename(columns={'y_proj': 'y_node', 'x_proj': 'x_node'})
+    df = df.merge(nodes[['y_node', 'x_node']], left_on='node_id', right_index=True, how='left')
+    df_coords = [coords for coords in zip(df['y_proj'], df['x_proj'])]
+    node_coords = [coords for coords in zip(df['y_node'], df['x_node'])]
+    print('Adding connectors')
+    df['conn_dist'] = [distance.cdist(df_coords, node_coords, 'euclidean')[idx][idx] for idx in df.index]
+    print('Adding connectors done')
+    df = df[[df_id, 'conn_dist']]
+    df_from = df.rename(columns={df_id: 'from_id', 'conn_dist': 'conn_dist_from'})
+    df_to = df.rename(columns={df_id: 'to_id', 'conn_dist': 'conn_dist_to'})
+    travel_data = travel_data.merge(df_from, on='from_id', how='left')
+    travel_data = travel_data.merge(df_to, on='to_id', how='left')
+    travel_data.loc[travel_data['from_id'] != travel_data['to_id'], 'pandana_distance'] = \
+        travel_data['pandana_distance'] + travel_data['conn_dist_from'] + travel_data['conn_dist_to']
+    return travel_data
 
 
 def export_shp(nodes, edges, name_shp='test', df=None):
@@ -339,7 +387,7 @@ def export_shp(nodes, edges, name_shp='test', df=None):
 
 
 def read_process_zones(net):
-    zones = gpd.read_file('data/processed/jobs/jobs_hexagons.shp')
+    zones = gpd.read_file('data/processed/jobs/jobs.shp')
     zones['centroid'] = zones['geometry'].centroid
     zones = zones.set_geometry('centroid')
     zones = zones.rename(columns={'geometry': 'polygon_geometry', 'centroid': 'geometry'})
@@ -347,13 +395,21 @@ def read_process_zones(net):
     zones = zones.to_crs(4326)
     zones['x'] = zones.geometry.x
     zones['y'] = zones.geometry.y
-    zones['node_id'] = net.get_node_ids(zones['x'], zones['y'])
-    zones = zones.to_crs(22192)
+    remove_nodes = set(net.low_connectivity_nodes(impedance=10, count=10, imp_name="weight"))
+    edges_clean = net.edges_df[~(net.edges_df['from'].isin(remove_nodes) | net.edges_df['to'].isin(remove_nodes))]
+    nodes_clean = net.nodes_df[(net.nodes_df.index.isin(edges_clean['from'])) | (net.nodes_df.index.isin(edges_clean['to']))]
+    filtered_net = pdna.Network(nodes_clean["x"], nodes_clean["y"], edges_clean["from"], edges_clean["to"], edges_clean[["weight"]], twoway=False)
+    zones['node_id'] = filtered_net.get_node_ids(zones['x'], zones['y'])
     zones = zones.rename(columns={'geometry': 'centroid', 'polygon_geometry': 'geometry'})
     zones = zones.set_geometry('geometry').drop(columns='centroid')
+    zones = zones.to_crs(22192)
+    zones['x_proj'] = zones.geometry.centroid.x
+    zones['y_proj'] = zones.geometry.centroid.y
     net.set(zones.node_id, variable=zones.jobs, name='jobs')
     zones = zones.set_index('node_id')
-    return net, zones
+    #nodes_df = net.nodes_df.reset_index().rename(columns={'id_int':'id'})
+    #export_shp(nodes_df, net.edges_df, name_shp='ejemplo', df=zones)
+    return net, zones, nodes_clean
 
 
 def calculate_indicators(scenario, net, zones):
@@ -364,12 +420,17 @@ def calculate_indicators(scenario, net, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    #zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones, scenario):
-    baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
-    project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
+def compare_indicators(zones, scenario, divide_zones=False):
+    if divide_zones==True:
+        baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
+        project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
+    else:
+        baseline = pd.read_csv('results/baseline.csv').set_index('ID')
+        project = pd.read_csv('results/%s.csv' % scenario).set_index('ID')
     job_cols = [col for col in baseline.columns if 'jobs' in col]
     project = project[job_cols]
     for col in job_cols:
@@ -381,7 +442,10 @@ def compare_indicators(zones, scenario):
         comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
         comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
     comparison = comparison.fillna(0)
-    comparison = zones.set_index('h3_polyfil')[['geometry']].join(comparison)
+    if divide_zones == True:
+        comparison = zones.set_index('h3_polyfil')[['geometry']].join(comparison)
+    else:
+        comparison = zones.set_index('ID')[['geometry']].join(comparison)
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

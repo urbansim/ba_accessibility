@@ -15,7 +15,7 @@ from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
 import h3pandas
 
-def process_update_jobs():
+def process_update_jobs(divide_zones = False):
     s_time = time.time()
     zones = gpd.read_file('data/original/jobs/empleo_ejemplo.shp')
     resolution=8 #10

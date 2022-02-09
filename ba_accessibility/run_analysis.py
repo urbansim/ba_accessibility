@@ -437,10 +437,12 @@ def compare_indicators(zones, scenario, divide_zones=True):
         project = project.rename(columns={col: col+'_p'})
     comparison = baseline[job_cols].join(project)
     for col in job_cols:
-        comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
-        comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
         comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
         comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
+        comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
+        comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
+        comparison['pct' + col.replace('jobs', '') + '_d'] = comparison['pct' + col.replace('jobs', '') + '_p'] - comparison['pct' + col.replace('jobs', '')]
+    comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.fillna(0)
     if divide_zones == True:
         comparison = zones.set_index('h3_polyfil')[['geometry']].join(comparison)

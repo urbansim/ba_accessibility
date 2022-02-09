@@ -15,9 +15,9 @@ from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
 import h3pandas
 
-def process_update_jobs(divide_zones = False):
+def process_update_jobs(divide_zones = True):
     s_time = time.time()
-    zones = gpd.read_file('data/original/jobs/empleo_ejemplo.shp')
+    zones = gpd.read_file('data/original/jobs/Empleo.shp')
     resolution=8 #10
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
     if not os.path.exists('data/processed/jobs'):
@@ -261,7 +261,8 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
                 stop_times_route['departure_min'] = start_arrival_time
                 stop_times_route['prev_stop_id'] = stop_times_route['stop_id'].shift().fillna(0).astype('int')
                 stop_times_route['from_to'] = stop_times_route['prev_stop_id'].astype('str') + '_'+ stop_times_route['stop_id'].astype('str')
-                stop_times_route = stop_times_route.merge(travel_time_updates[['from_to', 'delta']], on=['from_to'], how='left')
+                tt_updates_route = travel_time_updates[travel_time_updates['route_id']==route]
+                stop_times_route = stop_times_route.merge(tt_updates_route[['from_to', 'delta']], on=['from_to'], how='left')
                 stop_times_route['arrival_time'] = stop_times_route['arrival_min'] + stop_times_route['delta'].fillna(0) * 60
                 stop_times_route['departure_time'] = stop_times_route['departure_min'] + stop_times_route['delta'].fillna(0) * 60
                 stop_times_route['stop_duration'] = 0
@@ -292,7 +293,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
     print('Creating UrbanAccess Network')
     gtfs_path = './data/processed/gtfs_%s' % scenario
     bbox = (-59.3177426256,-35.3267410094,-57.6799695705,-34.1435770646)
-    bbox= (-59.001938,-34.623898,-58.377333,-34.141375) #Ejemplo
+    #bbox= (-59.001938,-34.623898,-58.377333,-34.141375) #Ejemplo
     nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
     ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
     loaded_feeds = ua.gtfs.load.gtfsfeed_to_df(gtfsfeed_path=gtfs_path, bbox=bbox, validation=True,
@@ -312,7 +313,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
 
 def create_pandana_network(ua_net, scenario):
     print('Loading Precomputed UrbanAccess Network')
-    ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
+    #ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
     #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
@@ -344,7 +345,6 @@ def calculate_pandana_distances(travel_data, net, nodes, df, df_id):
     if travel_data['pandana_distance'].max() > 4000000:
         print('WARNING: NO PATH BETWEEN SOME OD PAIRS')
     print('Pandana shortest paths done')
-    #net.shortest_path(10632, 11260)
     travel_data = add_connectors(nodes, df, df_id, travel_data)
     return travel_data
 
@@ -420,11 +420,11 @@ def calculate_indicators(scenario, net, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    #zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
-    zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    #zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones, scenario, divide_zones=False):
+def compare_indicators(zones, scenario, divide_zones=True):
     if divide_zones==True:
         baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
         project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')

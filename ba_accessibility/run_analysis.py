@@ -151,6 +151,12 @@ def expand_stop_times(frequencies, stop_times):
         selected_trip_ids = trip_ids[lower_bound:upper_bound]
         selected_frequencies = frequencies[frequencies['trip_id'].isin(selected_trip_ids)]
         selected_stop_times = stop_times[stop_times['trip_id'].isin(selected_trip_ids)]
+
+        #min_arrival_time = stop_times.arrival_time.min()
+        min_arrival_time = frequencies.groupby('route_id').start_time.min().reset_index()
+        min_arrival_time = min_arrival_time.rename(columns={'start_time': 'min_arrival_time'})
+        selected_frequencies = selected_frequencies.merge(min_arrival_time, on='route_id', how='left')
+
         df = selected_frequencies.merge(selected_stop_times, on='trip_id', how='left')
         df['trip_range'] = df['end_time'] - df['start_time']
         df['number_of_trips'] = (df['trip_range'] / df['headway_secs']).astype('int')
@@ -162,8 +168,7 @@ def expand_stop_times(frequencies, stop_times):
         df['trip_repetition'] = df['trip_repetition'].interpolate().astype('int')
         df['trip_suffix'] = df['start_time_idx']*1000 + df['trip_repetition'] + 1
         df['trip_suffix'] = df['trip_suffix'].astype('int')
-        min_arrival_time = stop_times.arrival_time.min()
-        df['arrival_time'] = df['start_time'] + df['headway_secs'] * df['trip_repetition'] + df['arrival_time'] - min_arrival_time
+        df['arrival_time'] = df['start_time'] + df['headway_secs'] * df['trip_repetition'] + df['arrival_time'] - df['min_arrival_time'] #min_arrival_time
         df['departure_time'] = df['arrival_time'] + df['stop_duration']
         df['arrival_time'] = pd.to_datetime(df['arrival_time'].round(), unit='s').dt.time
         df['departure_time'] = pd.to_datetime(df['departure_time'].round(), unit='s').dt.time

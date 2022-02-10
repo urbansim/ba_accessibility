@@ -56,7 +56,7 @@ def process_update_gtfs():
 
 
 def copy_baseline_files():
-    for mode in ['trenes']: #['subte', 'trenes', 'colectivos']:
+    for mode in ['subte', 'trenes', 'colectivos']:
         original_path = ('data/original/gtfs_baseline/%s' % (mode))
         processed_path = ('data/processed/gtfs_baseline/%s' % (mode))
         agencies = pd.read_csv('%s/agency.txt' % original_path)
@@ -153,9 +153,9 @@ def expand_stop_times(frequencies, stop_times):
         selected_stop_times = stop_times[stop_times['trip_id'].isin(selected_trip_ids)]
 
         #min_arrival_time = stop_times.arrival_time.min()
-        min_arrival_time = frequencies.groupby('route_id').start_time.min().reset_index()
-        min_arrival_time = min_arrival_time.rename(columns={'start_time': 'min_arrival_time'})
-        selected_frequencies = selected_frequencies.merge(min_arrival_time, on='route_id', how='left')
+        min_arrival_time = selected_stop_times.groupby('trip_id').arrival_time.min().reset_index()
+        min_arrival_time = min_arrival_time.rename(columns={'arrival_time': 'min_arrival_time'})
+        selected_stop_times = selected_stop_times.merge(min_arrival_time, on='trip_id', how='left')
 
         df = selected_frequencies.merge(selected_stop_times, on='trip_id', how='left')
         df['trip_range'] = df['end_time'] - df['start_time']

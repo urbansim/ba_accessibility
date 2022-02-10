@@ -142,42 +142,43 @@ def expand_stop_times(frequencies, stop_times):
     unique_trips = []
     lower_bound = 0
     prev_progress = 0
-    for i in range(0, num_batches):
+    for i in range(0, num_batches + 1):
         percentage_progress = 100 * i/num_batches
         if (percentage_progress - prev_progress) > 10:
             prev_progress = percentage_progress
             print('    ', round(percentage_progress), '% progress')
         upper_bound = min((i+1)*len_batch, len(trip_ids))
-        selected_trip_ids = trip_ids[lower_bound:upper_bound]
-        selected_frequencies = frequencies[frequencies['trip_id'].isin(selected_trip_ids)]
-        selected_stop_times = stop_times[stop_times['trip_id'].isin(selected_trip_ids)]
+        if upper_bound > lower_bound:
+            selected_trip_ids = trip_ids[lower_bound:upper_bound]
+            selected_frequencies = frequencies[frequencies['trip_id'].isin(selected_trip_ids)]
+            selected_stop_times = stop_times[stop_times['trip_id'].isin(selected_trip_ids)]
 
-        #min_arrival_time = stop_times.arrival_time.min()
-        min_arrival_time = selected_stop_times.groupby('trip_id').arrival_time.min().reset_index()
-        min_arrival_time = min_arrival_time.rename(columns={'arrival_time': 'min_arrival_time'})
-        selected_stop_times = selected_stop_times.merge(min_arrival_time, on='trip_id', how='left')
+            #min_arrival_time = stop_times.arrival_time.min()
+            min_arrival_time = selected_stop_times.groupby('trip_id').arrival_time.min().reset_index()
+            min_arrival_time = min_arrival_time.rename(columns={'arrival_time': 'min_arrival_time'})
+            selected_stop_times = selected_stop_times.merge(min_arrival_time, on='trip_id', how='left')
 
-        df = selected_frequencies.merge(selected_stop_times, on='trip_id', how='left')
-        df['trip_range'] = df['end_time'] - df['start_time']
-        df['number_of_trips'] = (df['trip_range'] / df['headway_secs']).astype('int')
-        df = df.reindex(np.repeat(df.index, df.number_of_trips)).reset_index(drop=True)
-        df = df.sort_values(by=['trip_id', 'start_time', 'stop_sequence'])
-        df['trip_start_sequence'] = df['trip_id'] + df['start_time'].astype('str') + df['stop_sequence'].astype('str')
-        df.loc[~df['trip_start_sequence'].eq(df['trip_start_sequence'].shift()), 'trip_repetition'] = 0
-        df.loc[~df['trip_start_sequence'].eq(df['trip_start_sequence'].shift(-1)), 'trip_repetition'] = df['number_of_trips'] - 1
-        df['trip_repetition'] = df['trip_repetition'].interpolate().astype('int')
-        df['trip_suffix'] = df['start_time_idx']*1000 + df['trip_repetition'] + 1
-        df['trip_suffix'] = df['trip_suffix'].astype('int')
-        df['arrival_time'] = df['start_time'] + df['headway_secs'] * df['trip_repetition'] + df['arrival_time'] - df['min_arrival_time'] #min_arrival_time
-        df['departure_time'] = df['arrival_time'] + df['stop_duration']
-        df['arrival_time'] = pd.to_datetime(df['arrival_time'].round(), unit='s').dt.time
-        df['departure_time'] = pd.to_datetime(df['departure_time'].round(), unit='s').dt.time
-        df['complete_trip_id'] = df['trip_id'] + '_' + df['trip_suffix'].astype('str')
-        df = df.sort_values(by=['trip_id', 'trip_suffix'])
-        df['trip_id'] = df['complete_trip_id']
-        unique_trips += df['trip_id'].unique().tolist()
-        results[i] = df
-        lower_bound = upper_bound
+            df = selected_frequencies.merge(selected_stop_times, on='trip_id', how='left')
+            df['trip_range'] = df['end_time'] - df['start_time']
+            df['number_of_trips'] = (df['trip_range'] / df['headway_secs']).astype('int')
+            df = df.reindex(np.repeat(df.index, df.number_of_trips)).reset_index(drop=True)
+            df = df.sort_values(by=['trip_id', 'start_time', 'stop_sequence'])
+            df['trip_start_sequence'] = df['trip_id'] + df['start_time'].astype('str') + df['stop_sequence'].astype('str')
+            df.loc[~df['trip_start_sequence'].eq(df['trip_start_sequence'].shift()), 'trip_repetition'] = 0
+            df.loc[~df['trip_start_sequence'].eq(df['trip_start_sequence'].shift(-1)), 'trip_repetition'] = df['number_of_trips'] - 1
+            df['trip_repetition'] = df['trip_repetition'].interpolate().astype('int')
+            df['trip_suffix'] = df['start_time_idx']*1000 + df['trip_repetition'] + 1
+            df['trip_suffix'] = df['trip_suffix'].astype('int')
+            df['arrival_time'] = df['start_time'] + df['headway_secs'] * df['trip_repetition'] + df['arrival_time'] - df['min_arrival_time'] #min_arrival_time
+            df['departure_time'] = df['arrival_time'] + df['stop_duration']
+            df['arrival_time'] = pd.to_datetime(df['arrival_time'].round(), unit='s').dt.time
+            df['departure_time'] = pd.to_datetime(df['departure_time'].round(), unit='s').dt.time
+            df['complete_trip_id'] = df['trip_id'] + '_' + df['trip_suffix'].astype('str')
+            df = df.sort_values(by=['trip_id', 'trip_suffix'])
+            df['trip_id'] = df['complete_trip_id']
+            unique_trips += df['trip_id'].unique().tolist()
+            results[i] = df
+            lower_bound = upper_bound
     print('Concatenating Batches')
     stop_times = pd.concat(list(results.values()))
     print('Stop times expansion done')

@@ -33,17 +33,29 @@
 1,trenes,5,1,34,Belgrano C.,15
 1,trenes,5,1,229,L. De La Torre,16
 1,trenes,5,1,332,Retiro,17
-1,trenes,33,0,409,Victoria,1
-1,trenes,33,0,118,Dr. A. Schweitzer,2
-1,trenes,33,0,29,Emp. Bancalari,3
-1,trenes,33,0,128,El Talar,4
-1,trenes,33,0,240,Lopez Camelo,5
-1,trenes,33,0,147,Garín,6
-1,trenes,33,0,253,Maq. Savio,7
-1,trenes,33,0,264,Matheu,8
-1,trenes,33,0,436,Zelaya,9
-1,trenes,33,0,243,Los Cardales,10
-1,trenes,33,0,61,Cap. Del Señor,11
+1,trenes,33,0,332,Retiro,1
+1,trenes,33,0,229,L. De La Torre,2
+1,trenes,33,0,34,Belgrano C.,3
+1,trenes,33,0,287,Nuñez,4
+1,trenes,33,0,337,Rivadavia,5
+1,trenes,33,0,408,V. Lopez,6
+1,trenes,33,0,291,Olivos,7
+1,trenes,33,0,212,La Lucila,8
+1,trenes,33,0,262,Martinez,9
+1,trenes,33,0,5,Acassuso,10
+1,trenes,33,0,357,San Isidro,11
+1,trenes,33,0,32,Beccar,12
+1,trenes,33,0,409,Victoria,12
+1,trenes,33,0,118,Dr. A. Schweitzer,12
+1,trenes,33,0,29,Emp. Bancalari,12
+1,trenes,33,0,128,El Talar,12
+1,trenes,33,0,240,Lopez Camelo,12
+1,trenes,33,0,147,Garín,12
+1,trenes,33,0,253,Maq. Savio,12
+1,trenes,33,0,264,Matheu,12
+1,trenes,33,0,436,Zelaya,12
+1,trenes,33,0,243,Los Cardales,12
+1,trenes,33,0,61,Cap. Del Señor,12
 1,trenes,33,1,61,Cap. Del Señor,1
 1,trenes,33,1,243,Los Cardales,2
 1,trenes,33,1,436,Zelaya,3
@@ -55,6 +67,18 @@
 1,trenes,33,1,29,Emp. Bancalari,9
 1,trenes,33,1,118,Dr. A. Schweitzer,10
 1,trenes,33,1,409,Victoria,11
+1,trenes,33,1,32,Beccar,12
+1,trenes,33,1,357,San Isidro,13
+1,trenes,33,1,5,Acassuso,14
+1,trenes,33,1,262,Martinez,15
+1,trenes,33,1,212,La Lucila,16
+1,trenes,33,1,291,Olivos,17
+1,trenes,33,1,408,V. Lopez,18
+1,trenes,33,1,337,Rivadavia,19
+1,trenes,33,1,287,Nuñez,20
+1,trenes,33,1,34,Belgrano C.,21
+1,trenes,33,1,229,L. De La Torre,22
+1,trenes,33,1,332,Retiro,23
 1,trenes,9,0,332,Retiro,1
 1,trenes,9,0,1,3 de Febrero,2
 1,trenes,9,0,272,Mtro. Carranza,3

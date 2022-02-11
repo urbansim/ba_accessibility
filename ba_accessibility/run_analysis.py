@@ -15,7 +15,7 @@ from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
 import h3pandas
 
-def process_update_jobs(divide_zones = True):
+def process_update_jobs(divide_zones = False):
     s_time = time.time()
     zones = gpd.read_file('data/original/jobs/Empleo.shp')
     resolution=8 #10
@@ -56,7 +56,7 @@ def process_update_gtfs():
 
 
 def copy_baseline_files():
-    for mode in ['subte', 'trenes', 'colectivos']:
+    for mode in ['trenes']: #['subte', 'trenes', 'colectivos']:
         original_path = ('data/original/gtfs_baseline/%s' % (mode))
         processed_path = ('data/processed/gtfs_baseline/%s' % (mode))
         agencies = pd.read_csv('%s/agency.txt' % original_path)
@@ -312,8 +312,18 @@ def create_ua_network(scenario, start_time, end_time, weekday):
                                        time_aware=True,
                                        simplify=True)
     loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
-    ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
-    ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='final_%s_net.h5' % scenario, overwrite_key=True)
+    if scenario == 'baseline':
+        nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
+        ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
+        ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
+        ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='baseline_net.h5', overwrite_key=True)
+    else:
+        baseline_net = ua.network.load_network(filename='baseline_net.h5')
+        ua.network.ua_network.osm_edges = baseline_net.osm_edges
+        ua.network.ua_network.osm_nodes = baseline_net.osm_nodes
+        ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
+    #ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
+    #ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='final_%s_net.h5' % scenario, overwrite_key=True)
     return ua.ua_network
 
 
@@ -426,11 +436,11 @@ def calculate_indicators(scenario, net, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
-    #zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    #zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones, scenario, divide_zones=True):
+def compare_indicators(zones, scenario, divide_zones=False):
     if divide_zones==True:
         baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
         project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')

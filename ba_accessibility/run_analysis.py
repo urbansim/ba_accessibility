@@ -312,7 +312,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
                                        time_aware=True,
                                        simplify=True)
     loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
-    if scenario == 'baseline':
+    if not os.path.isfile('data/baseline_net.h5'):
         nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
         ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
         ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)

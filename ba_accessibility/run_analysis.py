@@ -330,7 +330,7 @@ def create_ua_network(scenario, start_time, end_time, weekday):
 def create_pandana_network(ua_net, scenario):
     print('Loading Precomputed UrbanAccess Network')
     #ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
-    #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
+    export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -393,8 +393,8 @@ def export_shp(nodes, edges, name_shp='test', df=None):
     nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
     edges_gdf = gpd.GeoDataFrame(edges, crs={'init': 'epsg:4326'}, geometry='geometry')
     nodes_gdf = gpd.GeoDataFrame(nodes, crs={'init': 'epsg:4326'}, geometry='geometry')
-
-    nodes_gdf.to_file(name_shp + '_nodes.shp')
+    edges_gdf = edges_gdf[edges_gdf['net_type_x'].isin(['transit', 'osm to transit'])]
+    #nodes_gdf.to_file(name_shp + '_nodes.shp')
     edges_gdf.to_file(name_shp + '_edges.shp')
     if df is not None:
         df['geometry'] = [Point(xy) for xy in zip(df['x'], df['y'])]

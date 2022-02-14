@@ -17,7 +17,7 @@ import h3pandas
 
 def process_update_jobs(divide_zones = False):
     s_time = time.time()
-    zones = gpd.read_file('data/original/jobs/empleo_ejemplo2.shp')
+    zones = gpd.read_file('data/original/jobs/Empleo.shp')
     resolution=8 #10
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
     if not os.path.exists('data/processed/jobs'):
@@ -290,7 +290,7 @@ def run(project_id, start_time, end_time, weekday):
     for scenario in ['baseline', 'project_' + project_id]:
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
         net, zones_net = create_pandana_network(ua_net, scenario, zones)
-        travel_data = calculate_distance_matrix(zones, 'ID')
+        travel_data = calculate_distance_matrix(zones_net, 'ID')
         travel_data = calculate_pandana_distances(travel_data, net, zones_net, 'ID')
         travel_data.to_csv('travel_data_%s.csv' % scenario)
         breakpoint()
@@ -315,7 +315,7 @@ def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekda
 
 def create_pandana_network(ua_net, scenario, zones):
     print('Loading Precomputed UrbanAccess Network')
-    export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
+    #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -360,12 +360,12 @@ def export_shp(nodes, edges, name_shp='test', df=None):
     nodes_to = nodes.rename(columns={'id': 'to', 'x': 'x_to', 'y': 'y_to'})
     edges = edges.merge(nodes_from, on='from', how='left')
     edges = edges.merge(nodes_to, on='to', how='left')
-    edges = edges[edges['net_type_x'].isin(['transit', 'osm to transit'])]
+    #edges = edges[edges['net_type_x'].isin(['transit', 'osm to transit'])]
     edges['geometry'] = [LineString([(x1, y1), (x2, y2)]) for x1, y1, x2, y2 in zip(edges['x_from'], edges['y_from'], edges['x_to'], edges['y_to'])]
     edges_gdf = gpd.GeoDataFrame(edges, crs={'init': 'epsg:4326'}, geometry='geometry')
-    #nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
-    #nodes_gdf = gpd.GeoDataFrame(nodes, crs={'init': 'epsg:4326'}, geometry='geometry')
-    #nodes_gdf.to_file(name_shp + '_nodes.shp')
+    nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
+    nodes_gdf = gpd.GeoDataFrame(nodes, crs={'init': 'epsg:4326'}, geometry='geometry')
+    nodes_gdf.to_file(name_shp + '_nodes.shp')
     edges_gdf.to_file(name_shp + '_edges.shp')
     if df is not None:
         df['geometry'] = [Point(xy) for xy in zip(df['x'], df['y'])]

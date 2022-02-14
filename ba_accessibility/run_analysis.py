@@ -17,7 +17,7 @@ import h3pandas
 
 def process_update_jobs(divide_zones = False):
     s_time = time.time()
-    zones = gpd.read_file('data/original/jobs/Empleo.shp')
+    zones = gpd.read_file('data/original/jobs/empleo_ejemplo2.shp')
     resolution=8 #10
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
     if not os.path.exists('data/processed/jobs'):
@@ -285,52 +285,35 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
 
 
 def run(project_id, start_time, end_time, weekday):
+    bbox = (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
+    nodes, edges, zones, net = read_process_zones()
     for scenario in ['baseline', 'project_' + project_id]:
-        ua_net = create_ua_network(scenario, start_time, end_time, weekday)
-        net = create_pandana_network(ua_net, scenario)
-        net, zones, nodes_clean = read_process_zones(net)
+        ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
+        net, zones_net = create_pandana_network(ua_net, scenario, zones)
         #travel_data = calculate_distance_matrix(zones, 'ID')
         #travel_data = calculate_pandana_distances(travel_data, net, nodes_clean, zones, 'ID')
-        calculate_indicators(scenario, net, zones)
+        calculate_indicators(scenario, net, zones_net)
     compare_indicators(zones, 'project_' + project_id)
 
 
-def create_ua_network(scenario, start_time, end_time, weekday):
+def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday):
     print('Creating UrbanAccess Network')
     gtfs_path = './data/processed/gtfs_%s' % scenario
-    bbox = (-59.3177426256,-35.3267410094,-57.6799695705,-34.1435770646)
-    #bbox= (-59.001938,-34.623898,-58.377333,-34.141375) #Ejemplo
-    nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
     ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
     loaded_feeds = ua.gtfs.load.gtfsfeed_to_df(gtfsfeed_path=gtfs_path, bbox=bbox, validation=True,
                                                verbose=True, remove_stops_outsidebbox=True,
                                                append_definitions=True)
-    ua.gtfs.network.create_transit_net(gtfsfeeds_dfs=loaded_feeds,
-                                       day=weekday,
-                                       timerange=[start_time, end_time],
-                                       calendar_dates_lookup=None,
-                                       time_aware=True,
-                                       simplify=True)
+    ua.gtfs.network.create_transit_net(gtfsfeeds_dfs=loaded_feeds, day=weekday,
+                                       timerange=[start_time, end_time], calendar_dates_lookup=None,
+                                       time_aware=True, simplify=True)
     loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
-    if not os.path.isfile('data/baseline_net.h5'):
-        nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
-        ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
-        ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
-        ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='baseline_net.h5', overwrite_key=True)
-    else:
-        baseline_net = ua.network.load_network(filename='baseline_net.h5')
-        ua.network.ua_network.osm_edges = baseline_net.osm_edges
-        ua.network.ua_network.osm_nodes = baseline_net.osm_nodes
-        ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
-    #ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
-    #ua.network.save_network(urbanaccess_network=ua.network.ua_network, filename='final_%s_net.h5' % scenario, overwrite_key=True)
+    ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
     return ua.ua_network
 
 
-def create_pandana_network(ua_net, scenario):
+def create_pandana_network(ua_net, scenario, zones):
     print('Loading Precomputed UrbanAccess Network')
-    #ua_net = ua.network.load_network(filename='final_%s_net.h5' % scenario)
-    export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
+    #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -340,8 +323,14 @@ def create_pandana_network(ua_net, scenario):
                        ua_net.net_edges["to_int"],
                        ua_net.net_edges[["weight"]],
                        twoway=False)
+    id_df = ua_net.net_nodes.reset_index()[['id_int', 'id']]
+    id_df = id_df.set_index('id')
+    zones.index = zones.index.astype('str')
+    zones = zones.join(id_df)
+    net.set(zones['id_int'], variable=zones.jobs, name='jobs')
+    zones = zones.set_index('id_int')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
-    return net
+    return net, zones
 
 
 def calculate_distance_matrix(df, id_col):
@@ -402,7 +391,7 @@ def export_shp(nodes, edges, name_shp='test', df=None):
         zones_gdf.to_file(name_shp + '_zones.shp')
 
 
-def read_process_zones(net):
+def read_process_zones():
     zones = gpd.read_file('data/processed/jobs/jobs.shp')
     zones['centroid'] = zones['geometry'].centroid
     zones = zones.set_geometry('centroid')
@@ -411,11 +400,24 @@ def read_process_zones(net):
     zones = zones.to_crs(4326)
     zones['x'] = zones.geometry.x
     zones['y'] = zones.geometry.y
-    remove_nodes = set(net.low_connectivity_nodes(impedance=10, count=10, imp_name="weight"))
-    edges_clean = net.edges_df[~(net.edges_df['from'].isin(remove_nodes) | net.edges_df['to'].isin(remove_nodes))]
-    nodes_clean = net.nodes_df[(net.nodes_df.index.isin(edges_clean['from'])) | (net.nodes_df.index.isin(edges_clean['to']))]
-    filtered_net = pdna.Network(nodes_clean["x"], nodes_clean["y"], edges_clean["from"], edges_clean["to"], edges_clean[["weight"]], twoway=False)
-    zones['node_id'] = filtered_net.get_node_ids(zones['x'], zones['y'])
+    bbox=(-58.4, -34.7, -58.335, -34.6)
+    if not os.path.isfile('data/osm_nodes.csv'):
+        nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
+        #net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
+        #remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
+        #edges = net.edges_df[~(net.edges_df['from'].isin(remove_nodes) | net.edges_df['to'].isin(remove_nodes))]
+        #nodes = net.nodes_df[(net.nodes_df.index.isin(edges['from'])) | (net.nodes_df.index.isin(edges['to']))]
+        nodes.to_csv('data/osm_nodes.csv', index=False)
+        edges.to_csv('data/osm_edges.csv', index=False)
+    else:
+        nodes = pd.read_csv('data/osm_nodes.csv')
+        edges = pd.read_csv('data/osm_edges.csv')
+        nodes.index = nodes['id']
+        edges['from_'] = edges['from']
+        edges['to_'] = edges['to']
+        edges = edges.set_index(['from_', 'to_'])
+    net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
+    zones['node_id'] = net.get_node_ids(zones['x'], zones['y'])
     zones = zones.rename(columns={'geometry': 'centroid', 'polygon_geometry': 'geometry'})
     zones = zones.set_geometry('geometry').drop(columns='centroid')
     zones = zones.to_crs(22192)
@@ -423,14 +425,13 @@ def read_process_zones(net):
     zones['y_proj'] = zones.geometry.centroid.y
     net.set(zones.node_id, variable=zones.jobs, name='jobs')
     zones = zones.set_index('node_id')
-    #nodes_df = net.nodes_df.reset_index().rename(columns={'id_int':'id'})
-    #export_shp(nodes_df, net.edges_df, name_shp='ejemplo', df=zones)
-    return net, zones, nodes_clean
+    return nodes, edges, zones, net
 
 
 def calculate_indicators(scenario, net, zones):
     s_time = time.time()
     print('Aggregating variables')
+    #zones = zones.set_index('node_id')
     for i in [15, 30, 45, 60]:
         zones['jobs_' + str(i)] = net.aggregate(i, type='sum', decay='flat', name='jobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))

@@ -1,38 +1,4 @@
 ﻿project_id,mode,route_id,direction_id,stop_id,stop_name_from,stop_sequence
-#1,trenes,5,0,332,Retiro,1
-#1,trenes,5,0,229,L. De La Torre,2
-#1,trenes,5,0,34,Belgrano C.,3
-#1,trenes,5,0,287,Nuñez,4
-#1,trenes,5,0,337,Rivadavia,5
-#1,trenes,5,0,408,V. Lopez,6
-#1,trenes,5,0,291,Olivos,7
-#1,trenes,5,0,212,La Lucila,8
-#1,trenes,5,0,262,Martinez,9
-#1,trenes,5,0,5,Acassuso,10
-#1,trenes,5,0,357,San Isidro,11
-#1,trenes,5,0,32,Beccar,12
-#1,trenes,5,0,409,Victoria,13
-#1,trenes,5,0,428,Virreyes,14
-#1,trenes,5,0,355,San Fernando,15
-#1,trenes,5,0,65,Carupá,16
-#1,trenes,5,0,389,Tigre,17
-#1,trenes,5,1,389,Tigre,1
-#1,trenes,5,1,65,Carupá,2
-#1,trenes,5,1,355,San Fernando,3
-#1,trenes,5,1,428,Virreyes,4
-#1,trenes,5,1,409,Victoria,5
-#1,trenes,5,1,32,Beccar,6
-#1,trenes,5,1,357,San Isidro,7
-#1,trenes,5,1,5,Acassuso,8
-#1,trenes,5,1,262,Martinez,9
-#1,trenes,5,1,212,La Lucila,10
-#1,trenes,5,1,291,Olivos,11
-#1,trenes,5,1,408,V. Lopez,12
-#1,trenes,5,1,337,Rivadavia,13
-#1,trenes,5,1,287,Nuñez,14
-#1,trenes,5,1,34,Belgrano C.,15
-#1,trenes,5,1,229,L. De La Torre,16
-#1,trenes,5,1,332,Retiro,17
 1,trenes,33,0,332,Retiro,1
 1,trenes,33,0,229,L. De La Torre,2
 1,trenes,33,0,34,Belgrano C.,3

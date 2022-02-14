@@ -56,7 +56,7 @@ def process_update_gtfs():
 
 
 def copy_baseline_files():
-    for mode in ['trenes']: #['subte', 'trenes', 'colectivos']:
+    for mode in ['subte', 'trenes']: #['subte', 'trenes', 'colectivos']:
         original_path = ('data/original/gtfs_baseline/%s' % (mode))
         processed_path = ('data/processed/gtfs_baseline/%s' % (mode))
         agencies = pd.read_csv('%s/agency.txt' % original_path)
@@ -286,7 +286,7 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
 
 def run(project_id, start_time, end_time, weekday):
     bbox = (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
-    nodes, edges, zones, net = read_process_zones()
+    nodes, edges, zones, net = read_process_zones(bbox)
     for scenario in ['baseline', 'project_' + project_id]:
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
         net, zones_net = create_pandana_network(ua_net, scenario, zones)
@@ -313,7 +313,7 @@ def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekda
 
 def create_pandana_network(ua_net, scenario, zones):
     print('Loading Precomputed UrbanAccess Network')
-    #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
+    export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
 
     print('Creating Pandana Network')
     s_time = time.time()
@@ -377,12 +377,11 @@ def export_shp(nodes, edges, name_shp='test', df=None):
     nodes_to = nodes.rename(columns={'id': 'to', 'x': 'x_to', 'y': 'y_to'})
     edges = edges.merge(nodes_from, on='from', how='left')
     edges = edges.merge(nodes_to, on='to', how='left')
-    edges['geometry'] = [LineString([(x1, y1), (x2, y2)]) for x1, y1, x2, y2 in
-                         zip(edges['x_from'], edges['y_from'], edges['x_to'], edges['y_to'])]
-    nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
+    edges = edges[edges['net_type_x'].isin(['transit', 'osm to transit'])]
+    edges['geometry'] = [LineString([(x1, y1), (x2, y2)]) for x1, y1, x2, y2 in zip(edges['x_from'], edges['y_from'], edges['x_to'], edges['y_to'])]
     edges_gdf = gpd.GeoDataFrame(edges, crs={'init': 'epsg:4326'}, geometry='geometry')
-    nodes_gdf = gpd.GeoDataFrame(nodes, crs={'init': 'epsg:4326'}, geometry='geometry')
-    edges_gdf = edges_gdf[edges_gdf['net_type_x'].isin(['transit', 'osm to transit'])]
+    #nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
+    #nodes_gdf = gpd.GeoDataFrame(nodes, crs={'init': 'epsg:4326'}, geometry='geometry')
     #nodes_gdf.to_file(name_shp + '_nodes.shp')
     edges_gdf.to_file(name_shp + '_edges.shp')
     if df is not None:
@@ -391,7 +390,7 @@ def export_shp(nodes, edges, name_shp='test', df=None):
         zones_gdf.to_file(name_shp + '_zones.shp')
 
 
-def read_process_zones():
+def read_process_zones(bbox):
     zones = gpd.read_file('data/processed/jobs/jobs.shp')
     zones['centroid'] = zones['geometry'].centroid
     zones = zones.set_geometry('centroid')
@@ -400,7 +399,6 @@ def read_process_zones():
     zones = zones.to_crs(4326)
     zones['x'] = zones.geometry.x
     zones['y'] = zones.geometry.y
-    bbox=(-58.4, -34.7, -58.335, -34.6)
     if not os.path.isfile('data/osm_nodes.csv'):
         nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
         #net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)

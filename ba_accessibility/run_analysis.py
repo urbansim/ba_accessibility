@@ -286,12 +286,14 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
 
 def run(project_id, start_time, end_time, weekday):
     bbox = (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
-    nodes, edges, zones, net = read_process_zones(bbox)
+    nodes, edges, zones = read_process_zones(bbox)
     for scenario in ['baseline', 'project_' + project_id]:
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
         net, zones_net = create_pandana_network(ua_net, scenario, zones)
-        #travel_data = calculate_distance_matrix(zones, 'ID')
-        #travel_data = calculate_pandana_distances(travel_data, net, nodes_clean, zones, 'ID')
+        travel_data = calculate_distance_matrix(zones, 'ID')
+        travel_data = calculate_pandana_distances(travel_data, net, zones_net, 'ID')
+        travel_data.to_csv('travel_data_%s.csv' % scenario)
+        breakpoint()
         calculate_indicators(scenario, net, zones_net)
     compare_indicators(zones, 'project_' + project_id)
 
@@ -341,34 +343,15 @@ def calculate_distance_matrix(df, id_col):
     return df
 
 
-def calculate_pandana_distances(travel_data, net, nodes, df, df_id):
-    df_from = df.reset_index().rename(columns={df_id: 'from_id', 'node_id': 'node_from'})[['from_id', 'node_from']]
-    df_to = df.reset_index().rename(columns={df_id: 'to_id', 'node_id': 'node_to'})[['to_id', 'node_to']]
+def calculate_pandana_distances(travel_data, net, df, df_id):
+    df_from = df.reset_index().rename(columns={df_id: 'from_id', 'id_int': 'node_from'})[['from_id', 'node_from']]
+    df_to = df.reset_index().rename(columns={df_id: 'to_id', 'id_int': 'node_to'})[['to_id', 'node_to']]
     travel_data = travel_data.merge(df_from, on='from_id', how='left')
     travel_data = travel_data.merge(df_to, on='to_id', how='left')
     travel_data['pandana_distance'] = net.shortest_path_lengths(list(travel_data['node_from']), list(travel_data['node_to']))
     if travel_data['pandana_distance'].max() > 4000000:
         print('WARNING: NO PATH BETWEEN SOME OD PAIRS')
     print('Pandana shortest paths done')
-    travel_data = add_connectors(nodes, df, df_id, travel_data)
-    return travel_data
-
-
-def add_connectors(nodes, df, df_id, travel_data):
-    nodes = nodes.rename(columns={'y_proj': 'y_node', 'x_proj': 'x_node'})
-    df = df.merge(nodes[['y_node', 'x_node']], left_on='node_id', right_index=True, how='left')
-    df_coords = [coords for coords in zip(df['y_proj'], df['x_proj'])]
-    node_coords = [coords for coords in zip(df['y_node'], df['x_node'])]
-    print('Adding connectors')
-    df['conn_dist'] = [distance.cdist(df_coords, node_coords, 'euclidean')[idx][idx] for idx in df.index]
-    print('Adding connectors done')
-    df = df[[df_id, 'conn_dist']]
-    df_from = df.rename(columns={df_id: 'from_id', 'conn_dist': 'conn_dist_from'})
-    df_to = df.rename(columns={df_id: 'to_id', 'conn_dist': 'conn_dist_to'})
-    travel_data = travel_data.merge(df_from, on='from_id', how='left')
-    travel_data = travel_data.merge(df_to, on='to_id', how='left')
-    travel_data.loc[travel_data['from_id'] != travel_data['to_id'], 'pandana_distance'] = \
-        travel_data['pandana_distance'] + travel_data['conn_dist_from'] + travel_data['conn_dist_to']
     return travel_data
 
 
@@ -401,10 +384,10 @@ def read_process_zones(bbox):
     zones['y'] = zones.geometry.y
     if not os.path.isfile('data/osm_nodes.csv'):
         nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
-        #net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
-        #remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
-        #edges = net.edges_df[~(net.edges_df['from'].isin(remove_nodes) | net.edges_df['to'].isin(remove_nodes))]
-        #nodes = net.nodes_df[(net.nodes_df.index.isin(edges['from'])) | (net.nodes_df.index.isin(edges['to']))]
+        net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
+        remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
+        edges = edges[~(edges['from'].isin(remove_nodes) | edges['to'].isin(remove_nodes))]
+        nodes = nodes[~(nodes.index.isin(edges['from'])) | (nodes.index.isin(edges['to']))]
         nodes.to_csv('data/osm_nodes.csv', index=False)
         edges.to_csv('data/osm_edges.csv', index=False)
     else:
@@ -421,9 +404,8 @@ def read_process_zones(bbox):
     zones = zones.to_crs(22192)
     zones['x_proj'] = zones.geometry.centroid.x
     zones['y_proj'] = zones.geometry.centroid.y
-    net.set(zones.node_id, variable=zones.jobs, name='jobs')
     zones = zones.set_index('node_id')
-    return nodes, edges, zones, net
+    return nodes, edges, zones
 
 
 def calculate_indicators(scenario, net, zones):

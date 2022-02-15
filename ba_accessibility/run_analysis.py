@@ -301,8 +301,7 @@ def run(project_id, start_time, end_time, weekday):
         net, zones_net = create_pandana_network(ua_net, scenario, zones)
         travel_data = calculate_distance_matrix(zones_net, 'ID')
         travel_data = calculate_pandana_distances(travel_data, net, zones_net, 'ID')
-        travel_data.to_csv('travel_data_%s.csv' % scenario)
-        breakpoint()
+        travel_data.to_csv('results/travel_data_%s.csv' % scenario)
         calculate_indicators(scenario, net, zones_net)
     compare_indicators(zones, 'project_' + project_id)
 
@@ -374,8 +373,8 @@ def export_shp(nodes, edges, name_shp='test', df=None):
     edges_gdf = gpd.GeoDataFrame(edges, crs={'init': 'epsg:4326'}, geometry='geometry')
     nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
     nodes_gdf = gpd.GeoDataFrame(nodes, crs={'init': 'epsg:4326'}, geometry='geometry')
-    nodes_gdf.to_file(name_shp + '_nodes.shp')
-    edges_gdf.to_file(name_shp + '_edges.shp')
+    nodes_gdf.to_file('results/%s_nodes.shp' % name_shp)
+    edges_gdf.to_file('results/%s_edges.shp' % name_shp)
     if df is not None:
         df['geometry'] = [Point(xy) for xy in zip(df['x'], df['y'])]
         zones_gdf = GeoDataFrame(df, geometry='geometry', crs={'init': 'epsg:4326'})
@@ -397,11 +396,11 @@ def read_process_zones(bbox):
         remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
         edges = edges[~(edges['from'].isin(remove_nodes) | edges['to'].isin(remove_nodes))]
         nodes = nodes[~(nodes.index.isin(edges['from'])) | (nodes.index.isin(edges['to']))]
-        nodes.to_csv('data/osm_nodes.csv', index=False)
-        edges.to_csv('data/osm_edges.csv', index=False)
+        nodes.to_csv('results/osm_nodes.csv', index=False)
+        edges.to_csv('results/osm_edges.csv', index=False)
     else:
-        nodes = pd.read_csv('data/osm_nodes.csv')
-        edges = pd.read_csv('data/osm_edges.csv')
+        nodes = pd.read_csv('results/osm_nodes.csv')
+        edges = pd.read_csv('results/osm_edges.csv')
         nodes.index = nodes['id']
         edges['from_'] = edges['from']
         edges['to_'] = edges['to']

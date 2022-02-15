@@ -13,9 +13,8 @@ from scipy.spatial import distance
 from shapely.geometry import Point
 from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
-import h3pandas
 
-def process_update_jobs(divide_zones = False):
+def process_update_demographics(divide_zones = True):
     s_time = time.time()
     jobs = gpd.read_file('data/original/jobs/Empleo.shp')
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
@@ -435,7 +434,7 @@ def calculate_indicators(scenario, net, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
     #zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 

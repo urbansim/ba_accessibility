@@ -17,23 +17,38 @@ import h3pandas
 
 def process_update_jobs(divide_zones = False):
     s_time = time.time()
-    zones = gpd.read_file('data/original/jobs/Empleo.shp')
-    resolution=8 #10
+    jobs = gpd.read_file('data/original/jobs/Empleo.shp')
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
-    if not os.path.exists('data/processed/jobs'):
-        os.makedirs('./data/processed/jobs')
+    population = gpd.read_file('data/original/population/base_AGBA_200913.shp')
+    population['ID'] = population['PROV'] + population['DEPTO'] + population['FRAC'] + population['RADIO']
+    population_cols = ['POB10', 'HOG10', 'NBI_H10']
+    if not os.path.exists('data/processed/zones'):
+        os.makedirs('./data/processed/zones')
+    zones = jobs.copy()
     if divide_zones == True:
-        hexagons = zones.h3.polyfill_resample(resolution)
-        hexagons = hexagons.to_crs(22192)
-        hexagons['hex_area'] = hexagons.geometry.area
-        zone_area = hexagons.groupby('ID')['hex_area'].sum().reset_index()
-        zone_area = zone_area.rename(columns={'hex_area': 'zone_area'})
-        hexagons = hexagons.reset_index().merge(zone_area, on='ID', how='left')
-        for col in job_cols:
-            hexagons[col] = round(hexagons[col].fillna(0).astype('int') * hexagons['hex_area'] / hexagons['zone_area'])
-        hexagons[['h3_polyfill', 'ID', 'geometry'] + job_cols].to_file('data/processed/jobs/jobs.shp')
+        resolution = 8  # 10
+        hexagons = zones.h3.polyfill_resample(resolution).reset_index()
+        hexagons = hexagons[['h3_polyfill', 'geometry']].to_crs(22192)
+        cols = {'jobs': job_cols, 'population': population_cols}
+        agents_per_hexagon = {}
+        for agent in ['jobs', 'population']:
+            gdf = eval(agent)
+            gdf = gdf.to_crs(22192)
+            split_gdf = gpd.overlay(gdf, hexagons, how='intersection')
+            split_gdf = split_gdf[['ID', 'h3_polyfill', 'geometry'] + cols[agent]]
+            split_gdf['area'] = split_gdf.geometry.area
+            zone_area = split_gdf.groupby('ID')['area'].sum().reset_index()
+            zone_area = zone_area.rename(columns={'area': 'zone_area'})
+            split_gdf = split_gdf.reset_index().merge(zone_area, on='ID', how='left')
+            for col in cols[agent]:
+                split_gdf[col] = split_gdf[col].fillna(0).astype('int') * split_gdf['area'] / split_gdf['zone_area']
+            hexagon_agents = split_gdf.groupby('h3_polyfill').sum()[cols[agent]]
+            agents_per_hexagon[agent] = hexagon_agents
+        hexagons = hexagons.set_index('h3_polyfill').join(agents_per_hexagon['jobs'])
+        hexagons = hexagons.join(agents_per_hexagon['population']).reset_index()
+        hexagons[['h3_polyfill', 'geometry'] + job_cols + population_cols].to_file('data/processed/zones/zones.shp')
     else:
-        zones[['ID', 'geometry'] + job_cols].to_file('data/processed/jobs/jobs.shp')
+        jobs[['ID', 'geometry'] + job_cols + population_cols].to_file('data/processed/zones/zones.shp')
     print('Took {:,.2f} seconds to process jobs shapefile'.format(time.time() - s_time))
 
 
@@ -299,9 +314,6 @@ def run(project_id, start_time, end_time, weekday):
     for scenario in ['baseline', 'project_' + project_id]:
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
         net, zones_net = create_pandana_network(ua_net, scenario, zones)
-        travel_data = calculate_distance_matrix(zones_net, 'ID')
-        travel_data = calculate_pandana_distances(travel_data, net, zones_net, 'ID')
-        travel_data.to_csv('results/travel_data_%s.csv' % scenario)
         calculate_indicators(scenario, net, zones_net)
     compare_indicators(zones, 'project_' + project_id)
 
@@ -322,9 +334,6 @@ def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekda
 
 
 def create_pandana_network(ua_net, scenario, zones):
-    print('Loading Precomputed UrbanAccess Network')
-    #export_shp(ua_net.net_nodes, ua_net.net_edges, name_shp=scenario)
-
     print('Creating Pandana Network')
     s_time = time.time()
     net = pdna.Network(ua_net.net_nodes["x"],
@@ -340,6 +349,9 @@ def create_pandana_network(ua_net, scenario, zones):
     net.set(zones['id_int'], variable=zones.jobs, name='jobs')
     zones = zones.set_index('id_int')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
+    # travel_data = calculate_distance_matrix(zones, 'h3_polyfill')
+    # travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfill')
+    # travel_data.to_csv('results/travel_data_%s.csv' % scenario)
     return net, zones
 
 
@@ -368,7 +380,6 @@ def export_shp(nodes, edges, name_shp='test', df=None):
     nodes_to = nodes.rename(columns={'id': 'to', 'x': 'x_to', 'y': 'y_to'})
     edges = edges.merge(nodes_from, on='from', how='left')
     edges = edges.merge(nodes_to, on='to', how='left')
-    #edges = edges[edges['net_type_x'].isin(['transit', 'osm to transit'])]
     edges['geometry'] = [LineString([(x1, y1), (x2, y2)]) for x1, y1, x2, y2 in zip(edges['x_from'], edges['y_from'], edges['x_to'], edges['y_to'])]
     edges_gdf = gpd.GeoDataFrame(edges, crs={'init': 'epsg:4326'}, geometry='geometry')
     nodes['geometry'] = [Point(xy) for xy in zip(nodes['x'], nodes['y'])]
@@ -382,7 +393,7 @@ def export_shp(nodes, edges, name_shp='test', df=None):
 
 
 def read_process_zones(bbox):
-    zones = gpd.read_file('data/processed/jobs/jobs.shp')
+    zones = gpd.read_file('data/processed/zones/zones.shp')
     zones['centroid'] = zones['geometry'].centroid
     zones = zones.set_geometry('centroid')
     zones = zones.rename(columns={'geometry': 'polygon_geometry', 'centroid': 'geometry'})
@@ -390,7 +401,7 @@ def read_process_zones(bbox):
     zones = zones.to_crs(4326)
     zones['x'] = zones.geometry.x
     zones['y'] = zones.geometry.y
-    if not os.path.isfile('data/osm_nodes.csv'):
+    if not os.path.isfile('results/osm_nodes.csv'):
         nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
         net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
         remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
@@ -419,17 +430,16 @@ def read_process_zones(bbox):
 def calculate_indicators(scenario, net, zones):
     s_time = time.time()
     print('Aggregating variables')
-    #zones = zones.set_index('node_id')
     for i in [15, 30, 45, 60]:
         zones['jobs_' + str(i)] = net.aggregate(i, type='sum', decay='flat', name='jobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    #zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
-    zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    #zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones, scenario, divide_zones=False):
+def compare_indicators(zones, scenario, divide_zones=True):
     if divide_zones==True:
         baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
         project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
@@ -447,6 +457,12 @@ def compare_indicators(zones, scenario, divide_zones=False):
         comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
         comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
         comparison['pct' + col.replace('jobs', '') + '_d'] = comparison['pct' + col.replace('jobs', '') + '_p'] - comparison['pct' + col.replace('jobs', '')]
+        comparison['pop_acc'] = comparison['pct' + col.replace('jobs', '')] * comparison['POB10'] / comparison['POB10'].sum()
+        comparison['pov_acc'] = comparison['pct' + col.replace('jobs', '')] * comparison['NBI_H10'] / comparison['NBI_H10'].sum()
+        comparison['pop_acc_p'] = comparison['pct' + col.replace('jobs', '') + '_p'] * comparison['POB10'] / comparison['POB10'].sum()
+        comparison['pov_acc_p'] = comparison['pct' + col.replace('jobs', '') + '_p'] * comparison['NBI_H10'] / comparison['NBI_H10'].sum()
+        comparison['pop_acc_d'] = comparison['pop_acc']  - comparison['pop_acc_p']
+        comparison['pov_acc_d'] = comparison['pov_acc'] - comparison['pov_acc_p']
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.fillna(0)
     if divide_zones == True:
@@ -460,7 +476,7 @@ def compare_indicators(zones, scenario, divide_zones=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-uj", "--update_jobs", action="store_true", default=False, help="update_jobs")
+    parser.add_argument("-ud", "--update_demographics", action="store_true", default=False, help="update demographics")
     parser.add_argument("-ug", "--update_gtfs", action="store_true", default=False, help="update_gtfs")
     parser.add_argument("-p", "--project_id", type=str, default=False, help="project_id to evaluate")
     parser.add_argument("-st", "--start_time", type=str, default=False, help="start time for_analysis in 24 hr format (ej 07:00)")
@@ -468,15 +484,15 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--weekday", type=str, default=False, help="week day for analysis in 24 hr format (ej monday)")
     args = parser.parse_args()
 
-    update_jobs = args.update_jobs if args.update_jobs else False
+    update_demographics = args.update_demographics if args.update_demographics else False
     update_gtfs = args.update_gtfs if args.update_gtfs else False
     project_id = args.project_id if args.project_id else '1'
     start_time = args.start_time if args.start_time else '07:00:00'
     end_time = args.end_time if args.end_time else '08:00:00'
     weekday = args.weekday if args.weekday else 'monday'
 
-    if update_jobs:
-        process_update_jobs()
+    if update_demographics:
+        process_update_demographics()
     if update_gtfs:
         process_update_gtfs()
     run(project_id, start_time, end_time, weekday)

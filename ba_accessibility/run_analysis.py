@@ -209,13 +209,22 @@ def create_gtfs_with_project():
     for mode in travel_time_updates['mode'].unique():
         original_path = ('data/processed/gtfs_baseline/%s' % mode)
         trips = pd.read_csv('%s/trips.txt' % original_path, dtype={'trip_id': object})
+        stops = pd.read_csv('%s/stops.txt' % original_path, dtype={'trip_id': object})
         stop_times = pd.read_csv('%s/stop_times.txt' % original_path, dtype={'trip_id': object})
         projects = travel_time_updates[travel_time_updates['mode'] == mode]['project_id'].unique()
         for project_id in projects:
+            export_project_shape(project_id, stops, travel_time_updates)
             copy_with_project_files(project_id)
             updated_stop_times, updated_trips = update_frequencies(stop_times, trips, stop_updates, travel_time_updates, project_id)
             updated_stop_times.to_csv('data/processed/gtfs_project_%s/%s/stop_times.txt' % (project_id, mode), index=False)
             updated_trips.to_csv('data/processed/gtfs_project_%s/%s/trips.txt' % (project_id, mode), index=False)
+
+def export_project_shape(project_id, stops, travel_time_updates):
+    edges = travel_time_updates[travel_time_updates['project_id']==project_id]
+    edges = edges.rename(columns={'stop_id_from': 'from', 'stop_id_to': 'to'})
+    nodes = stops.drop(columns=['stop_name']).rename(columns={'stop_id':'id', 'stop_lat': 'y', 'stop_lon': 'x'})
+    nodes = nodes[(nodes['id'].isin(edges['from']))|(nodes['id'].isin(edges['to']))]
+    export_shp(nodes, edges, name_shp='project_%s_trajectory' % project_id)
 
 
 def copy_with_project_files(project_id):

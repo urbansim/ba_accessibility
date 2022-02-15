@@ -13,6 +13,7 @@ from scipy.spatial import distance
 from shapely.geometry import Point
 from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
+import h3pandas
 
 def process_update_demographics(divide_zones = True):
     s_time = time.time()
@@ -450,6 +451,10 @@ def compare_indicators(zones, scenario, divide_zones=True):
     for col in job_cols:
         project = project.rename(columns={col: col+'_p'})
     comparison = baseline[job_cols].join(project)
+    if divide_zones == True:
+        comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'NBI_H10']].join(comparison)
+    else:
+        comparison = zones.set_index('ID')[['geometry', 'POB10', 'NBI_H10']].join(comparison)
     for col in job_cols:
         comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
         comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
@@ -464,10 +469,6 @@ def compare_indicators(zones, scenario, divide_zones=True):
         comparison['pov_acc_d'] = comparison['pov_acc'] - comparison['pov_acc_p']
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.fillna(0)
-    if divide_zones == True:
-        comparison = zones.set_index('h3_polyfil')[['geometry']].join(comparison)
-    else:
-        comparison = zones.set_index('ID')[['geometry']].join(comparison)
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

@@ -56,7 +56,7 @@ def process_update_gtfs():
 
 
 def copy_baseline_files():
-    for mode in ['subte', 'trenes']: #['subte', 'trenes', 'colectivos']:
+    for mode in ['subte', 'trenes', 'colectivos']:
         original_path = ('data/original/gtfs_baseline/%s' % (mode))
         processed_path = ('data/processed/gtfs_baseline/%s' % (mode))
         agencies = pd.read_csv('%s/agency.txt' % original_path)

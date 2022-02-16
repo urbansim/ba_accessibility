@@ -219,7 +219,8 @@ def export_outputs( mode, stop_times, trips, expanded_stop_times, expanded_trips
 
 
 def create_gtfs_with_project():
-    stop_updates = pd.read_csv('data/original/project_updates/modified_stops.csv').fillna(0)
+    new_stops = pd.read_csv('data/original/project_updates/new_stops.csv').fillna(0)
+    stop_updates = pd.read_csv('data/original/project_updates/modified_routes.csv').fillna(0)
     travel_time_updates = pd.read_csv('data/original/project_updates/modified_times_between_stops.csv').fillna(0)
     for mode in travel_time_updates['mode'].unique():
         original_path = ('data/processed/gtfs_baseline/%s' % mode)
@@ -230,7 +231,8 @@ def create_gtfs_with_project():
         for project_id in projects:
             export_project_shape(project_id, stops, travel_time_updates)
             copy_with_project_files(project_id)
-            updated_stop_times, updated_trips = update_frequencies(stop_times, trips, stop_updates, travel_time_updates, project_id)
+            updated_stops, updated_stop_times, updated_trips = update_frequencies(stops, stop_times, trips, new_stops, stop_updates, travel_time_updates, project_id)
+            updated_stops.to_csv('data/processed/gtfs_project_%s/%s/stops.txt' % (project_id, mode),index=False)
             updated_stop_times.to_csv('data/processed/gtfs_project_%s/%s/stop_times.txt' % (project_id, mode), index=False)
             updated_trips.to_csv('data/processed/gtfs_project_%s/%s/trips.txt' % (project_id, mode), index=False)
 
@@ -253,7 +255,8 @@ def copy_with_project_files(project_id):
                             './data/processed/gtfs_project_%s/%s/%s.txt' % (project_id, dir, file))
 
 
-def update_frequencies(stop_times, trips, stop_updates, travel_time_updates, project_id):
+def update_frequencies(stops, stop_times, trips, new_stops, stop_updates, travel_time_updates, project_id):
+    stops = stops.append(new_stops)
     stop_times = time_to_seconds(stop_times, ['arrival_time', 'departure_time'])
     stop_times_routes = stop_times.merge(trips[['trip_id', 'route_id', 'service_id', 'direction_id']], on='trip_id', how ='left')
     routes_to_update = travel_time_updates[travel_time_updates['project_id'] == project_id]['route_id'].unique()
@@ -274,7 +277,7 @@ def update_frequencies(stop_times, trips, stop_updates, travel_time_updates, pro
     unchanged_stop_times['departure_time'] = pd.to_datetime(unchanged_stop_times['departure_time'].round(), unit='s').dt.time
     stop_times = unchanged_stop_times.append(updated_stop_times)[list(stop_times.columns)]
     trips = trips[trips['trip_id'].isin(unchanged_trips)].append(updated_trips)
-    return stop_times, trips
+    return stops, stop_times, trips
 
 
 def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_updates, travel_time_updates):
@@ -461,12 +464,27 @@ def compare_indicators(zones, scenario, divide_zones=True):
         comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
         comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
         comparison['pct' + col.replace('jobs', '') + '_d'] = comparison['pct' + col.replace('jobs', '') + '_p'] - comparison['pct' + col.replace('jobs', '')]
-        comparison['pop_acc'] = comparison['pct' + col.replace('jobs', '')] * comparison['POB10'] / comparison['POB10'].sum()
-        comparison['pov_acc'] = comparison['pct' + col.replace('jobs', '')] * comparison['NBI_H10'] / comparison['NBI_H10'].sum()
-        comparison['pop_acc_p'] = comparison['pct' + col.replace('jobs', '') + '_p'] * comparison['POB10'] / comparison['POB10'].sum()
-        comparison['pov_acc_p'] = comparison['pct' + col.replace('jobs', '') + '_p'] * comparison['NBI_H10'] / comparison['NBI_H10'].sum()
-        comparison['pop_acc_d'] = comparison['pop_acc']  - comparison['pop_acc_p']
-        comparison['pov_acc_d'] = comparison['pov_acc'] - comparison['pov_acc_p']
+
+
+
+    comparison['pop_acc'] = comparison['pct_60'] * comparison['POB10']
+    comparison['pov_acc'] = comparison['pct_60'] * comparison['NBI_H10']
+    comparison['pop_acc_p'] = comparison['pct_60_p'] * comparison['POB10']
+    comparison['pov_acc_p'] = comparison['pct_60_p'] * comparison['NBI_H10']
+    orig_pop_acc = comparison['pop_acc'].sum()/comparison['POB10'].sum()
+    orig_pov_acc = comparison['pov_acc'].sum()/comparison['NBI_H10'].sum()
+    project_pop_acc = comparison['pop_acc_p'].sum()/comparison['POB10'].sum()
+    project_pov_acc = comparison['pov_acc_p'].sum()/comparison['NBI_H10'].sum()
+    pop_acc_change = project_pop_acc = orig_pop_acc
+    pov_acc_change = project_pov_acc - orig_pov_acc
+    print('ORIGINAL POPULATION WEIGHTED JOB ACCESSIBILITY:', orig_pop_acc)
+    print('ORIGINAL POVERTY WEIGHTED JOB ACCESSIBILITY:', orig_pov_acc)
+    print('CHANGE IN POPULATION WEIGHTED JOB ACCESSIBILITY:', pop_acc_change)
+
+    print('CHANGE IN POVERTY WEIGHTED JOB ACCESSIBILITY:', pov_acc_change)
+
+
+
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.fillna(0)
     comparison.to_file('results/final_results_%s.shp' % scenario)

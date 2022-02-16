@@ -433,13 +433,13 @@ def read_process_zones(bbox):
 def calculate_indicators(scenario, net, zones):
     s_time = time.time()
     print('Aggregating variables')
-    for i in [15, 30, 45, 60]:
+    for i in [60]:
         zones['jobs_' + str(i)] = net.aggregate(i, type='sum', decay='flat', name='jobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
-    #zones[['ID', 'jobs', 'jobs_15', 'jobs_30', 'jobs_45', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    #zones[['ID', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
 def compare_indicators(zones, scenario, divide_zones=True):

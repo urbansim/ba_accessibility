@@ -350,6 +350,7 @@ def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekda
                                        timerange=[start_time, end_time], calendar_dates_lookup=None,
                                        time_aware=True, simplify=True)
     loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
+    loaded_feeds.headways = loaded_feeds.headways.groupby('node_id_route').min().reset_index()
     ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
     return ua.ua_network
 

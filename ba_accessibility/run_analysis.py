@@ -43,10 +43,28 @@ def process_update_demographics(divide_zones = True):
             for col in cols[agent]:
                 split_gdf[col] = split_gdf[col].fillna(0).astype('int') * split_gdf['area'] / split_gdf['zone_area']
             hexagon_agents = split_gdf.groupby('h3_polyfill').sum()[cols[agent]]
+            for col in cols[agent]:
+                hexagon_agents[col] = round(hexagon_agents[col])
             agents_per_hexagon[agent] = hexagon_agents
         hexagons = hexagons.set_index('h3_polyfill').join(agents_per_hexagon['jobs'])
         hexagons = hexagons.join(agents_per_hexagon['population']).reset_index()
-        hexagons[['h3_polyfill', 'geometry'] + job_cols + population_cols].to_file('data/processed/zones/zones.shp')
+        modified_routes = pd.read_csv('data/original/project_updates/modified_routes.csv').fillna(0)
+        stops_locations = modified_routes.groupby('stop_id')['location'].min()
+        buffer_cols = []
+        for project_id in modified_routes.project_id.unique():
+            project_stations = gpd.read_file('results/project_%s_trajectory_nodes.shp' % project_id).to_crs(22192)
+            project_stations = project_stations.set_index('id').join(stops_locations)
+            project_stations.loc[project_stations['location'] == 'CABA', 'buffer'] = project_stations['geometry'].buffer(1500)
+            project_stations.loc[project_stations['location'] == 'CORDON_1', 'buffer'] = project_stations['geometry'].buffer(2000)
+            project_stations.loc[project_stations['location'] == 'CORDON_2', 'buffer'] = project_stations['geometry'].buffer(2500)
+            project_stations = project_stations.drop(columns=['geometry']).rename(columns={'buffer':'geometry'})
+            buffer_col = 'buff' + str(project_id)
+            project_stations = project_stations.set_geometry('geometry').rename(columns={'location': buffer_col})
+            project_stations = project_stations.dissolve()
+            hexagons = gpd.sjoin(hexagons, project_stations[[buffer_col, 'geometry']], how='left', predicate='intersects').drop(columns=['index_right'])
+            buffer_cols += [buffer_col]
+        cols = ['h3_polyfill', 'geometry'] + job_cols + population_cols + buffer_cols
+        hexagons[cols].to_file('data/processed/zones/zones.shp')
     else:
         jobs[['ID', 'geometry'] + job_cols + population_cols].to_file('data/processed/zones/zones.shp')
     print('Took {:,.2f} seconds to process jobs shapefile'.format(time.time() - s_time))
@@ -229,12 +247,12 @@ def create_gtfs_with_project():
         stop_times = pd.read_csv('%s/stop_times.txt' % original_path, dtype={'trip_id': object})
         projects = travel_time_updates[travel_time_updates['mode'] == mode]['project_id'].unique()
         for project_id in projects:
-            export_project_shape(project_id, stops, travel_time_updates)
             copy_with_project_files(project_id)
             updated_stops, updated_stop_times, updated_trips = update_frequencies(stops, stop_times, trips, new_stops, stop_updates, travel_time_updates, project_id)
             updated_stops.to_csv('data/processed/gtfs_project_%s/%s/stops.txt' % (project_id, mode),index=False)
             updated_stop_times.to_csv('data/processed/gtfs_project_%s/%s/stop_times.txt' % (project_id, mode), index=False)
             updated_trips.to_csv('data/processed/gtfs_project_%s/%s/trips.txt' % (project_id, mode), index=False)
+            export_project_shape(project_id, updated_stops, travel_time_updates)
 
 def export_project_shape(project_id, stops, travel_time_updates):
     edges = travel_time_updates[travel_time_updates['project_id']==project_id]
@@ -443,6 +461,7 @@ def calculate_indicators(scenario, net, zones):
 
 
 def compare_indicators(zones, scenario, divide_zones=True):
+    buffer_col = 'buff_' + scenario.replace('project_', '')
     if divide_zones==True:
         baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
         project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
@@ -455,36 +474,42 @@ def compare_indicators(zones, scenario, divide_zones=True):
         project = project.rename(columns={col: col+'_p'})
     comparison = baseline[job_cols].join(project)
     if divide_zones == True:
-        comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'NBI_H10']].join(comparison)
+        comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'NBI_H10', buffer_col]].join(comparison)
     else:
-        comparison = zones.set_index('ID')[['geometry', 'POB10', 'NBI_H10']].join(comparison)
+        comparison = zones.set_index('ID')[['geometry', 'POB10', 'NBI_H10', buffer_col]].join(comparison)
     for col in job_cols:
         comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
         comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
         comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
         comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
         comparison['pct' + col.replace('jobs', '') + '_d'] = comparison['pct' + col.replace('jobs', '') + '_p'] - comparison['pct' + col.replace('jobs', '')]
-
-
-
     comparison['pop_acc'] = comparison['pct_60'] * comparison['POB10']
     comparison['pov_acc'] = comparison['pct_60'] * comparison['NBI_H10']
     comparison['pop_acc_p'] = comparison['pct_60_p'] * comparison['POB10']
     comparison['pov_acc_p'] = comparison['pct_60_p'] * comparison['NBI_H10']
+
     orig_pop_acc = comparison['pop_acc'].sum()/comparison['POB10'].sum()
     orig_pov_acc = comparison['pov_acc'].sum()/comparison['NBI_H10'].sum()
     project_pop_acc = comparison['pop_acc_p'].sum()/comparison['POB10'].sum()
     project_pov_acc = comparison['pov_acc_p'].sum()/comparison['NBI_H10'].sum()
-    pop_acc_change = project_pop_acc = orig_pop_acc
+    pop_acc_change = project_pop_acc - orig_pop_acc
     pov_acc_change = project_pov_acc - orig_pov_acc
     print('ORIGINAL POPULATION WEIGHTED JOB ACCESSIBILITY:', orig_pop_acc)
     print('ORIGINAL POVERTY WEIGHTED JOB ACCESSIBILITY:', orig_pov_acc)
     print('CHANGE IN POPULATION WEIGHTED JOB ACCESSIBILITY:', pop_acc_change)
-
     print('CHANGE IN POVERTY WEIGHTED JOB ACCESSIBILITY:', pov_acc_change)
-
-
-
+    breakpoint()
+    area_comparison = comparison[~comparison[buffer_col].isnull()]
+    orig_pop_acc = area_comparison['pop_acc'].sum()/area_comparison['POB10'].sum()
+    orig_pov_acc = area_comparison['pov_acc'].sum()/area_comparison['NBI_H10'].sum()
+    project_pop_acc = area_comparison['pop_acc_p'].sum()/area_comparison['POB10'].sum()
+    project_pov_acc = area_comparison['pov_acc_p'].sum()/area_comparison['NBI_H10'].sum()
+    pop_acc_change = project_pop_acc - orig_pop_acc
+    pov_acc_change = project_pov_acc - orig_pov_acc
+    print('ORIGINAL POPULATION WEIGHTED JOB ACCESSIBILITY IN BUFFER:', orig_pop_acc)
+    print('ORIGINAL POVERTY WEIGHTED JOB ACCESSIBILITY IN BUFFER:', orig_pov_acc)
+    print('CHANGE IN POPULATION WEIGHTED JOB ACCESSIBILITY IN BUFFER:', pop_acc_change)
+    print('CHANGE IN POVERTY WEIGHTED JOB ACCESSIBILITY IN BUFFER:', pov_acc_change)
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.fillna(0)
     comparison.to_file('results/final_results_%s.shp' % scenario)

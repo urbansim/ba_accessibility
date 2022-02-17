@@ -461,7 +461,7 @@ def calculate_indicators(scenario, net, zones):
 
 
 def compare_indicators(zones, scenario, divide_zones=True):
-    buffer_col = 'buff_' + scenario.replace('project_', '')
+    buffer_col = 'buff' + scenario.replace('project_', '')
     if divide_zones==True:
         baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
         project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')

@@ -24,12 +24,12 @@ def process_update_demographics(divide_zones = True):
     population_cols = ['POB10', 'HOG10', 'NBI_H10']
     if not os.path.exists('data/processed/zones'):
         os.makedirs('./data/processed/zones')
-    zones = gpd.sjoin(population.reset_index(), jobs[['geometry', 'jobs']].to_crs(population.crs), how='left', predicate='intersects').drop(columns=['index_right'])
-    zones_in_jobs = zones[~zones['jobs'].isnull()]
-    zones = population[population.index.isin(zones_in_jobs['index'])]
+    zones = population.reset_index().to_crs(jobs.crs).append(jobs)
     if divide_zones == True:
         resolution = 8  # 10
         hexagons = zones.h3.polyfill_resample(resolution).reset_index()
+        hexagons = gpd.sjoin(hexagons.drop(columns=['jobs']), jobs[['geometry', 'jobs']], how='left', predicate='intersects').drop(columns=['index_right'])
+        hexagons = hexagons[~hexagons['jobs'].isnull()].copy()
         hexagons = hexagons[['h3_polyfill', 'geometry']].to_crs(22192)
         cols = {'jobs': job_cols, 'population': population_cols}
         agents_per_hexagon = {}

@@ -489,7 +489,7 @@ def compare_indicators(zones, scenario, divide_zones=True):
     comparison['acc_60'] = 100 * (comparison['jobs_60'] / comparison['jobs'].sum())
     comparison['acc_60p'] = 100 * (comparison['jobs_60p'] / comparison['jobsp'].sum())
     comparison['acc_60d'] = comparison['acc_60p'] - comparison['acc_60']
-    comparison['pct_ch_acc'] = 100 * (comparison['acc_60_d']) / comparison['acc_60']
+    comparison['pct_ch_acc'] = 100 * (comparison['acc_60d']) / comparison['acc_60']
     comparison['pop_acc'] = comparison['acc_60'] * comparison['POB10']
     comparison['pov_acc'] = comparison['acc_60'] * comparison['NBI_H10']
     comparison['pop_accp'] = comparison['acc_60p'] * comparison['POB10']
@@ -568,7 +568,7 @@ def compare_indicators(zones, scenario, divide_zones=True):
     pop_acc_change = project_pop_acc - orig_pop_acc
     pov_acc_change = project_pov_acc - orig_pov_acc
     pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
-    pov_acc_pct_change =  100 * (pov_acc_change/orig_pov_acc)
+    pov_acc_pct_change = 100 * (pov_acc_change/orig_pov_acc)
     print('Original population weighted job accessibility in BUFFER:', orig_pop_acc)
     print('Change in population weighted job accessibility in BUFFER:', pop_acc_change)
     print('Percentage change in population weighted job accessibility in BUFFER:', pop_acc_pct_change)
@@ -576,13 +576,13 @@ def compare_indicators(zones, scenario, divide_zones=True):
     print('Change in poverty weighted job accessibility in BUFFER:', pov_acc_change)
     print('Percentage change in poverty weighted job accessibility in BUFFER:', pov_acc_pct_change)
 
-
+    breakpoint()
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
-    comparison = comparison.fillna(0)
+    comparison = comparison.reset_index().fillna(0)
     id_cols = ['h3_polyfil', 'NBI_H10', 'POB10', buffer_col]
     job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
     low_income_job_cols = ['li' + col for col in job_cols]
-    comparison = comparison[id_cols + job_cols + low_income_job_cols]
+    comparison = comparison[id_cols + job_cols + low_income_job_cols + 'geometry']
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

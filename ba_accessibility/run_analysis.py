@@ -582,7 +582,7 @@ def compare_indicators(zones, scenario, divide_zones=True):
     id_cols = ['h3_polyfil', 'NBI_H10', 'POB10', buffer_col]
     job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
     low_income_job_cols = ['li' + col for col in job_cols]
-    comparison = comparison[id_cols + job_cols + low_income_job_cols + 'geometry']
+    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['geometry']]
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

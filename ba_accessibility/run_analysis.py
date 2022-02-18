@@ -24,7 +24,9 @@ def process_update_demographics(divide_zones = True):
     population_cols = ['POB10', 'HOG10', 'NBI_H10']
     if not os.path.exists('data/processed/zones'):
         os.makedirs('./data/processed/zones')
-    zones = jobs.copy()
+    zones = gpd.sjoin(population.reset_index(), jobs[['geometry', 'jobs']].to_crs(population.crs), how='left', predicate='intersects').drop(columns=['index_right'])
+    zones_in_jobs = zones[~zones['jobs'].isnull()]
+    zones = population[population.index.isin(zones_in_jobs['index'])]
     if divide_zones == True:
         resolution = 8  # 10
         hexagons = zones.h3.polyfill_resample(resolution).reset_index()
@@ -63,7 +65,8 @@ def process_update_demographics(divide_zones = True):
             project_stations = project_stations.dissolve()
             hexagons = gpd.sjoin(hexagons, project_stations[[buffer_col, 'geometry']], how='left', predicate='intersects').drop(columns=['index_right'])
             buffer_cols += [buffer_col]
-        cols = ['h3_polyfill', 'geometry'] + job_cols + population_cols + buffer_cols
+        hexagons['lijobs'] = hexagons['job_a'] + hexagons['job_b'] + hexagons['job_c'] + hexagons['job_d'] + hexagons['job_h']
+        cols = ['h3_polyfill', 'geometry', 'jobs', 'lijobs'] + population_cols + buffer_cols
         hexagons[cols].to_file('data/processed/zones/zones.shp')
     else:
         jobs[['ID', 'geometry'] + job_cols + population_cols].to_file('data/processed/zones/zones.shp')
@@ -369,6 +372,7 @@ def create_pandana_network(ua_net, scenario, zones):
     zones.index = zones.index.astype('str')
     zones = zones.join(id_df)
     net.set(zones['id_int'], variable=zones.jobs, name='jobs')
+    net.set(zones['id_int'], variable=zones.lijobs, name='lijobs')
     zones = zones.set_index('id_int')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     # travel_data = calculate_distance_matrix(zones, 'h3_polyfill')
@@ -425,10 +429,10 @@ def read_process_zones(bbox):
     zones['y'] = zones.geometry.y
     if not os.path.isfile('results/osm_nodes.csv'):
         nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
-        net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
-        remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
-        edges = edges[~(edges['from'].isin(remove_nodes) | edges['to'].isin(remove_nodes))]
-        nodes = nodes[~(nodes.index.isin(edges['from'])) | (nodes.index.isin(edges['to']))]
+        #net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
+        #remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
+        #edges = edges[~(edges['from'].isin(remove_nodes) | edges['to'].isin(remove_nodes))]
+        #nodes = nodes[~(nodes.index.isin(edges['from'])) | (nodes.index.isin(edges['to']))]
         nodes.to_csv('results/osm_nodes.csv', index=False)
         edges.to_csv('results/osm_edges.csv', index=False)
     else:
@@ -452,12 +456,12 @@ def read_process_zones(bbox):
 def calculate_indicators(scenario, net, zones):
     s_time = time.time()
     print('Aggregating variables')
-    for i in [60]:
-        zones['jobs_' + str(i)] = net.aggregate(i, type='sum', decay='flat', name='jobs')
+    zones['jobs_60'] = net.aggregate(60, type='sum', decay='flat', name='jobs')
+    zones['lijobs_60'] = net.aggregate(60, type='sum', decay='flat', name='lijobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['h3_polyfil', 'jobs', 'lijobs', 'jobs_60', 'lijobs_60']].to_csv('results/%s.csv' % scenario)
     #zones[['ID', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
@@ -472,47 +476,113 @@ def compare_indicators(zones, scenario, divide_zones=True):
     job_cols = [col for col in baseline.columns if 'jobs' in col]
     project = project[job_cols]
     for col in job_cols:
-        project = project.rename(columns={col: col+'_p'})
+        project = project.rename(columns={col: col+'p'})
     comparison = baseline[job_cols].join(project)
     if divide_zones == True:
         comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'NBI_H10', buffer_col]].join(comparison)
     else:
         comparison = zones.set_index('ID')[['geometry', 'POB10', 'NBI_H10', buffer_col]].join(comparison)
-    for col in job_cols:
-        comparison[col + '_d'] = comparison[col + '_p'] - comparison[col]
-        comparison[col.replace('jobs', 'pct_ch')] = (comparison[col + '_d']) / comparison[col]
-        comparison['pct' + col.replace('jobs', '')] = 100 * (comparison[col] / comparison['jobs'].sum())
-        comparison['pct' + col.replace('jobs', '') + '_p'] = 100 * (comparison[col + '_p'] / comparison['jobs_p'].sum())
-        comparison['pct' + col.replace('jobs', '') + '_d'] = comparison['pct' + col.replace('jobs', '') + '_p'] - comparison['pct' + col.replace('jobs', '')]
-    comparison['pop_acc'] = comparison['pct_60'] * comparison['POB10']
-    comparison['pov_acc'] = comparison['pct_60'] * comparison['NBI_H10']
-    comparison['pop_acc_p'] = comparison['pct_60_p'] * comparison['POB10']
-    comparison['pov_acc_p'] = comparison['pct_60_p'] * comparison['NBI_H10']
 
+
+    breakpoint()
+    comparison['jobs_60d'] = comparison['jobs_60p'] - comparison['jobs_60']
+    comparison['acc_60'] = 100 * (comparison['jobs_60'] / comparison['jobs'].sum())
+    comparison['acc_60p'] = 100 * (comparison['jobs_60p'] / comparison['jobsp'].sum())
+    comparison['acc_60d'] = comparison['acc_60p'] - comparison['acc_60']
+    comparison['pct_ch_acc'] = 100 * (comparison['acc_60_d']) / comparison['acc_60']
+    comparison['pop_acc'] = comparison['acc_60'] * comparison['POB10']
+    comparison['pov_acc'] = comparison['acc_60'] * comparison['NBI_H10']
+    comparison['pop_accp'] = comparison['acc_60p'] * comparison['POB10']
+    comparison['pov_accp'] = comparison['acc_60p'] * comparison['NBI_H10']
+
+
+    comparison['lijobs_60d'] = comparison['lijobs_60p'] - comparison['lijobs_60']
+    comparison['liacc_60'] = 100 * (comparison['lijobs_60'] / comparison['lijobs'].sum())
+    comparison['liacc_60p'] = 100 * (comparison['lijobs_60p'] / comparison['lijobsp'].sum())
+    comparison['liacc_60d'] = comparison['liacc_60p'] - comparison['liacc_60']
+    comparison['lipct_ch_acc'] = 100 * (comparison['liacc_60d']) / comparison['liacc_60']
+    comparison['lipop_acc'] = comparison['liacc_60'] * comparison['POB10']
+    comparison['lipov_acc'] = comparison['liacc_60'] * comparison['NBI_H10']
+    comparison['lipop_accp'] = comparison['liacc_60p'] * comparison['POB10']
+    comparison['lipov_accp'] = comparison['liacc_60p'] * comparison['NBI_H10']
+
+    print('---------------------------------------------')
+    print('ENTIRE REGION')
+    print('---------------------------------------------')
     orig_pop_acc = comparison['pop_acc'].sum()/comparison['POB10'].sum()
     orig_pov_acc = comparison['pov_acc'].sum()/comparison['NBI_H10'].sum()
-    project_pop_acc = comparison['pop_acc_p'].sum()/comparison['POB10'].sum()
-    project_pov_acc = comparison['pov_acc_p'].sum()/comparison['NBI_H10'].sum()
+    project_pop_acc = comparison['pop_accp'].sum()/comparison['POB10'].sum()
+    project_pov_acc = comparison['pov_accp'].sum()/comparison['NBI_H10'].sum()
     pop_acc_change = project_pop_acc - orig_pop_acc
     pov_acc_change = project_pov_acc - orig_pov_acc
-    print('ORIGINAL POPULATION WEIGHTED JOB ACCESSIBILITY:', orig_pop_acc)
-    print('ORIGINAL POVERTY WEIGHTED JOB ACCESSIBILITY:', orig_pov_acc)
-    print('CHANGE IN POPULATION WEIGHTED JOB ACCESSIBILITY:', pop_acc_change)
-    print('CHANGE IN POVERTY WEIGHTED JOB ACCESSIBILITY:', pov_acc_change)
-    breakpoint()
+    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
+    pov_acc_pct_change = 100 * (pov_acc_change/orig_pov_acc)
+    print('Original population weighted job accessibility:', orig_pop_acc)
+    print('Change in population weighted job accessibility:', pop_acc_change)
+    print('Percentage change in population weighted job accessibility:', pop_acc_pct_change)
+    print('Original poverty weighted job accessibility:', orig_pov_acc)
+    print('Change in poverty weighted job accessibility:', pov_acc_change)
+    print('Percentage change in poverty weighted job accessibility:', pov_acc_pct_change)
+    print('---------------------------------------------')
+    print('ENTIRE REGION - LOW INCOME JOBS')
+    print('---------------------------------------------')
+    orig_pop_acc = comparison['lipop_acc'].sum()/comparison['POB10'].sum()
+    orig_pov_acc = comparison['lipov_acc'].sum()/comparison['NBI_H10'].sum()
+    project_pop_acc = comparison['lipop_accp'].sum()/comparison['POB10'].sum()
+    project_pov_acc = comparison['lipov_accp'].sum()/comparison['NBI_H10'].sum()
+    pop_acc_change = project_pop_acc - orig_pop_acc
+    pov_acc_change = project_pov_acc - orig_pov_acc
+    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
+    pov_acc_pct_change = 100 * (pov_acc_change/orig_pov_acc)
+    print('Original population weighted low income job accessibility:', orig_pop_acc)
+    print('Change in population weighted low income job accessibility:', pop_acc_change)
+    print('Percentage change in population weighted low income job accessibility:', pop_acc_pct_change)
+    print('Original poverty weighted low income job accessibility:', orig_pov_acc)
+    print('Change in poverty weighted low income job accessibility:', pov_acc_change)
+    print('Percentage change in poverty weighted low income job accessibility:', pov_acc_pct_change)
+    print('---------------------------------------------')
+    print('AREA OF INFLUENCE')
+    print('---------------------------------------------')
     area_comparison = comparison[~comparison[buffer_col].isnull()]
     orig_pop_acc = area_comparison['pop_acc'].sum()/area_comparison['POB10'].sum()
     orig_pov_acc = area_comparison['pov_acc'].sum()/area_comparison['NBI_H10'].sum()
-    project_pop_acc = area_comparison['pop_acc_p'].sum()/area_comparison['POB10'].sum()
-    project_pov_acc = area_comparison['pov_acc_p'].sum()/area_comparison['NBI_H10'].sum()
+    project_pop_acc = area_comparison['pop_accp'].sum()/area_comparison['POB10'].sum()
+    project_pov_acc = area_comparison['pov_accp'].sum()/area_comparison['NBI_H10'].sum()
     pop_acc_change = project_pop_acc - orig_pop_acc
     pov_acc_change = project_pov_acc - orig_pov_acc
-    print('ORIGINAL POPULATION WEIGHTED JOB ACCESSIBILITY IN BUFFER:', orig_pop_acc)
-    print('ORIGINAL POVERTY WEIGHTED JOB ACCESSIBILITY IN BUFFER:', orig_pov_acc)
-    print('CHANGE IN POPULATION WEIGHTED JOB ACCESSIBILITY IN BUFFER:', pop_acc_change)
-    print('CHANGE IN POVERTY WEIGHTED JOB ACCESSIBILITY IN BUFFER:', pov_acc_change)
+    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
+    pov_acc_pct_change =  100 * (pov_acc_change/orig_pov_acc)
+    print('Original population weighted job accessibility in BUFFER:', orig_pop_acc)
+    print('Change in population weighted job accessibility in BUFFER:', pop_acc_change)
+    print('Percentage change in population weighted job accessibility in BUFFER:', pop_acc_pct_change)
+    print('Original poverty weighted job accessibility in BUFFER:', orig_pov_acc)
+    print('Change in poverty weighted job accessibility in BUFFER:', pov_acc_change)
+    print('Percentage change in poverty weighted job accessibility in BUFFER:', pov_acc_pct_change)
+    print('---------------------------------------------')
+    print('AREA OF INFLUENCE - LOW INCOME JOBS')
+    print('---------------------------------------------')
+    orig_pop_acc = area_comparison['lipop_acc'].sum()/area_comparison['POB10'].sum()
+    orig_pov_acc = area_comparison['lipov_acc'].sum()/area_comparison['NBI_H10'].sum()
+    project_pop_acc = area_comparison['lipop_accp'].sum()/area_comparison['POB10'].sum()
+    project_pov_acc = area_comparison['lipov_accp'].sum()/area_comparison['NBI_H10'].sum()
+    pop_acc_change = project_pop_acc - orig_pop_acc
+    pov_acc_change = project_pov_acc - orig_pov_acc
+    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
+    pov_acc_pct_change =  100 * (pov_acc_change/orig_pov_acc)
+    print('Original population weighted job accessibility in BUFFER:', orig_pop_acc)
+    print('Change in population weighted job accessibility in BUFFER:', pop_acc_change)
+    print('Percentage change in population weighted job accessibility in BUFFER:', pop_acc_pct_change)
+    print('Original poverty weighted job accessibility in BUFFER:', orig_pov_acc)
+    print('Change in poverty weighted job accessibility in BUFFER:', pov_acc_change)
+    print('Percentage change in poverty weighted job accessibility in BUFFER:', pov_acc_pct_change)
+
+
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.fillna(0)
+    id_cols = ['h3_polyfil', 'NBI_H10', 'POB10', buffer_col]
+    job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
+    low_income_job_cols = ['li' + col for col in job_cols]
+    comparison = comparison[id_cols + job_cols + low_income_job_cols]
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 
@@ -535,10 +605,10 @@ if __name__ == '__main__':
     end_time = args.end_time if args.end_time else '08:00:00'
     weekday = args.weekday if args.weekday else 'monday'
 
-    if update_demographics:
-        process_update_demographics()
     if update_gtfs:
         process_update_gtfs()
+    if update_demographics:
+        process_update_demographics()
     run(project_id, start_time, end_time, weekday)
 
 

@@ -1,6 +1,6 @@
 ﻿project_id,mode,route_id,direction_id,stop_id_from,stop_id_to,stop_name_from,stop_name_to,from_to,min_since_prev,delta,headway_min,frequency
 1,trenes,5,0,332,1000,Retiro,Facultad de Derecho,332_1000,5,5,12,5
-1,trenes,5,0,1000,229,Facultad de Derecho,L. De La Torre,,3,8,12,5
+1,trenes,5,0,1000,229,Facultad de Derecho,L. De La Torre,1000_229,3,8,12,5
 1,trenes,5,0,229,34,L. De La Torre,Belgrano C.,229_34,2,10,12,5
 1,trenes,5,0,34,287,Belgrano C.,Nuñez,34_287,3,13,12,5
 1,trenes,5,0,287,337,Nuñez,Rivadavia,287_337,3,16,12,5
@@ -34,7 +34,7 @@
 1,trenes,5,1,229,1000,L. De La Torre,Facultad de Derecho,229_1000,3,42,12,5
 1,trenes,5,1,1000,332,Facultad de Derecho,Retiro,1000_332,6,48,12,5
 1,trenes,33,0,332,1000,Retiro,Facultad de Derecho,332_1000,5,5,30,2
-1,trenes,33,0,1000,229,Facultad de Derecho,L. De La Torre,,3,8,30,2
+1,trenes,33,0,1000,229,Facultad de Derecho,L. De La Torre,1000_229,3,8,30,2
 1,trenes,33,0,229,34,L. De La Torre,Belgrano C.,229_34,2,10,30,2
 1,trenes,33,0,34,287,Belgrano C.,Nuñez,34_287,3,13,30,2
 1,trenes,33,0,287,337,Nuñez,Rivadavia,287_337,3,16,30,2

@@ -1,4 +1,6 @@
 ﻿project_id,mode,route_id,direction_id,stop_id_from,stop_id_to,stop_name_from,stop_name_to,from_to,min_since_prev,delta,headway_min,frequency
+0,trenes,1001,0,1002,1001,new_line_2,new_line_1,1002_1001,2,2,5,12
+0,trenes,1001,1,1001,1002,new_line_1,new_line_2,1001_1002,2,2,5,12
 1,trenes,5,0,332,1000,Retiro,Facultad de Derecho,332_1000,5,5,12,5
 1,trenes,5,0,1000,229,Facultad de Derecho,L. De La Torre,1000_229,3,8,12,5
 1,trenes,5,0,229,34,L. De La Torre,Belgrano C.,229_34,2,10,12,5

@@ -1,4 +1,8 @@
 ﻿project_id,mode,route_id,direction_id,stop_id,stop_name_from,stop_sequence,location
+0,trenes,1001,0,1002,new_line_2,1,CABA
+0,trenes,1001,0,1001,new_line_1,2,CABA
+0,trenes,1001,1,1001,new_line_1,1,CABA
+0,trenes,1001,1,1002,new_line_2,2,CABA
 1,trenes,5,0,332,Retiro,1,CABA
 1,trenes,5,0,1000,Facultad de Derecho,2,CABA
 1,trenes,5,0,229,L. De La Torre,3,CABA

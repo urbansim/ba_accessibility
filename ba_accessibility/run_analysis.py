@@ -255,14 +255,41 @@ def create_gtfs_with_project():
             updated_stops.to_csv('data/processed/gtfs_project_%s/%s/stops.txt' % (project_id, mode),index=False)
             updated_stop_times.to_csv('data/processed/gtfs_project_%s/%s/stop_times.txt' % (project_id, mode), index=False)
             updated_trips.to_csv('data/processed/gtfs_project_%s/%s/trips.txt' % (project_id, mode), index=False)
-            export_project_shape(project_id, updated_stops, travel_time_updates)
+            export_project_shape(stop_times, trips, project_id, updated_stops, travel_time_updates)
 
-def export_project_shape(project_id, stops, travel_time_updates):
+def export_project_shape(stop_times, trips, project_id, stops, travel_time_updates):
     edges = travel_time_updates[travel_time_updates['project_id']==project_id]
     edges = edges.rename(columns={'stop_id_from': 'from', 'stop_id_to': 'to'})
     nodes = stops.drop(columns=['stop_name']).rename(columns={'stop_id':'id', 'stop_lat': 'y', 'stop_lon': 'x'})
     nodes = nodes[(nodes['id'].isin(edges['from']))|(nodes['id'].isin(edges['to']))]
     export_shp(nodes, edges, name_shp='project_%s_trajectory' % project_id)
+    affected_routes = [route for route in edges['route_id'].unique() if route in trips.route_id.unique()]
+    if len(affected_routes)>0:
+        stop_times = time_to_seconds(stop_times, ['arrival_time', 'departure_time'])
+        stop_times_routes = stop_times.merge(trips[['trip_id', 'route_id', 'service_id', 'direction_id']], on='trip_id', how ='left')
+        stop_times_routes['route_service_direction'] = stop_times_routes['route_id'].astype('str') + '_' + stop_times_routes['service_id'].astype('str') + '_' + stop_times_routes['direction_id'].astype('str')
+        stop_times_routes['route_service_direction_trip'] = stop_times_routes['route_service_direction'] + '_' + stop_times_routes['trip_id'].astype('str')
+        num_stops = stop_times_routes.groupby(['route_service_direction_trip'])['stop_id'].count()
+        stop_times_routes = stop_times_routes.set_index('route_service_direction_trip')
+        stop_times_routes['num_stops_trip'] = num_stops
+        max_num_stops = stop_times_routes.reset_index().groupby(['route_service_direction'])['num_stops_trip'].max()
+        stop_times_routes = stop_times_routes.reset_index().set_index('route_service_direction')
+        stop_times_routes['max_num_stops'] = max_num_stops
+        stop_times_routes = stop_times_routes[stop_times_routes['num_stops_trip'] == stop_times_routes['max_num_stops']]
+        min_trips = stop_times_routes.groupby(['route_id', 'service_id', 'direction_id', 'stop_id'])['trip_id'].min()
+        baseline_tt = stop_times_routes[stop_times_routes['trip_id'].isin(min_trips)]
+        baseline_tt = baseline_tt[baseline_tt['service_id'] == baseline_tt['service_id'].min()]
+        baseline_tt['to'] = baseline_tt['stop_id'].astype('int')
+        baseline_tt['from'] = baseline_tt['stop_id'].shift().fillna(0).astype('int')
+        baseline_tt['prev_arrival_time'] = baseline_tt['arrival_time'].shift().fillna(0)
+        baseline_tt['min_since_prev'] = (baseline_tt['arrival_time'] - baseline_tt['prev_arrival_time'])/60
+        edges = baseline_tt[baseline_tt['stop_sequence']>1]
+        edges = edges[edges['route_id'].isin(travel_time_updates[travel_time_updates['project_id']==project_id]['route_id'].unique())]
+        nodes = stops.drop(columns=['stop_name']).rename(columns={'stop_id': 'id', 'stop_lat': 'y', 'stop_lon': 'x'})
+        nodes = nodes[(nodes['id'].isin(edges['from'])) | (nodes['id'].isin(edges['to']))]
+        export_shp(nodes, edges, name_shp='project_%s_baseline_trajectory' % project_id)
+
+
 
 
 def copy_with_project_files(project_id):
@@ -282,17 +309,31 @@ def update_frequencies(stops, stop_times, trips, new_stops, stop_updates, travel
     stop_times_routes = stop_times.merge(trips[['trip_id', 'route_id', 'service_id', 'direction_id']], on='trip_id', how ='left')
     routes_to_update = travel_time_updates[travel_time_updates['project_id'] == project_id]['route_id'].unique()
     unchanged_trips = stop_times_routes[~stop_times_routes['route_id'].isin(routes_to_update)]['trip_id'].unique()
-    stop_times_routes = stop_times_routes[stop_times_routes['route_id'].isin(routes_to_update)]
-
+    if len(stop_times_routes[stop_times_routes['route_id'].isin(routes_to_update)].index) == 0:
+        sample_route = stop_times_routes['route_id'].unique()[0]
+        stop_times_routes_project = stop_times_routes[stop_times_routes['route_id'] == sample_route]
+        start_times = pd.DataFrame(stop_times_routes_project.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].min()).rename(columns={'arrival_time': 'start_time'})
+        end_times = pd.DataFrame(stop_times_routes_project.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].max()).rename(columns={'arrival_time': 'end_time'})
+        frequencies = pd.DataFrame()
+        for route in routes_to_update:
+            start_times_route = start_times.reset_index().copy()
+            end_times_route = end_times.reset_index().copy()
+            start_times_route['route_id'] = route
+            end_times_route['route_id'] = route
+            start_times_route = start_times_route.set_index(['route_id', 'service_id', 'direction_id'])
+            end_times_route = end_times_route.set_index(['route_id', 'service_id', 'direction_id'])
+            frequencies_route = start_times_route.join(end_times_route)
+            frequencies = frequencies.append(frequencies_route)
+    else:
+          stop_times_routes_project = stop_times_routes[stop_times_routes['route_id'].isin(routes_to_update)]
+          start_times = pd.DataFrame(stop_times_routes_project.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].min()).rename(columns={'arrival_time': 'start_time'})
+          end_times = pd.DataFrame(stop_times_routes_project.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].max()).rename(columns={'arrival_time': 'end_time'})
+          frequencies = start_times.join(end_times)
     headways = travel_time_updates[['route_id', 'headway_min']].groupby('route_id').min().reset_index()
     headways['headway_secs'] = headways['headway_min'] * 60
-    start_times = pd.DataFrame(stop_times_routes.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].min()).rename(columns={'arrival_time': 'start_time'})
-    end_times = pd.DataFrame(stop_times_routes.groupby(['route_id', 'service_id', 'direction_id'])['arrival_time'].max()).rename(columns={'arrival_time': 'end_time'})
-    frequencies = start_times.join(end_times)
     frequencies = frequencies.reset_index().merge(headways[['route_id', 'headway_secs']], on='route_id', how='left')
     frequencies['exact_times'] = 1
     updated_stop_times, updated_trips = update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_updates, travel_time_updates)
-
     unchanged_stop_times = stop_times[stop_times['trip_id'].isin(unchanged_trips)]
     unchanged_stop_times['arrival_time'] = pd.to_datetime(unchanged_stop_times['arrival_time'].round(), unit='s').dt.time
     unchanged_stop_times['departure_time'] = pd.to_datetime(unchanged_stop_times['departure_time'].round(), unit='s').dt.time
@@ -303,12 +344,14 @@ def update_frequencies(stops, stop_times, trips, new_stops, stop_updates, travel
 
 def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_updates, travel_time_updates):
     modified_stop_times = pd.DataFrame()
+    start_trip_id = stop_times_routes['trip_id'].max() + str(1)
     for route in routes_to_update:
         i = 1
         for service_id in frequencies.service_id.unique():
             for direction in frequencies.direction_id.unique():
                 selection = (stop_times_routes['route_id'] == route) & (stop_times_routes['service_id'] == service_id) & (stop_times_routes['direction_id'] == direction)
-                start_trip_id = stop_times_routes[selection]['trip_id'].min()
+                if len(stop_times_routes[selection]) != 0:
+                    start_trip_id = stop_times_routes[selection]['trip_id'].min()
                 start_arrival_time = frequencies[frequencies['route_id']==route].start_time.min()
                 stop_times_route = stop_updates[(stop_updates['route_id'] == route) & (stop_updates['direction_id']==direction)]
                 stop_times_route['arrival_min'] = start_arrival_time

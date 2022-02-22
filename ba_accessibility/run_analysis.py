@@ -24,13 +24,13 @@ def process_update_demographics(divide_zones = True):
     population_cols = ['POB10', 'HOG10', 'NBI_H10']
     if not os.path.exists('data/processed/zones'):
         os.makedirs('./data/processed/zones')
-    zones = population.reset_index().to_crs(jobs.crs).append(jobs)
+    zones = population.reset_index().to_crs(jobs.crs).append(jobs).dissolve()
     if divide_zones == True:
         resolution = 8  # 10
         hexagons = zones.h3.polyfill_resample(resolution).reset_index()
-        hexagons = gpd.sjoin(hexagons.drop(columns=['jobs']), jobs[['geometry', 'jobs']], how='left', predicate='intersects').drop(columns=['index_right'])
-        hexagons = hexagons[~hexagons['jobs'].isnull()].copy()
-        hexagons = hexagons[['h3_polyfill', 'geometry']].to_crs(22192)
+        hexagons_with_jobs = gpd.sjoin(hexagons.drop(columns=['jobs']), jobs[['geometry', 'jobs']], how='left', predicate='intersects').drop(columns=['index_right'])
+        hexagons_with_jobs = hexagons_with_jobs[~hexagons_with_jobs['jobs'].isnull()].copy()
+        hexagons = hexagons[hexagons['h3_polyfill'].isin(hexagons_with_jobs['h3_polyfill'])][['h3_polyfill', 'geometry']].to_crs(22192)
         cols = {'jobs': job_cols, 'population': population_cols}
         agents_per_hexagon = {}
         for agent in ['jobs', 'population']:

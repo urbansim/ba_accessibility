@@ -158,6 +158,7 @@ def format_inputs(frequencies, stop_times):
         stop_times['pct'] = (stop_times['shape_dist_traveled'] - stop_times['min_dist'])/stop_times['total_dist']
         stop_times['arrival_time'] = stop_times['min_arrival'] + stop_times['pct'] * (stop_times['max_arrival'] - stop_times['min_arrival'])
         stop_times['departure_time'] = stop_times['arrival_time']
+        stop_times = stop_times.reset_index()
     stop_times['stop_duration'] = stop_times['departure_time'] - stop_times['arrival_time']
     return frequencies, stop_times
 

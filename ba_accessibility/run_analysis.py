@@ -148,8 +148,16 @@ def format_inputs(frequencies, stop_times):
     stop_times = time_to_seconds(stop_times, ['arrival_time', 'departure_time'])
     stop_times = stop_times.sort_values(by=['trip_id', 'stop_sequence'])
     if len(stop_times[stop_times['arrival_time'].isnull()].index) > 0:
-        stop_times['arrival_time'] = stop_times['arrival_time'].interpolate()
-        stop_times['departure_time'] = stop_times['departure_time'].interpolate()
+        min_arrivals = stop_times.groupby('trip_id')['arrival_time'].min().reset_index().rename(columns={'arrival_time': 'min_arrival'})
+        max_arrivals = stop_times.groupby('trip_id')['arrival_time'].max().reset_index().rename(columns={'arrival_time': 'max_arrival'})
+        min_dist = stop_times.groupby('trip_id')['shape_dist_traveled'].min().reset_index().rename(columns={'shape_dist_traveled': 'min_dist'})
+        max_dist = stop_times.groupby('trip_id')['shape_dist_traveled'].max().reset_index().rename(columns={'shape_dist_traveled': 'max_dist'})
+        stop_times = stop_times.set_index('trip_id').join(min_arrivals.set_index('trip_id')).join(max_arrivals.set_index('trip_id'))
+        stop_times = stop_times.join(min_dist.set_index('trip_id')).join(max_dist.set_index('trip_id'))
+        stop_times['total_dist'] = stop_times['max_dist'] - stop_times['min_dist']
+        stop_times['pct'] = (stop_times['shape_dist_traveled'] - stop_times['min_dist'])/stop_times['total_dist']
+        stop_times['arrival_time'] = stop_times['min_arrival'] + stop_times['pct'] * (stop_times['max_arrival'] - stop_times['min_arrival'])
+        stop_times['departure_time'] = stop_times['arrival_time']
     stop_times['stop_duration'] = stop_times['departure_time'] - stop_times['arrival_time']
     return frequencies, stop_times
 

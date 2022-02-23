@@ -427,9 +427,19 @@ def create_pandana_network(ua_net, scenario, zones):
     net.set(zones['id_int'], variable=zones.lijobs, name='lijobs')
     zones = zones.set_index('id_int')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
-    # travel_data = calculate_distance_matrix(zones, 'h3_polyfill')
-    # travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfill')
-    # travel_data.to_csv('results/travel_data_%s.csv' % scenario)
+    travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
+    travel_data = travel_data[travel_data['to_id'] == '88c2e31ad1fffff']
+    travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
+    travel_data = zones[zones['h3_polyfil'].isin(travel_data['from_id'].unique())].merge(travel_data[['from_id', 'euclidean_distance', 'pandana_distance']], left_on='h3_polyfil', right_on='from_id', how='left')
+    travel_data.to_file('times_to_cbd_%s.shp' % scenario)
+    node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
+    node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
+    shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
+    nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
+    edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
+    edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
+    export_shp(nodes, edges, name_shp='escobar_retiro_%s' % scenario)
+    breakpoint()
     return net, zones
 
 

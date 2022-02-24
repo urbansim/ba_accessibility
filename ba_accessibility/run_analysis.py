@@ -57,8 +57,8 @@ def process_update_demographics(divide_zones = True):
             project_stations = gpd.read_file('results/project_%s_trajectory_nodes.shp' % project_id).to_crs(22192)
             project_stations = project_stations.set_index('id').join(stops_locations)
             project_stations.loc[project_stations['location'] == 'CABA', 'buffer'] = project_stations['geometry'].buffer(1500)
-            project_stations.loc[project_stations['location'] == 'CORDON_1', 'buffer'] = project_stations['geometry'].buffer(2000)
-            project_stations.loc[project_stations['location'] == 'CORDON_2', 'buffer'] = project_stations['geometry'].buffer(2500)
+            project_stations.loc[project_stations['location'] == 'CORDON_1', 'buffer'] = project_stations['geometry'].buffer(1500)
+            project_stations.loc[project_stations['location'] == 'CORDON_2', 'buffer'] = project_stations['geometry'].buffer(1500)
             project_stations = project_stations.drop(columns=['geometry']).rename(columns={'buffer':'geometry'})
             buffer_col = 'buff' + str(project_id)
             project_stations = project_stations.set_geometry('geometry').rename(columns={'location': buffer_col})
@@ -198,7 +198,6 @@ def expand_stop_times(frequencies, stop_times):
             selected_frequencies = frequencies[frequencies['trip_id'].isin(selected_trip_ids)]
             selected_stop_times = stop_times[stop_times['trip_id'].isin(selected_trip_ids)]
 
-            #min_arrival_time = stop_times.arrival_time.min()
             min_arrival_time = selected_stop_times.groupby('trip_id').arrival_time.min().reset_index()
             min_arrival_time = min_arrival_time.rename(columns={'arrival_time': 'min_arrival_time'})
             selected_stop_times = selected_stop_times.merge(min_arrival_time, on='trip_id', how='left')

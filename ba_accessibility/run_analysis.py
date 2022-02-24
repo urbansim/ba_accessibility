@@ -388,8 +388,8 @@ def run(project_id, start_time, end_time, weekday):
     nodes, edges, zones = read_process_zones(bbox)
     for scenario in ['baseline', 'project_' + project_id]:
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
-        net, zones_net = create_pandana_network(ua_net, scenario, zones)
-        calculate_indicators(scenario, net, zones_net)
+        net, zones_net, travel_data = create_pandana_network(ua_net, scenario, zones)
+        calculate_indicators(scenario, net, zones_net, travel_data)
     compare_indicators(zones, 'project_' + project_id)
 
 
@@ -428,19 +428,18 @@ def create_pandana_network(ua_net, scenario, zones):
     zones = zones.set_index('id_int')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
-    travel_data = travel_data[travel_data['to_id'] == '88c2e31ad1fffff']
     travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
-    travel_data = zones[zones['h3_polyfil'].isin(travel_data['from_id'].unique())].merge(travel_data[['from_id', 'euclidean_distance', 'pandana_distance']], left_on='h3_polyfil', right_on='from_id', how='left')
-    travel_data.to_file('times_to_cbd_%s.shp' % scenario)
-    node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
-    node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
-    shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
-    nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
-    edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
-    edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
-    export_shp(nodes, edges, name_shp='escobar_retiro_%s' % scenario)
-    breakpoint()
-    return net, zones
+    travel_data = zones[zones['h3_polyfil'].isin(travel_data['from_id'].unique())].merge(travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']], left_on='h3_polyfil', right_on='from_id', how='left')
+    #travel_data.to_file('times_to_cbd_%s.shp' % scenario)
+    #Path from Escobar to Retiro
+    #node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
+    #node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
+    #shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
+    #nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
+    #edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
+    #edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
+    #export_shp(nodes, edges, name_shp='escobar_retiro_%s' % scenario)
+    return net, zones, travel_data
 
 
 def calculate_distance_matrix(df, id_col):
@@ -515,15 +514,22 @@ def read_process_zones(bbox):
     return nodes, edges, zones
 
 
-def calculate_indicators(scenario, net, zones):
+def calculate_indicators(scenario, net, zones, travel_data):
     s_time = time.time()
+    print('Calculating indicators from skims')
+    within_60_min = travel_data[travel_data['pandana_distance']<=90]
+    jobs_60 = within_60_min.groupby('from_id')['jobs', 'lijobs'].sum().rename(columns={'jobs':'jobs_60', 'lijobs':'lijobs_60'})
+    zones = zones.set_index('h3_polyfil').join(jobs_60)
+    times_to_cbd = travel_data[travel_data['to_id'] == '88c2e31ad1fffff'].rename(columns={'pandana_distance': 'time_cbd'})
+    zones = zones.join(times_to_cbd.set_index('from_id')[['time_cbd']])
+    print('Took {:,.2f} seconds'.format(time.time() - s_time))
     print('Aggregating variables')
-    zones['jobs_60'] = net.aggregate(60, type='sum', decay='flat', name='jobs')
-    zones['lijobs_60'] = net.aggregate(60, type='sum', decay='flat', name='lijobs')
+    zones['jobs_60_agg'] = net.aggregate(90, type='sum', decay='flat', name='jobs')
+    zones['lijobs_60_agg'] = net.aggregate(90, type='sum', decay='flat', name='lijobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['h3_polyfil', 'jobs', 'lijobs', 'jobs_60', 'lijobs_60']].to_csv('results/%s.csv' % scenario)
+    zones[['jobs', 'lijobs', 'jobs_60', 'lijobs_60', 'jobs_60_agg', 'lijobs_60_agg', 'time_cbd']].to_csv('results/%s.csv' % scenario)
     #zones[['ID', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
@@ -535,7 +541,7 @@ def compare_indicators(zones, scenario, divide_zones=True):
     else:
         baseline = pd.read_csv('results/baseline.csv').set_index('ID')
         project = pd.read_csv('results/%s.csv' % scenario).set_index('ID')
-    job_cols = [col for col in baseline.columns if 'jobs' in col]
+    job_cols = [col for col in baseline.columns if 'jobs' in col] + ['time_cbd']
     project = project[job_cols]
     for col in job_cols:
         project = project.rename(columns={col: col+'p'})
@@ -544,7 +550,6 @@ def compare_indicators(zones, scenario, divide_zones=True):
         comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'HOG10', 'NBI_H10', buffer_col]].join(comparison)
     else:
         comparison = zones.set_index('ID')[['geometry', 'POB10', 'HOG10', 'NBI_H10', buffer_col]].join(comparison)
-    breakpoint()
     comparison['pct_NBI'] = round(comparison['NBI_H10']/comparison['HOG10'], 2)
     comparison['jobs_60d'] = comparison['jobs_60p'] - comparison['jobs_60']
     comparison['acc_60'] = 100 * (comparison['jobs_60'] / comparison['jobs'].sum())
@@ -567,40 +572,6 @@ def compare_indicators(zones, scenario, divide_zones=True):
     comparison['lipop_accp'] = comparison['liacc_60p'] * comparison['POB10']
     comparison['lipov_accp'] = comparison['liacc_60p'] * comparison['NBI_H10']
 
-    print('---------------------------------------------')
-    print('ENTIRE REGION')
-    print('---------------------------------------------')
-    orig_pop_acc = comparison['pop_acc'].sum()/comparison['POB10'].sum()
-    orig_pov_acc = comparison['pov_acc'].sum()/comparison['NBI_H10'].sum()
-    project_pop_acc = comparison['pop_accp'].sum()/comparison['POB10'].sum()
-    project_pov_acc = comparison['pov_accp'].sum()/comparison['NBI_H10'].sum()
-    pop_acc_change = project_pop_acc - orig_pop_acc
-    pov_acc_change = project_pov_acc - orig_pov_acc
-    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
-    pov_acc_pct_change = 100 * (pov_acc_change/orig_pov_acc)
-    print('Original population weighted job accessibility:', orig_pop_acc)
-    print('Change in population weighted job accessibility:', pop_acc_change)
-    print('Percentage change in population weighted job accessibility:', pop_acc_pct_change)
-    print('Original poverty weighted job accessibility:', orig_pov_acc)
-    print('Change in poverty weighted job accessibility:', pov_acc_change)
-    print('Percentage change in poverty weighted job accessibility:', pov_acc_pct_change)
-    print('---------------------------------------------')
-    print('ENTIRE REGION - LOW INCOME JOBS')
-    print('---------------------------------------------')
-    orig_pop_acc = comparison['lipop_acc'].sum()/comparison['POB10'].sum()
-    orig_pov_acc = comparison['lipov_acc'].sum()/comparison['NBI_H10'].sum()
-    project_pop_acc = comparison['lipop_accp'].sum()/comparison['POB10'].sum()
-    project_pov_acc = comparison['lipov_accp'].sum()/comparison['NBI_H10'].sum()
-    pop_acc_change = project_pop_acc - orig_pop_acc
-    pov_acc_change = project_pov_acc - orig_pov_acc
-    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
-    pov_acc_pct_change = 100 * (pov_acc_change/orig_pov_acc)
-    print('Original population weighted low income job accessibility:', orig_pop_acc)
-    print('Change in population weighted low income job accessibility:', pop_acc_change)
-    print('Percentage change in population weighted low income job accessibility:', pop_acc_pct_change)
-    print('Original poverty weighted low income job accessibility:', orig_pov_acc)
-    print('Change in poverty weighted low income job accessibility:', pov_acc_change)
-    print('Percentage change in poverty weighted low income job accessibility:', pov_acc_pct_change)
     print('---------------------------------------------')
     print('AREA OF INFLUENCE')
     print('---------------------------------------------')
@@ -636,14 +607,14 @@ def compare_indicators(zones, scenario, divide_zones=True):
     print('Original poverty weighted job accessibility in BUFFER:', orig_pov_acc)
     print('Change in poverty weighted job accessibility in BUFFER:', pov_acc_change)
     print('Percentage change in poverty weighted job accessibility in BUFFER:', pov_acc_pct_change)
-
-    breakpoint()
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.reset_index().fillna(0)
+    breakpoint()
     id_cols = ['h3_polyfil', 'NBI_H10', 'POB10', buffer_col]
-    job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
+    job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc',
+                'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
     low_income_job_cols = ['li' + col for col in job_cols]
-    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['geometry']]
+    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['time_cbd', 'geometry']]
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

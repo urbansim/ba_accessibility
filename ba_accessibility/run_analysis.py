@@ -118,7 +118,8 @@ def copy_baseline_files():
                 subset = {}
                 subset['feed_info'] = feed_info.copy()
                 subset['agency'] = agencies[agencies['agency_id'] == agency].copy()
-                subset['routes'] = routes[routes['agency_id'] == agency].copy()
+                express_routes = [route for route in routes['route_desc'].unique() if'Expreso' in route]
+                subset['routes'] = routes[(routes['agency_id'] == agency) & (~routes['route_desc'].isin(express_routes))].copy()
                 subset['trips'] = trips[trips['route_id'].isin(subset['routes'].route_id)].copy()
                 subset['calendar'] = calendar[calendar['service_id'].isin(subset['trips'].service_id)].copy()
                 subset['stop_times'] = stop_times[stop_times['trip_id'].isin(subset['trips'].trip_id)].copy()

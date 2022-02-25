@@ -430,7 +430,7 @@ def create_pandana_network(ua_net, scenario, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
     travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
-    travel_data = zones[zones['h3_polyfil'].isin(travel_data['from_id'].unique())].merge(travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']], left_on='h3_polyfil', right_on='from_id', how='left')
+    travel_data = travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']].merge(zones[zones['h3_polyfil'].isin(travel_data['to_id'].unique())], left_on='to_id', right_on='h3_polyfil', how='left')
     #travel_data.to_file('times_to_cbd_%s.shp' % scenario)
     #Path from Escobar to Retiro
     #node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
@@ -530,7 +530,7 @@ def calculate_indicators(scenario, net, zones, travel_data):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
-    zones[['jobs', 'lijobs', 'jobs_60', 'lijobs_60', 'jobs_60_agg', 'lijobs_60_agg', 'time_cbd']].to_csv('results/%s.csv' % scenario)
+    zones[['jobs', 'lijobs', 'jobs_60', 'lijobs_60', 'time_cbd']].to_csv('results/%s.csv' % scenario)
     #zones[['ID', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
@@ -610,12 +610,11 @@ def compare_indicators(zones, scenario, divide_zones=True):
     print('Percentage change in poverty weighted job accessibility in BUFFER:', pov_acc_pct_change)
     comparison = comparison.reindex(sorted(comparison.columns), axis=1)
     comparison = comparison.reset_index().fillna(0)
-    breakpoint()
     id_cols = ['h3_polyfil', 'NBI_H10', 'POB10', buffer_col]
     job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc',
                 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
     low_income_job_cols = ['li' + col for col in job_cols]
-    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['jobs_60_agg', 'jobs_60_aggp', 'lijobs_60_agg', 'lijobs_60_aggp','time_cbd', 'geometry']]
+    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['time_cbd', 'time_cbd_p', 'geometry']]
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

@@ -518,15 +518,11 @@ def read_process_zones(bbox):
 def calculate_indicators(scenario, net, zones, travel_data):
     s_time = time.time()
     print('Calculating indicators from skims')
-    within_60_min = travel_data[travel_data['pandana_distance']<=90]
+    within_60_min = travel_data[travel_data['pandana_distance']<=60]
     jobs_60 = within_60_min.groupby('from_id')['jobs', 'lijobs'].sum().rename(columns={'jobs':'jobs_60', 'lijobs':'lijobs_60'})
     zones = zones.set_index('h3_polyfil').join(jobs_60)
     times_to_cbd = travel_data[travel_data['to_id'] == '88c2e31ad1fffff'].rename(columns={'pandana_distance': 'time_cbd'})
     zones = zones.join(times_to_cbd.set_index('from_id')[['time_cbd']])
-    print('Took {:,.2f} seconds'.format(time.time() - s_time))
-    print('Aggregating variables')
-    zones['jobs_60_agg'] = net.aggregate(90, type='sum', decay='flat', name='jobs')
-    zones['lijobs_60_agg'] = net.aggregate(90, type='sum', decay='flat', name='lijobs')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     if not os.path.exists('results'):
         os.makedirs('./results')
@@ -614,7 +610,7 @@ def compare_indicators(zones, scenario, divide_zones=True):
     job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d', 'pct_ch_acc',
                 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp']
     low_income_job_cols = ['li' + col for col in job_cols]
-    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['time_cbd', 'time_cbd_p', 'geometry']]
+    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['time_cbd', 'time_cbdp', 'geometry']]
     comparison.to_file('results/final_results_%s.shp' % scenario)
     breakpoint()
 

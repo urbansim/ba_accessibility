@@ -149,12 +149,20 @@ def format_inputs(frequencies, stop_times):
     stop_times = time_to_seconds(stop_times, ['arrival_time', 'departure_time'])
     stop_times = stop_times.sort_values(by=['trip_id', 'stop_sequence'])
     if len(stop_times[stop_times['arrival_time'].isnull()].index) > 0:
-        min_arrivals = stop_times.groupby('trip_id')['arrival_time'].min().reset_index().rename(columns={'arrival_time': 'min_arrival'})
-        max_arrivals = stop_times.groupby('trip_id')['arrival_time'].max().reset_index().rename(columns={'arrival_time': 'max_arrival'})
-        min_dist = stop_times.groupby('trip_id')['shape_dist_traveled'].min().reset_index().rename(columns={'shape_dist_traveled': 'min_dist'})
-        max_dist = stop_times.groupby('trip_id')['shape_dist_traveled'].max().reset_index().rename(columns={'shape_dist_traveled': 'max_dist'})
-        stop_times = stop_times.set_index('trip_id').join(min_arrivals.set_index('trip_id')).join(max_arrivals.set_index('trip_id'))
-        stop_times = stop_times.join(min_dist.set_index('trip_id')).join(max_dist.set_index('trip_id'))
+        min_stop_sequence = stop_times.groupby('trip_id')['stop_sequence'].min().reset_index()
+        min_stop_sequence = min_stop_sequence.rename(columns={'stop_sequence': 'min_stop_sequence'})
+        stop_times = stop_times.set_index('trip_id').join(min_stop_sequence.set_index('trip_id')).reset_index()
+        stop_times['min_arrival'] = stop_times['arrival_time'].ffill()
+        stop_times.loc[~stop_times['arrival_time'].isnull(), 'min_arrival'] = stop_times['min_arrival'].shift()
+        stop_times.loc[stop_times['stop_sequence'] == stop_times['min_stop_sequence'], 'min_arrival'] = stop_times['arrival_time']
+        stop_times.loc[~stop_times['arrival_time'].isnull(), 'min_dist'] = stop_times['shape_dist_traveled']
+        stop_times['min_dist'] = stop_times['min_dist'].ffill()
+        stop_times.loc[~stop_times['arrival_time'].isnull(), 'min_dist'] = stop_times['min_dist'].shift()
+        stop_times.loc[stop_times['stop_sequence'] == stop_times['min_stop_sequence'], 'min_dist'] = stop_times['shape_dist_traveled']
+        stop_times['trip_arrival'] = stop_times['trip_id'] + '_' + stop_times['min_arrival'].astype('str')
+        max_arrivals = stop_times.groupby('trip_arrival')['arrival_time', 'shape_dist_traveled'].max().reset_index()
+        max_arrivals = max_arrivals.rename(columns={'arrival_time': 'max_arrival', 'shape_dist_traveled': 'max_dist'})
+        stop_times = stop_times.set_index('trip_arrival').join(max_arrivals.set_index('trip_arrival'))
         stop_times['total_dist'] = stop_times['max_dist'] - stop_times['min_dist']
         stop_times['pct'] = (stop_times['shape_dist_traveled'] - stop_times['min_dist'])/stop_times['total_dist']
         stop_times['arrival_time'] = stop_times['min_arrival'] + stop_times['pct'] * (stop_times['max_arrival'] - stop_times['min_arrival'])

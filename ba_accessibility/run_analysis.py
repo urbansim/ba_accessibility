@@ -441,15 +441,22 @@ def create_pandana_network(ua_net, scenario, zones):
     travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
     travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
     travel_data = travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']].merge(zones[zones['h3_polyfil'].isin(travel_data['to_id'].unique())], left_on='to_id', right_on='h3_polyfil', how='left')
-    #travel_data.to_file('times_to_cbd_%s.shp' % scenario)
-    #Path from Escobar to Retiro
-    #node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
-    #node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
-    #shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
-    #nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
-    #edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
-    #edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
-    #export_shp(nodes, edges, name_shp='escobar_retiro_%s' % scenario)
+
+    #Path from Gonzalez Catan to Retiro
+    td_cols = ['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']
+    zone_cols = ['h3_polyfil', 'jobs', 'lijobs']
+    travel_data = travel_data[td_cols].merge(zones[zone_cols], left_on='to_id', right_on='h3_polyfil', how='left')
+    # Path from Gonzalez Catan to Retiro
+    node_from = zones[zones.h3_polyfil == '88c2e380d1fffff'].index.item()
+    node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
+    shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
+    nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
+    edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
+    edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
+    export_shp(nodes, edges, name_shp='gonzalez_catan_retiro_%s' % scenario)
+    jobs_90_gonzalez_catan = travel_data[(travel_data['from_id']=='88c2e380d1fffff')&(travel_data['pandana_distance']<=90)]
+    jobs_90_gonzalez_catan = zones.set_index('h3_polyfil')[['geometry', 'buff2']].join(jobs_90_gonzalez_catan.set_index('to_id')[['from_id', 'pandana_distance', 'jobs']])
+    jobs_90_gonzalez_catan.to_file('results/jobs_90_gonzalez_catan_%s.shp' % scenario)
     return net, zones, travel_data
 
 

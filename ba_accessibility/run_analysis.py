@@ -454,9 +454,23 @@ def create_pandana_network(ua_net, scenario, zones):
     edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
     edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
     export_shp(nodes, edges, name_shp='gonzalez_catan_retiro_%s' % scenario)
-    jobs_90_gonzalez_catan = travel_data[(travel_data['from_id']=='88c2e380d1fffff')&(travel_data['pandana_distance']<=90)]
-    jobs_90_gonzalez_catan = zones.set_index('h3_polyfil')[['geometry', 'buff2']].join(jobs_90_gonzalez_catan.set_index('to_id')[['from_id', 'pandana_distance', 'jobs']])
-    jobs_90_gonzalez_catan.to_file('results/jobs_90_gonzalez_catan_%s.shp' % scenario)
+    jobs_gonzalez_catan = travel_data[(travel_data['from_id']=='88c2e380d1fffff')]
+    jobs_gonzalez_catan = zones.set_index('h3_polyfil')[['geometry', 'buff2']].join(jobs_gonzalez_catan.set_index('to_id')[['from_id', 'pandana_distance', 'jobs']])
+    jobs_gonzalez_catan.to_file('results/jobs_gonzalez_catan_%s.shp' % scenario)
+
+    # Path from Escobar to Retiro
+    node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
+    node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
+    shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
+    nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
+    edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
+    edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
+    export_shp(nodes, edges, name_shp='escobar_retiro_%s' % scenario)
+    jobs_escobar = travel_data[(travel_data['from_id']=='88c2e33745fffff')]
+    jobs_escobar = zones.set_index('h3_polyfil')[['geometry', 'buff2']].join(jobs_escobar.set_index('to_id')[['from_id', 'pandana_distance', 'jobs']])
+    jobs_escobar.to_file('results/jobs_escobar_%s.shp' % scenario)
+
+
     return net, zones, travel_data
 
 

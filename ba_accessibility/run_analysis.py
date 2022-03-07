@@ -551,6 +551,7 @@ def calculate_indicators(scenario, net, zones, travel_data):
 
 
 def compare_indicators(zones, scenario, divide_zones=True):
+    print('SCENARIO ', scenario)
     buffer_col = 'buff' + scenario.replace('project_', '')
     if divide_zones==True:
         baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')

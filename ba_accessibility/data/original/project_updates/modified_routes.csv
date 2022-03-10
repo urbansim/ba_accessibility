@@ -139,50 +139,32 @@
 1,trenes,7,1,272,Mtro. Carranza,9,CABA
 1,trenes,7,1,1,3 de Febrero,10,CABA
 1,trenes,7,1,332,Retiro,11,CABA
-1,trenes,80,0,332,Retiro,1,CABA
-1,trenes,80,0,1,3 de Febrero,2,CABA
-1,trenes,80,0,272,Mtro. Carranza,3,CABA
-1,trenes,80,0,91,Colegiales,4,CABA
-1,trenes,80,0,35,Belgrano R,5,CABA
-1,trenes,80,0,236,L. M. Drago,6,CABA
-1,trenes,80,0,150,Gral. Urquiza,7,CABA
-1,trenes,80,0,318,Pueyrredon,8,CABA
-1,trenes,80,0,271,Miguelete,9,CABA
-1,trenes,80,0,360,San Martín,10,CABA
-1,trenes,80,0,353,San Andrés,11,CABA
-1,trenes,80,0,249,Malaver,12,CABA
-1,trenes,80,0,412,V. Ballester,13,CABA
-1,trenes,80,0,79,Chilavert,14,CABA
-1,trenes,80,0,190,J. L. SUAREZ,15,CABA
-1,trenes,80,0,29,BANCALARI,16,CABA
-1,trenes,80,0,296,GRAL. PACHECO,17,CABA
-1,trenes,80,0,37,BENAVIDEZ,18,CABA
-1,trenes,80,1,37,BENAVIDEZ,1,CABA
-1,trenes,80,1,296,GRAL. PACHECO,2,CABA
-1,trenes,80,1,29,BANCALARI,3,CABA
-1,trenes,80,1,190,J L Suárez,4,CABA
-1,trenes,80,1,79,Chilavert,5,CABA
-1,trenes,80,1,412,V. Ballester,6,CABA
-1,trenes,80,1,249,Malaver,7,CABA
-1,trenes,80,1,353,San Andrés,8,CABA
-1,trenes,80,1,360,San Martín,9,CABA
-1,trenes,80,1,271,Miguelete,10,CABA
-1,trenes,80,1,318,Pueyrredon,11,CABA
-1,trenes,80,1,150,Gral. Urquiza,12,CABA
-1,trenes,80,1,236,L. M. Drago,13,CABA
-1,trenes,80,1,35,Belgrano R,14,CABA
-1,trenes,80,1,91,Colegiales,15,CABA
-1,trenes,80,1,272,Mtro. Carranza,16,CABA
-1,trenes,80,1,1,3 de Febrero,17,CABA
-1,trenes,80,1,332,Retiro,18,CABA
-1,trenes,35,0,37,BENAVIDEZ,1,CABA
-1,trenes,35,0,263,ING. MASCHWITZ,2,CABA
-1,trenes,35,0,130,ESCOBAR,3,CABA
-1,trenes,35,0,335,RIO LUJAN,4,CABA
-1,trenes,35,0,294,ING. OTAMENDI,5,CABA
-1,trenes,35,0,55,CAMPANA,6,CABA
-1,trenes,35,0,204,Kilometro 83,7,CABA
-1,trenes,35,0,434,ZARATE,8,CABA
+1,trenes,35,0,332,Retiro,1,CABA
+1,trenes,35,0,1,3 de Febrero,2,CABA
+1,trenes,35,0,272,Mtro. Carranza,3,CABA
+1,trenes,35,0,91,Colegiales,4,CABA
+1,trenes,35,0,35,Belgrano R,5,CABA
+1,trenes,35,0,236,L. M. Drago,6,CABA
+1,trenes,35,0,150,Gral. Urquiza,7,CABA
+1,trenes,35,0,318,Pueyrredon,8,CABA
+1,trenes,35,0,271,Miguelete,9,CABA
+1,trenes,35,0,360,San Martín,10,CABA
+1,trenes,35,0,353,San Andrés,11,CABA
+1,trenes,35,0,249,Malaver,12,CABA
+1,trenes,35,0,412,V. Ballester,13,CABA
+1,trenes,35,0,79,Chilavert,14,CABA
+1,trenes,35,0,190,J. L. SUAREZ,15,CABA
+1,trenes,35,0,29,BANCALARI,16,CABA
+1,trenes,35,0,296,GRAL. PACHECO,17,CABA
+1,trenes,35,0,37,BENAVIDEZ,18,CABA
+1,trenes,35,0,37,BENAVIDEZ,19,CABA
+1,trenes,35,0,263,ING. MASCHWITZ,20,CABA
+1,trenes,35,0,130,ESCOBAR,21,CABA
+1,trenes,35,0,335,RIO LUJAN,22,CABA
+1,trenes,35,0,294,ING. OTAMENDI,23,CABA
+1,trenes,35,0,55,CAMPANA,24,CABA
+1,trenes,35,0,204,Kilometro 83,25,CABA
+1,trenes,35,0,434,ZARATE,26,CABA
 1,trenes,35,1,434,ZARATE,1,CABA
 1,trenes,35,1,204,Kilometro 83,2,CABA
 1,trenes,35,1,55,CAMPANA,3,CABA
@@ -191,6 +173,24 @@
 1,trenes,35,1,130,ESCOBAR,6,CABA
 1,trenes,35,1,263,ING. MASCHWITZ,7,CABA
 1,trenes,35,1,37,BENAVIDEZ,8,CABA
+1,trenes,35,1,37,BENAVIDEZ,9,CABA
+1,trenes,35,1,296,GRAL. PACHECO,10,CABA
+1,trenes,35,1,29,BANCALARI,11,CABA
+1,trenes,35,1,190,J L Suárez,12,CABA
+1,trenes,35,1,79,Chilavert,13,CABA
+1,trenes,35,1,412,V. Ballester,14,CABA
+1,trenes,35,1,249,Malaver,15,CABA
+1,trenes,35,1,353,San Andrés,16,CABA
+1,trenes,35,1,360,San Martín,17,CABA
+1,trenes,35,1,271,Miguelete,18,CABA
+1,trenes,35,1,318,Pueyrredon,19,CABA
+1,trenes,35,1,150,Gral. Urquiza,20,CABA
+1,trenes,35,1,236,L. M. Drago,21,CABA
+1,trenes,35,1,35,Belgrano R,22,CABA
+1,trenes,35,1,91,Colegiales,23,CABA
+1,trenes,35,1,272,Mtro. Carranza,24,CABA
+1,trenes,35,1,1,3 de Febrero,25,CABA
+1,trenes,35,1,332,Retiro,26,CABA
 2,trenes,25,0,93,PLAZA CONSTITUCION,1,CABA
 2,trenes,25,0,48,BUENOS AIRES,2,CABA
 2,trenes,25,0,525,DR. A. SÁENZ,3,CABA

@@ -129,47 +129,30 @@
 1,trenes,7,1,91,272,Colegiales,Mtro. Carranza,91_272,3,24,20,3
 1,trenes,7,1,272,1,Mtro. Carranza,3 de Febrero,272_1,2,26,20,3
 1,trenes,7,1,1,332,3 de Febrero,Retiro,1_332,7,33,20,3
-1,trenes,80,0,332,1,Retiro,3 de Febrero,332_1,7,7,30,2
-1,trenes,80,0,1,272,3 de Febrero,Mtro. Carranza,1_272,2,9,30,2
-1,trenes,80,0,272,91,Mtro. Carranza,Colegiales,272_91,3,12,30,2
-1,trenes,80,0,91,35,Colegiales,Belgrano R,91_35,3,15,30,2
-1,trenes,80,0,35,236,Belgrano R,L. M. Drago,35_236,4,19,30,2
-1,trenes,80,0,236,150,L. M. Drago,Gral. Urquiza,236_150,2,21,30,2
-1,trenes,80,0,150,318,Gral. Urquiza,Pueyrredon,150_318,3,24,30,2
-1,trenes,80,0,318,271,Pueyrredon,Miguelete,318_271,3,27,30,2
-1,trenes,80,0,271,360,Miguelete,San Martín,271_360,3,30,30,2
-1,trenes,80,0,360,353,San Martín,San Andrés,360_353,3,33,30,2
-1,trenes,80,0,353,249,San Andrés,Malaver,353_249,2,35,30,2
-1,trenes,80,0,249,412,Malaver,V. Ballester,249_412,2,37,30,2
-1,trenes,80,0,412,79,V. Ballester,Chilavert,412_79,3,40,30,2
-1,trenes,80,0,79,190,Chilavert,J L Suárez,79_190,3,43,30,2
-1,trenes,80,0,190,29,J. L. SUAREZ,BANCALARI,190_29,7,50,30,2
-1,trenes,80,0,29,296,BANCALARI,GRAL. PACHECO,29_296,4,54,30,2
-1,trenes,80,0,296,37,GRAL. PACHECO,BENAVIDEZ,296_37,7,61,30,2
-1,trenes,80,1,37,296,BENAVIDEZ,GRAL. PACHECO,37_296,7,7,30,2
-1,trenes,80,1,296,29,GRAL. PACHECO,BANCALARI,296_29,4,11,30,2
-1,trenes,80,1,29,190,BANCALARI,J. L. SUAREZ,29_190,6,17,30,2
-1,trenes,80,1,190,79,J L Suárez,Chilavert,190_79,3,20,30,2
-1,trenes,80,1,79,412,Chilavert,V. Ballester,79_412,3,23,30,2
-1,trenes,80,1,412,249,V. Ballester,Malaver,412_249,2,25,30,2
-1,trenes,80,1,249,353,Malaver,San Andrés,249_353,2,27,30,2
-1,trenes,80,1,353,360,San Andrés,San Martín,353_360,3,30,30,2
-1,trenes,80,1,360,271,San Martín,Miguelete,360_271,3,33,30,2
-1,trenes,80,1,271,318,Miguelete,Pueyrredon,271_318,3,36,30,2
-1,trenes,80,1,318,150,Pueyrredon,Gral. Urquiza,318_150,3,39,30,2
-1,trenes,80,1,150,236,Gral. Urquiza,L. M. Drago,150_236,2,41,30,2
-1,trenes,80,1,236,35,L. M. Drago,Belgrano R,236_35,4,45,30,2
-1,trenes,80,1,35,91,Belgrano R,Colegiales,35_91,3,48,30,2
-1,trenes,80,1,91,272,Colegiales,Mtro. Carranza,91_272,3,51,30,2
-1,trenes,80,1,272,1,Mtro. Carranza,3 de Febrero,272_1,2,53,30,2
-1,trenes,80,1,1,332,3 de Febrero,Retiro,1_332,7,60,30,2
-1,trenes,35,0,37,263,BENAVIDEZ,ING. MASCHWITZ,37_263,6,6,30,2
-1,trenes,35,0,263,130,ING. MASCHWITZ,ESCOBAR,263_130,6,12,30,2
-1,trenes,35,0,130,335,ESCOBAR,RIO LUJAN,130_335,9,21,30,2
-1,trenes,35,0,335,294,RIO LUJAN,ING. OTAMENDI,335_294,6,27,30,2
-1,trenes,35,0,294,55,ING. OTAMENDI,CAMPANA,294_55,8,35,30,2
-1,trenes,35,0,55,204,CAMPANA,Kilometro 83,55_204,4,39,30,2
-1,trenes,35,0,204,434,Kilometro 83,ZARATE,204_434,5,44,30,2
+1,trenes,35,0,332,1,Retiro,3 de Febrero,332_1,7,7,30,2
+1,trenes,35,0,1,272,3 de Febrero,Mtro. Carranza,1_272,2,9,30,2
+1,trenes,35,0,272,91,Mtro. Carranza,Colegiales,272_91,3,12,30,2
+1,trenes,35,0,91,35,Colegiales,Belgrano R,91_35,3,15,30,2
+1,trenes,35,0,35,236,Belgrano R,L. M. Drago,35_236,4,19,30,2
+1,trenes,35,0,236,150,L. M. Drago,Gral. Urquiza,236_150,2,21,30,2
+1,trenes,35,0,150,318,Gral. Urquiza,Pueyrredon,150_318,3,24,30,2
+1,trenes,35,0,318,271,Pueyrredon,Miguelete,318_271,3,27,30,2
+1,trenes,35,0,271,360,Miguelete,San Martín,271_360,3,30,30,2
+1,trenes,35,0,360,353,San Martín,San Andrés,360_353,3,33,30,2
+1,trenes,35,0,353,249,San Andrés,Malaver,353_249,2,35,30,2
+1,trenes,35,0,249,412,Malaver,V. Ballester,249_412,2,37,30,2
+1,trenes,35,0,412,79,V. Ballester,Chilavert,412_79,3,40,30,2
+1,trenes,35,0,79,190,Chilavert,J L Suárez,79_190,3,43,30,2
+1,trenes,35,0,190,29,J. L. SUAREZ,BANCALARI,190_29,7,50,30,2
+1,trenes,35,0,29,296,BANCALARI,GRAL. PACHECO,29_296,4,54,30,2
+1,trenes,35,0,296,37,GRAL. PACHECO,BENAVIDEZ,296_37,7,61,30,2
+1,trenes,35,0,37,263,BENAVIDEZ,ING. MASCHWITZ,37_263,6,67,30,2
+1,trenes,35,0,263,130,ING. MASCHWITZ,ESCOBAR,263_130,6,73,30,2
+1,trenes,35,0,130,335,ESCOBAR,RIO LUJAN,130_335,9,82,30,2
+1,trenes,35,0,335,294,RIO LUJAN,ING. OTAMENDI,335_294,6,88,30,2
+1,trenes,35,0,294,55,ING. OTAMENDI,CAMPANA,294_55,8,96,30,2
+1,trenes,35,0,55,204,CAMPANA,Kilometro 83,55_204,4,100,30,2
+1,trenes,35,0,204,434,Kilometro 83,ZARATE,204_434,5,105,30,2
 1,trenes,35,1,434,204,ZARATE,Kilometro 83,434_204,5,5,30,2
 1,trenes,35,1,204,55,Kilometro 83,CAMPANA,204_55,4,9,30,2
 1,trenes,35,1,55,294,CAMPANA,ING. OTAMENDI,55_294,8,17,30,2
@@ -177,6 +160,23 @@
 1,trenes,35,1,335,130,RIO LUJAN,ESCOBAR,335_130,10,33,30,2
 1,trenes,35,1,130,263,ESCOBAR,ING. MASCHWITZ,130_263,6,39,30,2
 1,trenes,35,1,263,37,ING. MASCHWITZ,BENAVIDEZ,263_37,6,45,30,2
+1,trenes,35,1,37,296,BENAVIDEZ,GRAL. PACHECO,37_296,7,52,30,2
+1,trenes,35,1,296,29,GRAL. PACHECO,BANCALARI,296_29,4,56,30,2
+1,trenes,35,1,29,190,BANCALARI,J. L. SUAREZ,29_190,6,62,30,2
+1,trenes,35,1,190,79,J L Suárez,Chilavert,190_79,3,65,30,2
+1,trenes,35,1,79,412,Chilavert,V. Ballester,79_412,3,68,30,2
+1,trenes,35,1,412,249,V. Ballester,Malaver,412_249,2,70,30,2
+1,trenes,35,1,249,353,Malaver,San Andrés,249_353,2,72,30,2
+1,trenes,35,1,353,360,San Andrés,San Martín,353_360,3,75,30,2
+1,trenes,35,1,360,271,San Martín,Miguelete,360_271,3,78,30,2
+1,trenes,35,1,271,318,Miguelete,Pueyrredon,271_318,3,81,30,2
+1,trenes,35,1,318,150,Pueyrredon,Gral. Urquiza,318_150,3,84,30,2
+1,trenes,35,1,150,236,Gral. Urquiza,L. M. Drago,150_236,2,86,30,2
+1,trenes,35,1,236,35,L. M. Drago,Belgrano R,236_35,4,90,30,2
+1,trenes,35,1,35,91,Belgrano R,Colegiales,35_91,3,93,30,2
+1,trenes,35,1,91,272,Colegiales,Mtro. Carranza,91_272,3,96,30,2
+1,trenes,35,1,272,1,Mtro. Carranza,3 de Febrero,272_1,2,98,30,2
+1,trenes,35,1,1,332,3 de Febrero,Retiro,1_332,7,105,30,2
 2,trenes,25,0,93,48,PLAZA CONSTITUCION,BUENOS AIRES,93_48,3.969328838,3.969328838,14,4
 2,trenes,25,0,48,525,BUENOS AIRES,DR. A. SÁENZ,48_525,4.98347312,8.952801958,14,4
 2,trenes,25,0,525,427,DR. A. SÁENZ,VILLA SOLDATI,525_427,5.03,13.98280196,14,4

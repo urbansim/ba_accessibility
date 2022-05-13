@@ -444,6 +444,7 @@ def create_pandana_network(ua_net, zones):
     zones_join = zones[zones['h3_polyfil'].isin(travel_data['to_id'].unique())].set_index('h3_polyfil')
     td_join = travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']].set_index('to_id')
     travel_data = td_join.join(zones_join)
+    travel_data.index.name = 'to_id'
     travel_data = travel_data.reset_index()
     return net, zones, travel_data
 

@@ -14,8 +14,10 @@ from shapely.geometry import Point
 from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
 import h3pandas
+import matplotlib.pyplot as plt
 
-def process_update_demographics(divide_zones = True):
+
+def process_update_demographics():
     s_time = time.time()
     jobs = gpd.read_file('data/original/jobs/Empleo.shp')
     job_cols = ['jobs', 'job_a', 'job_b', 'job_c', 'job_d', 'job_h']
@@ -25,51 +27,48 @@ def process_update_demographics(divide_zones = True):
     if not os.path.exists('data/processed/zones'):
         os.makedirs('./data/processed/zones')
     zones = population.reset_index().to_crs(jobs.crs).append(jobs).dissolve()
-    if divide_zones == True:
-        resolution = 8  # 10
-        hexagons = zones.h3.polyfill_resample(resolution).reset_index()
-        hexagons_with_jobs = gpd.sjoin(hexagons.drop(columns=['jobs']), jobs[['geometry', 'jobs']], how='left', predicate='intersects').drop(columns=['index_right'])
-        hexagons_with_jobs = hexagons_with_jobs[~hexagons_with_jobs['jobs'].isnull()].copy()
-        hexagons = hexagons[hexagons['h3_polyfill'].isin(hexagons_with_jobs['h3_polyfill'])][['h3_polyfill', 'geometry']].to_crs(22192)
-        cols = {'jobs': job_cols, 'population': population_cols}
-        agents_per_hexagon = {}
-        for agent in ['jobs', 'population']:
-            gdf = eval(agent)
-            gdf = gdf.to_crs(22192)
-            split_gdf = gpd.overlay(gdf, hexagons, how='intersection')
-            split_gdf = split_gdf[['ID', 'h3_polyfill', 'geometry'] + cols[agent]]
-            split_gdf['area'] = split_gdf.geometry.area
-            zone_area = split_gdf.groupby('ID')['area'].sum().reset_index()
-            zone_area = zone_area.rename(columns={'area': 'zone_area'})
-            split_gdf = split_gdf.reset_index().merge(zone_area, on='ID', how='left')
-            for col in cols[agent]:
-                split_gdf[col] = split_gdf[col].fillna(0).astype('int') * split_gdf['area'] / split_gdf['zone_area']
-            hexagon_agents = split_gdf.groupby('h3_polyfill').sum()[cols[agent]]
-            for col in cols[agent]:
-                hexagon_agents[col] = round(hexagon_agents[col])
-            agents_per_hexagon[agent] = hexagon_agents
-        hexagons = hexagons.set_index('h3_polyfill').join(agents_per_hexagon['jobs'])
-        hexagons = hexagons.join(agents_per_hexagon['population']).reset_index()
-        modified_routes = pd.read_csv('data/original/project_updates/modified_routes.csv').fillna(0)
-        stops_locations = modified_routes.groupby('stop_id')['location'].min()
-        buffer_cols = []
-        for project_id in modified_routes.project_id.unique():
-            project_stations = gpd.read_file('results/project_%s_trajectory_nodes.shp' % project_id).to_crs(22192)
-            project_stations = project_stations.set_index('id').join(stops_locations)
-            project_stations.loc[project_stations['location'] == 'CABA', 'buffer'] = project_stations['geometry'].buffer(1500)
-            project_stations.loc[project_stations['location'] == 'CORDON_1', 'buffer'] = project_stations['geometry'].buffer(1500)
-            project_stations.loc[project_stations['location'] == 'CORDON_2', 'buffer'] = project_stations['geometry'].buffer(1500)
-            project_stations = project_stations.drop(columns=['geometry']).rename(columns={'buffer':'geometry'})
-            buffer_col = 'buff' + str(project_id)
-            project_stations = project_stations.set_geometry('geometry').rename(columns={'location': buffer_col})
-            project_stations = project_stations.dissolve()
-            hexagons = gpd.sjoin(hexagons, project_stations[[buffer_col, 'geometry']], how='left', predicate='intersects').drop(columns=['index_right'])
-            buffer_cols += [buffer_col]
-        hexagons['lijobs'] = hexagons['job_a'] + hexagons['job_b'] + hexagons['job_c'] + hexagons['job_d'] + hexagons['job_h']
-        cols = ['h3_polyfill', 'geometry', 'jobs', 'lijobs'] + population_cols + buffer_cols
-        hexagons[cols].to_file('data/processed/zones/zones.shp')
-    else:
-        jobs[['ID', 'geometry'] + job_cols + population_cols].to_file('data/processed/zones/zones.shp')
+    resolution = 8
+    hexagons = zones.h3.polyfill_resample(resolution).reset_index()
+    hexagons_with_jobs = gpd.sjoin(hexagons.drop(columns=['jobs']), jobs[['geometry', 'jobs']], how='left', predicate='intersects').drop(columns=['index_right'])
+    hexagons_with_jobs = hexagons_with_jobs[~hexagons_with_jobs['jobs'].isnull()].copy()
+    hexagons = hexagons[hexagons['h3_polyfill'].isin(hexagons_with_jobs['h3_polyfill'])][['h3_polyfill', 'geometry']].to_crs(22192)
+    cols = {'jobs': job_cols, 'population': population_cols}
+    agents_per_hexagon = {}
+    for agent in ['jobs', 'population']:
+        gdf = eval(agent)
+        gdf = gdf.to_crs(22192)
+        split_gdf = gpd.overlay(gdf, hexagons, how='intersection')
+        split_gdf = split_gdf[['ID', 'h3_polyfill', 'geometry'] + cols[agent]]
+        split_gdf['area'] = split_gdf.geometry.area
+        zone_area = split_gdf.groupby('ID')['area'].sum().reset_index()
+        zone_area = zone_area.rename(columns={'area': 'zone_area'})
+        split_gdf = split_gdf.reset_index().merge(zone_area, on='ID', how='left')
+        for col in cols[agent]:
+            split_gdf[col] = split_gdf[col].fillna(0).astype('int') * split_gdf['area'] / split_gdf['zone_area']
+        hexagon_agents = split_gdf.groupby('h3_polyfill').sum()[cols[agent]]
+        for col in cols[agent]:
+            hexagon_agents[col] = round(hexagon_agents[col])
+        agents_per_hexagon[agent] = hexagon_agents
+    hexagons = hexagons.set_index('h3_polyfill').join(agents_per_hexagon['jobs'])
+    hexagons = hexagons.join(agents_per_hexagon['population']).reset_index()
+    modified_routes = pd.read_csv('data/original/project_updates/modified_routes.csv').fillna(0)
+    stops_locations = modified_routes.groupby('stop_id')['location'].min()
+    buffer_cols = []
+    for project_id in modified_routes.project_id.unique():
+        project_stations = gpd.read_file('results/project_%s_trajectory_nodes.shp' % project_id).to_crs(22192)
+        project_stations = project_stations.set_index('id').join(stops_locations)
+        project_stations.loc[project_stations['location'] == 'CABA', 'buffer'] = project_stations['geometry'].buffer(1500)
+        project_stations.loc[project_stations['location'] == 'CORDON_1', 'buffer'] = project_stations['geometry'].buffer(1500)
+        project_stations.loc[project_stations['location'] == 'CORDON_2', 'buffer'] = project_stations['geometry'].buffer(1500)
+        project_stations = project_stations.drop(columns=['geometry']).rename(columns={'buffer':'geometry'})
+        buffer_col = 'buff' + str(project_id)
+        project_stations = project_stations.set_geometry('geometry').rename(columns={'location': buffer_col})
+        project_stations = project_stations.dissolve()
+        hexagons = gpd.sjoin(hexagons, project_stations[[buffer_col, 'geometry']], how='left', predicate='intersects').drop(columns=['index_right'])
+        buffer_cols += [buffer_col]
+    hexagons['lijobs'] = hexagons['job_a'] + hexagons['job_b'] + hexagons['job_c'] + hexagons['job_d'] + hexagons['job_h']
+    cols = ['h3_polyfill', 'geometry', 'jobs', 'lijobs'] + population_cols + buffer_cols
+    hexagons[cols].to_file('data/processed/zones/zones.shp')
     print('Took {:,.2f} seconds to process jobs shapefile'.format(time.time() - s_time))
 
 
@@ -307,8 +306,6 @@ def export_project_shape(stop_times, trips, project_id, stops, travel_time_updat
         export_shp(nodes, edges, name_shp='project_%s_baseline_trajectory' % project_id)
 
 
-
-
 def copy_with_project_files(project_id):
     for dir in sorted(os.listdir('data/processed/gtfs_baseline')):
         if not os.path.exists('data/processed/gtfs_project_%s/%s' % (project_id, dir)):
@@ -394,14 +391,18 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
     return expanded_stop_times, expanded_trips
 
 
-def run(project_id, start_time, end_time, weekday):
+def run(project_ids, start_time, end_time, weekday):
     bbox = (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
     nodes, edges, zones = read_process_zones(bbox)
-    for scenario in ['baseline', 'project_' + project_id]:
+    project_scenarios = ['project_' + project_id for project_id in project_ids]
+    for scenario in ['baseline'] + project_scenarios:
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
-        net, zones_net, travel_data = create_pandana_network(ua_net, scenario, zones)
-        calculate_indicators(scenario, net, zones_net, travel_data)
-    compare_indicators(zones, 'project_' + project_id)
+        net, zones_net, travel_data = create_pandana_network(ua_net, zones)
+        calculate_indicators(scenario, zones_net, travel_data)
+    results = pd.DataFrame()
+    for scenario in project_scenarios:
+        results = compare_indicators(zones, scenario, results)
+    summarize_results(results)
 
 
 def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday):
@@ -421,7 +422,7 @@ def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekda
     return ua.ua_network
 
 
-def create_pandana_network(ua_net, scenario, zones):
+def create_pandana_network(ua_net, zones):
     print('Creating Pandana Network')
     s_time = time.time()
     net = pdna.Network(ua_net.net_nodes["x"],
@@ -440,37 +441,10 @@ def create_pandana_network(ua_net, scenario, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
     travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
-    travel_data = travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']].merge(zones[zones['h3_polyfil'].isin(travel_data['to_id'].unique())], left_on='to_id', right_on='h3_polyfil', how='left')
-
-    #Path from Gonzalez Catan to Retiro
-    td_cols = ['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']
-    zone_cols = ['h3_polyfil', 'jobs', 'lijobs']
-    travel_data = travel_data[td_cols].merge(zones[zone_cols], left_on='to_id', right_on='h3_polyfil', how='left')
-    # Path from Gonzalez Catan to Retiro
-    node_from = zones[zones.h3_polyfil == '88c2e380d1fffff'].index.item()
-    node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
-    shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
-    nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
-    edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
-    edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
-    export_shp(nodes, edges, name_shp='gonzalez_catan_retiro_%s' % scenario)
-    jobs_gonzalez_catan = travel_data[(travel_data['from_id']=='88c2e380d1fffff')]
-    jobs_gonzalez_catan = zones.set_index('h3_polyfil')[['geometry', 'buff2']].join(jobs_gonzalez_catan.set_index('to_id')[['from_id', 'pandana_distance', 'jobs']])
-    jobs_gonzalez_catan.to_file('results/jobs_gonzalez_catan_%s.shp' % scenario)
-
-    # Path from Escobar to Retiro
-    node_from = zones[zones.h3_polyfil == '88c2e33745fffff'].index.item()
-    node_to = zones[zones.h3_polyfil == '88c2e31ad1fffff'].index.item()
-    shortest_path = net.shortest_path(node_from, node_to, imp_name='weight')
-    nodes = ua_net.net_nodes[ua_net.net_nodes.index.isin(shortest_path)].drop(columns=['id']).reset_index().rename(columns={'id_int':'id'})
-    edges = ua_net.net_edges[(ua_net.net_edges['from_int'].isin(shortest_path))&(ua_net.net_edges['to_int'].isin(shortest_path))]
-    edges = edges.drop(columns=['from', 'to']).rename(columns={'from_int':'from', 'to_int': 'to'})
-    export_shp(nodes, edges, name_shp='escobar_retiro_%s' % scenario)
-    jobs_escobar = travel_data[(travel_data['from_id']=='88c2e33745fffff')]
-    jobs_escobar = zones.set_index('h3_polyfil')[['geometry', 'buff2']].join(jobs_escobar.set_index('to_id')[['from_id', 'pandana_distance', 'jobs']])
-    jobs_escobar.to_file('results/jobs_escobar_%s.shp' % scenario)
-
-
+    zones_join = zones[zones['h3_polyfil'].isin(travel_data['to_id'].unique())].set_index('h3_polyfil')
+    td_join = travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']].set_index('to_id')
+    travel_data = td_join.join(zones_join)
+    travel_data = travel_data.reset_index()
     return net, zones, travel_data
 
 
@@ -522,10 +496,6 @@ def read_process_zones(bbox):
     zones['y'] = zones.geometry.y
     if not os.path.isfile('results/osm_nodes.csv'):
         nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
-        #net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
-        #remove_nodes = set(net.low_connectivity_nodes(impedance=200, count=10, imp_name="distance"))
-        #edges = edges[~(edges['from'].isin(remove_nodes) | edges['to'].isin(remove_nodes))]
-        #nodes = nodes[~(nodes.index.isin(edges['from'])) | (nodes.index.isin(edges['to']))]
         nodes.to_csv('results/osm_nodes.csv', index=False)
         edges.to_csv('results/osm_edges.csv', index=False)
     else:
@@ -546,7 +516,7 @@ def read_process_zones(bbox):
     return nodes, edges, zones
 
 
-def calculate_indicators(scenario, net, zones, travel_data):
+def calculate_indicators(scenario, zones, travel_data):
     s_time = time.time()
     print('Calculating indicators from skims')
     within_60_min = travel_data[travel_data['pandana_distance']<=60]
@@ -561,128 +531,122 @@ def calculate_indicators(scenario, net, zones, travel_data):
     if not os.path.exists('results'):
         os.makedirs('./results')
     zones[['jobs', 'lijobs', 'jobs_60', 'lijobs_60', 'jobs_90', 'lijobs_90', 'time_cbd']].to_csv('results/%s.csv' % scenario)
-    #zones[['ID', 'jobs', 'jobs_60']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones, scenario, divide_zones=True):
-    print('SCENARIO ', scenario)
+def compare_indicators(zones, scenario, results):
+    print('Comparing scenario %s with Baseline' % scenario)
     buffer_col = 'buff' + scenario.replace('project_', '')
-    if divide_zones==True:
-        baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
-        project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
-    else:
-        baseline = pd.read_csv('results/baseline.csv').set_index('ID')
-        project = pd.read_csv('results/%s.csv' % scenario).set_index('ID')
+    baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
+    project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')
     job_cols = [col for col in baseline.columns if 'jobs' in col] + ['time_cbd']
     project = project[job_cols]
     for col in job_cols:
         project = project.rename(columns={col: col+'p'})
     comparison = baseline[job_cols].join(project)
-    if divide_zones == True:
-        comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'HOG10', 'NBI_H10', buffer_col]].join(comparison)
-    else:
-        comparison = zones.set_index('ID')[['geometry', 'POB10', 'HOG10', 'NBI_H10', buffer_col]].join(comparison)
-    comparison['pct_NBI'] = round(comparison['NBI_H10']/comparison['HOG10'], 2)
-    comparison['jobs_60d'] = comparison['jobs_60p'] - comparison['jobs_60']
-    comparison['acc_60'] = 100 * (comparison['jobs_60'] / comparison['jobs'].sum())
-    comparison['acc_60p'] = 100 * (comparison['jobs_60p'] / comparison['jobsp'].sum())
-    comparison['acc_60d'] = comparison['acc_60p'] - comparison['acc_60']
-    comparison['pct_ch_acc'] = 100 * (comparison['acc_60d']) / comparison['acc_60']
-    comparison['pop_acc'] = comparison['acc_60'] * comparison['POB10']
-    comparison['pov_acc'] = comparison['acc_60'] * comparison['NBI_H10']
-    comparison['pop_accp'] = comparison['acc_60p'] * comparison['POB10']
-    comparison['pov_accp'] = comparison['acc_60p'] * comparison['NBI_H10']
-
-    comparison['jobs_90d'] = comparison['jobs_90p'] - comparison['jobs_90']
-    comparison['acc_90'] = 100 * (comparison['jobs_90'] / comparison['jobs'].sum())
-    comparison['acc_90p'] = 100 * (comparison['jobs_90p'] / comparison['jobsp'].sum())
-    comparison['acc_90d'] = comparison['acc_90p'] - comparison['acc_90']
-    comparison['pop_acc90'] = comparison['acc_90'] * comparison['POB10']
-    comparison['pov_acc90'] = comparison['acc_90'] * comparison['NBI_H10']
-    comparison['pop_acc90p'] = comparison['acc_90p'] * comparison['POB10']
-    comparison['pov_acc90p'] = comparison['acc_90p'] * comparison['NBI_H10']
-
-
-
-    comparison['lijobs_60d'] = comparison['lijobs_60p'] - comparison['lijobs_60']
-    comparison['liacc_60'] = 100 * (comparison['lijobs_60'] / comparison['lijobs'].sum())
-    comparison['liacc_60p'] = 100 * (comparison['lijobs_60p'] / comparison['lijobsp'].sum())
-    comparison['liacc_60d'] = comparison['liacc_60p'] - comparison['liacc_60']
-    comparison['lipct_ch_acc'] = 100 * (comparison['liacc_60d']) / comparison['liacc_60']
-    comparison['lipop_acc'] = comparison['liacc_60'] * comparison['POB10']
-    comparison['lipov_acc'] = comparison['liacc_60'] * comparison['NBI_H10']
-    comparison['lipop_accp'] = comparison['liacc_60p'] * comparison['POB10']
-    comparison['lipov_accp'] = comparison['liacc_60p'] * comparison['NBI_H10']
-
-    print('---------------------------------------------')
-    print('AREA OF INFLUENCE, 60 MIN')
-    print('---------------------------------------------')
-    area_comparison = comparison[~comparison[buffer_col].isnull()]
-    orig_pop_acc = area_comparison['pop_acc'].sum()/area_comparison['POB10'].sum()
-    orig_pov_acc = area_comparison['pov_acc'].sum()/area_comparison['NBI_H10'].sum()
-    project_pop_acc = area_comparison['pop_accp'].sum()/area_comparison['POB10'].sum()
-    project_pov_acc = area_comparison['pov_accp'].sum()/area_comparison['NBI_H10'].sum()
-    pop_acc_change = project_pop_acc - orig_pop_acc
-    pov_acc_change = project_pov_acc - orig_pov_acc
-    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
-    pov_acc_pct_change =  100 * (pov_acc_change/orig_pov_acc)
-    print('Original population weighted job accessibility in BUFFER:', round(orig_pop_acc,2))
-    print('Change in population weighted job accessibility in BUFFER:', round(pop_acc_change,2))
-    print('')
-    print('Original poverty weighted job accessibility in BUFFER:', round(orig_pov_acc,2))
-    print('Change in poverty weighted job accessibility in BUFFER:', round(pov_acc_change,2))
-    print('')
+    comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'HOG10', 'NBI_H10', buffer_col]].join(comparison)
+    project_id = scenario.replace('project_', '')
+    nodes = gpd.read_file('results/%s_trajectory_nodes.shp' % scenario)
+    edges = gpd.read_file('results/%s_trajectory_edges.shp' % scenario)
+    comparison['project_id'] = project_id
+    for jt in ['', 'li']:
+        for tr in ['60', '90']:
+            comparison['%sjobs_%sd' % (jt, tr)] = comparison['%sjobs_%sp' % (jt, tr)] - comparison['%sjobs_%s' % (jt, tr)]
+            comparison['%sacc_%s' % (jt, tr)] = 100 * (comparison['%sjobs_%s' % (jt, tr)] / comparison['%sjobs' % jt].sum())
+            comparison['%sacc_%sp' % (jt, tr)] = 100 * (comparison['%sjobs_%sp' % (jt, tr)] / comparison['%sjobsp' % jt].sum())
+            comparison['%sacc_%sd' % (jt, tr)] = comparison['%sacc_%sp' % (jt, tr)] - comparison['%sacc_%s' % (jt, tr)]
+            comparison['%spct_ch_acc%s' % (jt, tr)] = 100 * (comparison['%sacc_%sd' % (jt, tr)]) / comparison['%sacc_%s' % (jt, tr)]
+            comparison['%spop_acc%s' % (jt, tr)] = comparison['%sacc_%s' % (jt, tr)] * comparison['POB10']
+            comparison['%spov_acc%s' % (jt, tr)] = comparison['%sacc_%s' % (jt, tr)] * comparison['NBI_H10']
+            comparison['%spop_acc%sp' % (jt, tr)] = comparison['%sacc_%sp' % (jt, tr)] * comparison['POB10']
+            comparison['%spov_acc%sp' % (jt, tr)] = comparison['%sacc_%sp' % (jt, tr)] * comparison['NBI_H10']
+            if jt == '':
+                fig, ax = plt.subplots(1, figsize=(10, 6))
+                comparison.plot(column='%sacc_%sd' % (jt, tr), ax=ax, cmap = 'Spectral', legend=True) #cmap= 'RdYlBu') #, linewidth=1, ax=ax, edgecolor='0.9', legend=True)
+                edges.plot(ax=ax, color='black')
+                ax.axis('off')
+                plt.savefig("accessibility_change_%s_min.png" % tr)
+    results = results.append(comparison)
+    return results
 
 
+def summarize_results(results):
+    results_analysis = pd.DataFrame()
+    analysis = 'all'
+    for project_id in results.project_id.unique():
+        for buff in [1000, 'gov']:
+            for threshold in [60, 90]:
+                if buff == 'gov':
+                    buffer = gpd.read_file('data/original/gov_buffers/Area de Influencia Belgrano Sur.shp')
+                    buffer = buffer.to_crs(results.crs).rename(columns={'descripcio': 'stop_name_from'})
+                    remove_stations = [station for station in buffer.stop_name_from.str.lower().unique() if 'constitu' in station or 'aires' in station]
+                    project_stations = buffer[~buffer['stop_name_from'].str.lower().isin(remove_stations)]
+                else:
+                    modified_routes = pd.read_csv('data/original/project_updates/modified_routes.csv').fillna(0)
+                    modified_routes = modified_routes[modified_routes['project_id'].astype('str') == project_id]
+                    stops_locations = modified_routes.groupby('stop_id')['stop_name_from'].min()
+                    project_stations = gpd.read_file('results/project_%s_trajectory_nodes.shp' % project_id)
+                    project_stations = project_stations.set_index('id').join(stops_locations)
+                    project_stations = project_stations.to_crs(results.crs)
+                    project_stations['buffer'] = project_stations['geometry'].buffer(buff)
+                    project_stations = project_stations.drop(columns=['geometry']).rename(columns={'buffer': 'geometry'})
+                    project_stations = project_stations.set_geometry('geometry')
+                    remove_stations = [station for station in project_stations.stop_name_from.str.lower().unique() if 'constitu' in station or 'aires' in station]
+                    project_stations = project_stations[~project_stations['stop_name_from'].str.lower().isin(remove_stations)]
+                if analysis == 'all':
+                    project_stations = project_stations.dissolve()
+                    project_stations['stop_name_from'] = 'all'
+                results_project = results[results['project_id'] == project_id].copy()
+                results_stations = gpd.sjoin(results_project, project_stations[['stop_name_from', 'geometry']], how='left', predicate='intersects').drop(columns=['index_right'])
+                results_stations['pop_acc'] = results_stations['acc_%s' % str(threshold)] * results_stations['POB10']
+                results_stations['pov_acc'] = results_stations['acc_%s' % str(threshold)] * results_stations['NBI_H10']
+                results_stations['pop_accp'] = results_stations['acc_%sp' % str(threshold)] * results_stations['POB10']
+                results_stations['pov_accp'] = results_stations['acc_%sp' % str(threshold)] * results_stations['NBI_H10']
+                jobs_baseline = 'jobs_%s' % str(threshold)
+                jobs_project = 'jobs_%sp' % str(threshold)
+                results_stations['pop_jobs'] = results_stations[jobs_baseline] * results_stations['POB10']
+                results_stations['pov_jobs'] = results_stations[jobs_baseline] * results_stations['NBI_H10']
+                results_stations['pop_jobsp'] = results_stations[jobs_project] * results_stations['POB10']
+                results_stations['pov_jobsp'] = results_stations[jobs_project] * results_stations['NBI_H10']
+                results_stations = results_stations.groupby('stop_name_from')['POB10', 'NBI_H10', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp', 'pop_jobs', 'pop_jobsp', 'pov_jobs', 'pov_jobsp'].sum()
+                results_stations['pop_acc'] = results_stations['pop_acc'] / results_stations['POB10']
+                results_stations['pop_accp'] = results_stations['pop_accp'] / results_stations['POB10']
+                results_stations['pop_accd'] = results_stations['pop_accp'] - results_stations['pop_acc']
+                results_stations['pov_acc'] = results_stations['pov_acc'] / results_stations['NBI_H10']
+                results_stations['pov_accp'] = results_stations['pov_accp'] / results_stations['NBI_H10']
+                results_stations['pov_accd'] = results_stations['pov_accp'] - results_stations['pov_acc']
+                results_stations['pop_jobs'] = results_stations['pop_jobs'] / results_stations['POB10']
+                results_stations['pov_jobs'] = results_stations['pov_jobs'] / results_stations['NBI_H10']
+                results_stations['pop_jobsp'] = results_stations['pop_jobsp'] / results_stations['POB10']
+                results_stations['pov_jobsp'] = results_stations['pov_jobsp'] / results_stations['NBI_H10']
+                results_stations['pop_pct_ch'] = 100 * (results_stations['pop_jobsp'] - results_stations['pop_jobs']) / results_stations['pop_jobs']
+                results_stations['pov_pct_ch'] = 100 * (results_stations['pov_jobsp'] - results_stations['pov_jobs']) / results_stations['pov_jobs']
+                results_stations = results_stations[~results_stations['pop_accd'].isnull()].drop(columns=['POB10', 'NBI_H10']).sort_values(by='pop_accd', ascending=False)
+                results_stations['project'] = project_id
+                results_stations['threshold'] = str(threshold)
+                results_stations['buffer'] = str(buff)
+                if len(results_analysis.index) == 0:
+                    results_analysis = results_stations
+                else:
+                    results_analysis = results_analysis.append(results_stations)
 
-    print('---------------------------------------------')
-    print('AREA OF INFLUENCE, 90 MIN')
-    print('---------------------------------------------')
-    area_comparison = comparison[~comparison[buffer_col].isnull()]
-    orig_pop_acc = area_comparison['pop_acc90'].sum()/area_comparison['POB10'].sum()
-    orig_pov_acc = area_comparison['pov_acc90'].sum()/area_comparison['NBI_H10'].sum()
-    project_pop_acc = area_comparison['pop_acc90p'].sum()/area_comparison['POB10'].sum()
-    project_pov_acc = area_comparison['pov_acc90p'].sum()/area_comparison['NBI_H10'].sum()
-    pop_acc_change = project_pop_acc - orig_pop_acc
-    pov_acc_change = project_pov_acc - orig_pov_acc
-    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
-    pov_acc_pct_change =  100 * (pov_acc_change/orig_pov_acc)
-    print('Original population weighted job accessibility in BUFFER:', round(orig_pop_acc,2))
-    print('Change in population weighted job accessibility in BUFFER:', round(pop_acc_change,2))
-    print('')
-    print('Original poverty weighted job accessibility in BUFFER:', round(orig_pov_acc,2))
-    print('Change in poverty weighted job accessibility in BUFFER:', round(pov_acc_change,2))
-    print('')
+    results_analysis = results_analysis.sort_values(by=['buffer', 'threshold', 'project'])
+    names = {'pop_acc': 'Baseline Population Weighted Accessibility',
+             'pop_accp': 'With Project Population Weighted Accessibility',
+             'pop_accd': 'Change in Population Weighted Accessibility',
+             'pov_acc': 'Baseline Poverty Weighted Accessibility',
+             'pov_accp': 'With Project Population Weighted Accessibility',
+             'pov_accd': 'Change in Population Weighted Accessibility',
+             'pop_jobs': 'Baseline Population Weighted Number of Jobs Accessible',
+             'pop_jobsp': 'With Project Population Weighted Number of Jobs Accessible',
+             'pop_pct_ch': 'Percentage Change in Population Weighted Number of Jobs Accessible',
+             'pov_jobs': 'Baseline Poverty Weighted Number of Jobs Accessible',
+             'pov_jobsp': 'With Project Poverty Weighted Number of Jobs Accessible',
+             'pov_pct_ch': 'Percentage Change in Poverty Weighted Number of Jobs Accessible',}
+    results_analysis = results_analysis.reset_index().set_index(['stop_name_from', 'buffer', 'threshold', 'project'])
+    results_analysis = results_analysis[list(names.keys())]
+    results_analysis = results_analysis.rename(columns=names)
+    results_analysis.to_csv('results/results_all_projects.csv')
 
-
-
-
-    print('---------------------------------------------')
-    print('AREA OF INFLUENCE - LOW INCOME JOBS')
-    print('---------------------------------------------')
-    orig_pop_acc = area_comparison['lipop_acc'].sum()/area_comparison['POB10'].sum()
-    orig_pov_acc = area_comparison['lipov_acc'].sum()/area_comparison['NBI_H10'].sum()
-    project_pop_acc = area_comparison['lipop_accp'].sum()/area_comparison['POB10'].sum()
-    project_pov_acc = area_comparison['lipov_accp'].sum()/area_comparison['NBI_H10'].sum()
-    pop_acc_change = project_pop_acc - orig_pop_acc
-    pov_acc_change = project_pov_acc - orig_pov_acc
-    pop_acc_pct_change = 100 * (pop_acc_change / orig_pop_acc)
-    pov_acc_pct_change = 100 * (pov_acc_change/orig_pov_acc)
-    print('Original population weighted job accessibility in BUFFER:', round(orig_pop_acc,2))
-    print('Change in population weighted job accessibility in BUFFER:', round(pop_acc_change,2))
-    print('')
-    print('Original poverty weighted job accessibility in BUFFER:', round(orig_pov_acc,2))
-    print('Change in poverty weighted job accessibility in BUFFER:', round(pov_acc_change,2))
-    print('')
-    comparison = comparison.reindex(sorted(comparison.columns), axis=1)
-    comparison = comparison.reset_index().fillna(0)
-    id_cols = ['h3_polyfil', 'NBI_H10', 'POB10', buffer_col]
-    job_cols = ['jobs', 'jobs_60', 'jobs_60p', 'jobs_60d', 'acc_60', 'acc_60p', 'acc_60d',
-                'jobs_90', 'jobs_90p', 'jobs_90d', 'acc_90', 'acc_90p', 'acc_90d']
-    low_income_job_cols = ['li' + col for col in job_cols if '90' not in col]
-    comparison = comparison[id_cols + job_cols + low_income_job_cols + ['time_cbd', 'time_cbdp', 'geometry']]
-    comparison.to_file('results/final_results_%s.shp' % scenario)
-    breakpoint()
 
 
 
@@ -690,7 +654,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-ud", "--update_demographics", action="store_true", default=False, help="update demographics")
     parser.add_argument("-ug", "--update_gtfs", action="store_true", default=False, help="update_gtfs")
-    parser.add_argument("-p", "--project_id", type=str, default=False, help="project_id to evaluate")
+    parser.add_argument("-p", "--project_ids", type=str, nargs='+', default=[])
     parser.add_argument("-st", "--start_time", type=str, default=False, help="start time for_analysis in 24 hr format (ej 07:00)")
     parser.add_argument("-et", "--end_time", type=str, default=False, help="end time for analysis in 24 hr format (ej 08:00)")
     parser.add_argument("-d", "--weekday", type=str, default=False, help="week day for analysis in 24 hr format (ej monday)")
@@ -698,7 +662,7 @@ if __name__ == '__main__':
 
     update_demographics = args.update_demographics if args.update_demographics else False
     update_gtfs = args.update_gtfs if args.update_gtfs else False
-    project_id = args.project_id if args.project_id else '1'
+    project_ids = args.project_ids if args.project_ids else ['1']
     start_time = args.start_time if args.start_time else '07:00:00'
     end_time = args.end_time if args.end_time else '08:00:00'
     weekday = args.weekday if args.weekday else 'monday'
@@ -707,6 +671,5 @@ if __name__ == '__main__':
         process_update_gtfs()
     if update_demographics:
         process_update_demographics()
-    run(project_id, start_time, end_time, weekday)
-
+    run(project_ids, start_time, end_time, weekday)
 

@@ -546,8 +546,8 @@ def compare_indicators(zones, scenario, results):
     comparison = baseline[job_cols].join(project)
     comparison = zones.set_index('h3_polyfil')[['geometry', 'POB10', 'HOG10', 'NBI_H10', buffer_col]].join(comparison)
     project_id = scenario.replace('project_', '')
-    nodes = gpd.read_file('results/%s_trajectory_nodes.shp' % scenario)
-    edges = gpd.read_file('results/%s_trajectory_edges.shp' % scenario)
+    nodes = gpd.read_file('results/%s_trajectory_nodes.shp' % scenario).to_crs(comparison.crs)
+    edges = gpd.read_file('results/%s_trajectory_edges.shp' % scenario).to_crs(comparison.crs)
     comparison['project_id'] = project_id
     for jt in ['', 'li']:
         for tr in ['60', '90']:
@@ -561,9 +561,10 @@ def compare_indicators(zones, scenario, results):
             comparison['%spop_acc%sp' % (jt, tr)] = comparison['%sacc_%sp' % (jt, tr)] * comparison['POB10']
             comparison['%spov_acc%sp' % (jt, tr)] = comparison['%sacc_%sp' % (jt, tr)] * comparison['NBI_H10']
             if jt == '':
-                fig, ax = plt.subplots(1, figsize=(10, 6))
+                fig, ax = plt.subplots(1, figsize=(8, 8))
                 comparison.plot(column='%sacc_%sd' % (jt, tr), ax=ax, cmap = 'Spectral', legend=True) #cmap= 'RdYlBu') #, linewidth=1, ax=ax, edgecolor='0.9', legend=True)
-                edges.plot(ax=ax, color='black')
+                edges.plot(ax=ax, color='black', linewidth=0.5)
+                nodes.plot(ax=ax, color='black', markersize=0.5)
                 ax.axis('off')
                 plt.savefig("accessibility_change_%s_min.png" % tr)
     results = results.append(comparison)

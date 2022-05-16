@@ -16,6 +16,6 @@ To run the accessibility analysis:
 cd ba_accessibility
 source env/bin/activate
 cd ba_accessibility
-python3.8 run_analysis.py -u -st 07:00:00 -et 08:00:00 -d monday
+python3.8 run_analysis.py -u -st 07:00:00 -et 08:00:00 -d monday -p 1 2
 ```
 

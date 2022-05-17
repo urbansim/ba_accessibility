@@ -441,20 +441,18 @@ def create_pandana_network(ua_net, zones):
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
     travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
-    zones_join = zones[zones['h3_polyfil'].isin(travel_data['to_id'].unique())].set_index('h3_polyfil')
-    td_join = travel_data[['from_id', 'to_id', 'euclidean_distance', 'pandana_distance']].set_index('to_id')
-    travel_data = td_join.join(zones_join)
-    travel_data.index.name = 'to_id'
-    travel_data = travel_data.reset_index()
     return net, zones, travel_data
 
 
 def calculate_distance_matrix(df, id_col):
+    print('Calculating euclidian distance matrix')
     coords = [coords for coords in zip(df['y_proj'], df['x_proj'])]
     distances = distance.cdist(coords, coords, 'euclidean')
-    df = pd.DataFrame(distances, columns=df[id_col].unique(), index=df[id_col].unique())
-    df = df.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
-    return df
+    distances = pd.DataFrame(distances, columns=df[id_col].unique(), index=df[id_col].unique())
+    distances = distances.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
+    distances = distances.set_index('to_id').join(df.rename(columns={'h3_polyfil': 'to_id'}).set_index('to_id')[['jobs', 'li_jobs']])
+    print('Distance matrix calculation done')
+    return distances
 
 
 def calculate_pandana_distances(travel_data, net, df, df_id):
@@ -462,6 +460,7 @@ def calculate_pandana_distances(travel_data, net, df, df_id):
     df_to = df.reset_index().rename(columns={df_id: 'to_id', 'id_int': 'node_to'})[['to_id', 'node_to']]
     travel_data = travel_data.merge(df_from, on='from_id', how='left')
     travel_data = travel_data.merge(df_to, on='to_id', how='left')
+    print('Starting shortest path calculation')
     travel_data['pandana_distance'] = net.shortest_path_lengths(list(travel_data['node_from']), list(travel_data['node_to']))
     if travel_data['pandana_distance'].max() > 4000000:
         print('WARNING: NO PATH BETWEEN SOME OD PAIRS')
@@ -566,7 +565,7 @@ def compare_indicators(zones, scenario, results):
                 edges.plot(ax=ax, color='black', linewidth=0.5)
                 nodes.plot(ax=ax, color='black', markersize=0.5)
                 ax.axis('off')
-                plt.savefig("accessibility_change_%s_min.png" % tr)
+                plt.savefig("results/accessibility_change_%s_min.png" % tr)
     results = results.append(comparison)
     return results
 

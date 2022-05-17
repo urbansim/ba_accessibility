@@ -452,7 +452,7 @@ def calculate_distance_matrix(df, id_col):
     distances = distances.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
     distances = distances.set_index('to_id').join(df.rename(columns={'h3_polyfil': 'to_id'}).set_index('to_id')[['jobs', 'li_jobs']])
     print('Distance matrix calculation done')
-    return distances
+    return distances.reset_index()
 
 
 def calculate_pandana_distances(travel_data, net, df, df_id):
@@ -464,6 +464,7 @@ def calculate_pandana_distances(travel_data, net, df, df_id):
     travel_data['pandana_distance'] = net.shortest_path_lengths(list(travel_data['node_from']), list(travel_data['node_to']))
     if travel_data['pandana_distance'].max() > 4000000:
         print('WARNING: NO PATH BETWEEN SOME OD PAIRS')
+    travel_data = travel_data[travel_data['pandana_distance'] <= 90]
     print('Pandana shortest paths done')
     return travel_data
 

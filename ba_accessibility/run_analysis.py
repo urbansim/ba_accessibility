@@ -450,7 +450,7 @@ def calculate_distance_matrix(df, id_col):
     distances = distance.cdist(coords, coords, 'euclidean')
     distances = pd.DataFrame(distances, columns=df[id_col].unique(), index=df[id_col].unique())
     distances = distances.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
-    distances = distances.set_index('to_id').join(df.rename(columns={'h3_polyfil': 'to_id'}).set_index('to_id')[['jobs', 'li_jobs']])
+    distances = distances.set_index('to_id').join(df.rename(columns={'h3_polyfil': 'to_id'}).set_index('to_id')[['jobs', 'lijobs']])
     print('Distance matrix calculation done')
     return distances.reset_index()
 

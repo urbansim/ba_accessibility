@@ -1,6 +1,8 @@
 import os
+import gc
 import time
 import glob
+import math
 import shutil
 import argparse
 import numpy as np
@@ -399,6 +401,8 @@ def run(project_ids, start_time, end_time, weekday):
         ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
         net, zones_net, travel_data = create_pandana_network(ua_net, zones)
         calculate_indicators(scenario, zones_net, travel_data)
+        del ua_net, net, zones_net, travel_data
+        gc.collect()
     results = pd.DataFrame()
     for scenario in project_scenarios:
         results = compare_indicators(zones, scenario, results)
@@ -461,10 +465,17 @@ def calculate_pandana_distances(travel_data, net, df, df_id):
     travel_data = travel_data.merge(df_from, on='from_id', how='left')
     travel_data = travel_data.merge(df_to, on='to_id', how='left')
     print('Starting shortest path calculation')
-    travel_data['pandana_distance'] = net.shortest_path_lengths(list(travel_data['node_from']), list(travel_data['node_to']))
-    if travel_data['pandana_distance'].max() > 4000000:
-        print('WARNING: NO PATH BETWEEN SOME OD PAIRS')
-    travel_data = travel_data[travel_data['pandana_distance'] <= 90]
+    n = math.ceil(len(travel_data.index)/100000)
+    updated_travel_data = pd.DataFrame()
+    for i in range(0, n + 1):
+        print(i)
+        if i*100000<len(travel_data.index):
+            subset = travel_data.iloc[(i-1)*100000: i*100000].copy()
+        else:
+            subset = travel_data.iloc[(i-1)*100000:].copy()
+        subset['pandana_distance'] = net.shortest_path_lengths(list(subset['node_from']), list(subset['node_to']))
+        updated_travel_data = pd.concat([updated_travel_data, subset], axis=0)
+    travel_data = updated_travel_data[updated_travel_data['pandana_distance'] <= 90]
     print('Pandana shortest paths done')
     return travel_data
 

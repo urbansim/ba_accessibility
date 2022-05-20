@@ -444,7 +444,7 @@ def create_pandana_network(ua_net, zones):
     zones = zones.set_index('id_int')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
     travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
-    travel_data = calculate_pandana_distances(travel_data, net, zones, 'h3_polyfil')
+    travel_data = calculate_pandana_distances(travel_data, net)
     return net, zones, travel_data
 
 
@@ -454,22 +454,21 @@ def calculate_distance_matrix(df, id_col):
     distances = distance.cdist(coords, coords, 'euclidean')
     distances = pd.DataFrame(distances, columns=df[id_col].unique(), index=df[id_col].unique())
     distances = distances.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
-    distances = distances.set_index('to_id').join(df.rename(columns={'h3_polyfil': 'to_id'}).set_index('to_id')[['jobs', 'lijobs']])
+    df_to = df.reset_index().rename(columns={'h3_polyfil': 'to_id', 'id_int': 'node_to'}).set_index('to_id')[['jobs', 'lijobs', 'node_to']]
+    df_from = df.reset_index().rename(columns={'h3_polyfil': 'from_id', 'id_int': 'node_from'}).set_index('from_id')[['node_from']]
+    distances = distances.set_index('to_id').join(df_to).reset_index()
+    distances = distances.set_index('from_id').join(df_from).reset_index()
     print('Distance matrix calculation done')
-    return distances.reset_index()
+    return distances
 
 
-def calculate_pandana_distances(travel_data, net, df, df_id):
-    df_from = df.reset_index().rename(columns={df_id: 'from_id', 'id_int': 'node_from'})[['from_id', 'node_from']]
-    df_to = df.reset_index().rename(columns={df_id: 'to_id', 'id_int': 'node_to'})[['to_id', 'node_to']]
-    travel_data = travel_data.merge(df_from, on='from_id', how='left')
-    travel_data = travel_data.merge(df_to, on='to_id', how='left')
+def calculate_pandana_distances(travel_data, net):
     print('Starting shortest path calculation')
     n = math.ceil(len(travel_data.index)/100000)
     updated_travel_data = pd.DataFrame()
     for i in range(0, n + 1):
         print(i)
-        if i*100000<len(travel_data.index):
+        if i*100000 < len(travel_data.index):
             subset = travel_data.iloc[(i-1)*100000: i*100000].copy()
         else:
             subset = travel_data.iloc[(i-1)*100000:].copy()

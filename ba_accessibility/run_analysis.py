@@ -17,6 +17,9 @@ from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
 import h3pandas
 import matplotlib.pyplot as plt
+import sys
+import subprocess
+import psutil
 
 
 def process_update_demographics():
@@ -394,19 +397,31 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
 
 
 def run(project_ids, start_time, end_time, weekday):
+    print('------------------------------------')
+    print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
+    print('------------------------------------')
     bbox = (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
-    nodes, edges, zones = read_process_zones(bbox)
     project_scenarios = ['project_' + project_id for project_id in project_ids]
     for scenario in ['baseline'] + project_scenarios:
-        ua_net = create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday)
-        net, zones_net, travel_data = create_pandana_network(ua_net, zones)
+        print('------------------------------------')
+        print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
+        print('------------------------------------')
+        ua_args = [sys.executable, 'create_ua_network.py', '-bb', '(%s, %s, %s, %s)' % bbox, '-sc', scenario, '-st', start_time, '-et', end_time, '-d', weekday]
+        subprocess.check_call(ua_args)
+        print('------------------------------------')
+        print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
+        print('------------------------------------')
+        net, zones_net, travel_data = create_pandana_network()
         calculate_indicators(scenario, zones_net, travel_data)
-        del ua_net, net, zones_net, travel_data
+        print('------------------------------------')
+        print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
+        print('------------------------------------')
+        del net, zones_net, travel_data
         gc.collect()
     results = pd.DataFrame()
-    for scenario in project_scenarios:
-        results = compare_indicators(zones, scenario, results)
-    summarize_results(results)
+    #for scenario in project_scenarios:
+    #    results = compare_indicators(zones, scenario, results)
+    #summarize_results(results)
 
 
 def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday):
@@ -426,19 +441,13 @@ def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekda
     return ua.ua_network
 
 
-def create_pandana_network(ua_net, zones):
+def create_pandana_network():
     print('Creating Pandana Network')
     s_time = time.time()
-    net = pdna.Network(ua_net.net_nodes["x"],
-                       ua_net.net_nodes["y"],
-                       ua_net.net_edges["from_int"],
-                       ua_net.net_edges["to_int"],
-                       ua_net.net_edges[["weight"]],
-                       twoway=False)
-    id_df = ua_net.net_nodes.reset_index()[['id_int', 'id']]
-    id_df = id_df.set_index('id')
-    zones.index = zones.index.astype('str')
-    zones = zones.join(id_df)
+    ua_nodes = pd.read_csv('results/ua_nodes.csv', dtype={'x': float, 'y': 'float'}).set_index('id_int')
+    ua_edges = pd.read_csv('results/ua_edges.csv', dtype={'from_int':int, 'to_int': int, 'weight': float})
+    net = pdna.Network(ua_nodes["x"], ua_nodes["y"], ua_edges["from_int"], ua_edges["to_int"],ua_edges[["weight"]], twoway=False)
+    zones = gpd.read_file('results/zones.shp').set_index('node_id')
     net.set(zones['id_int'], variable=zones.jobs, name='jobs')
     net.set(zones['id_int'], variable=zones.lijobs, name='lijobs')
     zones = zones.set_index('id_int')
@@ -464,14 +473,14 @@ def calculate_distance_matrix(df, id_col):
 
 def calculate_pandana_distances(travel_data, net):
     print('Starting shortest path calculation')
-    n = math.ceil(len(travel_data.index)/100000)
+    n = math.ceil(len(travel_data.index)/1000000)
     updated_travel_data = pd.DataFrame()
     for i in range(0, n + 1):
         print(i)
-        if i*100000 < len(travel_data.index):
-            subset = travel_data.iloc[(i-1)*100000: i*100000].copy()
+        if i*1000000 < len(travel_data.index):
+            subset = travel_data.iloc[(i-1)*1000000: i*1000000].copy()
         else:
-            subset = travel_data.iloc[(i-1)*100000:].copy()
+            subset = travel_data.iloc[(i-1)*1000000:].copy()
         subset['pandana_distance'] = net.shortest_path_lengths(list(subset['node_from']), list(subset['node_to']))
         updated_travel_data = pd.concat([updated_travel_data, subset], axis=0)
     travel_data = updated_travel_data[updated_travel_data['pandana_distance'] <= 90]
@@ -684,4 +693,3 @@ if __name__ == '__main__':
     if update_demographics:
         process_update_demographics()
     run(project_ids, start_time, end_time, weekday)
-

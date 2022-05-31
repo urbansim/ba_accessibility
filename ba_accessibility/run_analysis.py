@@ -397,48 +397,22 @@ def update_travel_times(routes_to_update, frequencies, stop_times_routes, stop_u
 
 
 def run(project_ids, start_time, end_time, weekday):
-    print('------------------------------------')
-    print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
-    print('------------------------------------')
     bbox = (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
     project_scenarios = ['project_' + project_id for project_id in project_ids]
     for scenario in ['baseline'] + project_scenarios:
         print('------------------------------------')
         print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
         print('------------------------------------')
-        ua_args = [sys.executable, 'create_ua_network.py', '-bb', '(%s, %s, %s, %s)' % bbox, '-sc', scenario, '-st', start_time, '-et', end_time, '-d', weekday]
+        ua_args = [sys.executable, 'utils.py', '-ua', '-bb', '(%s, %s, %s, %s)' % bbox, '-sc', scenario, '-st', start_time, '-et', end_time, '-d', weekday]
         subprocess.check_call(ua_args)
-        print('------------------------------------')
-        print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
-        print('------------------------------------')
         net, zones_net, travel_data = create_pandana_network()
         calculate_indicators(scenario, zones_net, travel_data)
-        print('------------------------------------')
-        print('TOTAL MEMORY:', psutil.Process().memory_info().rss / (1024 * 1024))
-        print('------------------------------------')
         del net, zones_net, travel_data
         gc.collect()
     results = pd.DataFrame()
-    #for scenario in project_scenarios:
-    #    results = compare_indicators(zones, scenario, results)
-    #summarize_results(results)
-
-
-def create_ua_network(nodes, edges, bbox, scenario, start_time, end_time, weekday):
-    print('Creating UrbanAccess Network')
-    gtfs_path = './data/processed/gtfs_%s' % scenario
-    ua.osm.network.create_osm_net(osm_edges=edges, osm_nodes=nodes, travel_speed_mph=3)
-    loaded_feeds = ua.gtfs.load.gtfsfeed_to_df(gtfsfeed_path=gtfs_path, bbox=bbox, validation=True,
-                                               verbose=True, remove_stops_outsidebbox=True,
-                                               append_definitions=True)
-    ua.gtfs.network.create_transit_net(gtfsfeeds_dfs=loaded_feeds, day=weekday,
-                                       timerange=[start_time, end_time], calendar_dates_lookup=None,
-                                       time_aware=True, simplify=True)
-    loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
-    loaded_feeds.headways = loaded_feeds.headways.groupby('node_id_route').min().reset_index()
-    loaded_feeds.headways.loc[loaded_feeds.headways['mean'].isnull(), 'mean'] = 60
-    ua.network.integrate_network(urbanaccess_network=ua.network.ua_network, urbanaccess_gtfsfeeds_df=loaded_feeds, headways=True)
-    return ua.ua_network
+    for scenario in project_scenarios:
+        results = compare_indicators(scenario, results)
+    summarize_results(results)
 
 
 def create_pandana_network():
@@ -451,8 +425,11 @@ def create_pandana_network():
     net.set(zones['id_int'], variable=zones.jobs, name='jobs')
     net.set(zones['id_int'], variable=zones.lijobs, name='lijobs')
     zones = zones.set_index('id_int')
+    zones.to_file('results/zones.shp')
     print('Took {:,.2f} seconds'.format(time.time() - s_time))
-    travel_data = calculate_distance_matrix(zones, 'h3_polyfil')
+    ed_args = [sys.executable, 'utils.py', '-ed']
+    subprocess.check_call(ed_args)
+    travel_data = pd.read_csv('results/distances.csv')
     travel_data = calculate_pandana_distances(travel_data, net)
     return net, zones, travel_data
 
@@ -553,8 +530,9 @@ def calculate_indicators(scenario, zones, travel_data):
     zones[['jobs', 'lijobs', 'jobs_60', 'lijobs_60', 'jobs_90', 'lijobs_90', 'time_cbd']].to_csv('results/%s.csv' % scenario)
 
 
-def compare_indicators(zones, scenario, results):
+def compare_indicators(scenario, results):
     print('Comparing scenario %s with Baseline' % scenario)
+    zones = gpd.read_file('results/zones.shp')
     buffer_col = 'buff' + scenario.replace('project_', '')
     baseline = pd.read_csv('results/baseline.csv').set_index('h3_polyfil')
     project = pd.read_csv('results/%s.csv' % scenario).set_index('h3_polyfil')

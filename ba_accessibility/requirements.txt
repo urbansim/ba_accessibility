@@ -2,4 +2,5 @@ pandas
 pandana
 rtree
 h3pandas
+psutil
 https://github.com/udst/urbanaccess/archive/maintence/unit-test-coverage.zip#egg=urbanaccess

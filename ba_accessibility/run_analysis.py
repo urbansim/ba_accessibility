@@ -414,7 +414,7 @@ def run(project_ids, start_time, end_time, weekday):
 def create_pandana_network():
     print('Creating Pandana Network')
     s_time = time.time()
-    ua_nodes = pd.read_csv('results/ua_nodes.csv', dtype={'x': float, 'y': 'float'}).set_index('id_int')
+    ua_nodes = pd.read_csv('results/ua_nodes.csv', dtype={'x': float, 'y': float}).set_index('id_int')
     ua_edges = pd.read_csv('results/ua_edges.csv', dtype={'from_int':int, 'to_int': int, 'weight': float})
     net = pdna.Network(ua_nodes["x"], ua_nodes["y"], ua_edges["from_int"], ua_edges["to_int"],ua_edges[["weight"]], twoway=False)
     zones = gpd.read_file('results/zones.shp').set_index('node_id')

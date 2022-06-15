@@ -84,6 +84,7 @@ def preprocess_loaded_feeds(loaded_feeds):
     calendar_selected_trips_df = ua.gtfs.network._trip_selector(trips_df=loaded_feeds.trips[columns], service_ids=active_service_ids)
     calendar_selected_trips_df['unique_trip_id'] = calendar_selected_trips_df['trip_id'].str.cat(calendar_selected_trips_df['unique_agency_id'].astype('str'), sep='_')
     uniquetriplist = calendar_selected_trips_df['unique_trip_id'].unique().tolist()
+    stop_times_df.sort_values(by=['unique_trip_id', 'stop_sequence'], inplace=True)
     stop_times_df = stop_times_df[stop_times_df['unique_trip_id'].isin(uniquetriplist)]
     stop_times_df = ua.gtfs.network._time_difference(stop_times_df=stop_times_df)
     loaded_feeds.stop_times_int = stop_times_df

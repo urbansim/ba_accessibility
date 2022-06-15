@@ -1,23 +1,10 @@
 import os
-import gc
-import time
-import glob
-import math
-import psutil
-import shutil
 import argparse
-import numpy as np
 import pandas as pd
 import pandana as pdna
 import geopandas as gpd
-from geopandas import GeoDataFrame
 from scipy.spatial import distance
-from shapely.geometry import Point
-from shapely.geometry import LineString
 from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
-import h3pandas
-import matplotlib.pyplot as plt
-
 import urbanaccess as ua
 
 def read_process_zones(bbox):
@@ -83,7 +70,6 @@ def preprocess_loaded_feeds(loaded_feeds):
     stop_times_df = loaded_feeds.stop_times
     stop_times_df['unique_trip_id'] = stop_times_df['trip_id'].str.cat(stop_times_df['unique_agency_id'].astype('str'), sep='_')
     stop_times_df['unique_stop_id'] = stop_times_df['stop_id'].str.cat(stop_times_df['unique_agency_id'].astype('str'), sep='_')
-
     stop_times_df['departure_time_sec_interpolate'] = stop_times_df['departure_time_sec']
     active_service_ids = []
     agency_id_col = 'unique_agency_id'

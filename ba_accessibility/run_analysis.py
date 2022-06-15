@@ -9,13 +9,9 @@ import numpy as np
 import pandas as pd
 import pandana as pdna
 import geopandas as gpd
-import urbanaccess as ua
 from geopandas import GeoDataFrame
-from scipy.spatial import distance
 from shapely.geometry import Point
 from shapely.geometry import LineString
-from urbanaccess.gtfs.gtfsfeeds_dataframe import gtfsfeeds_dfs
-import h3pandas
 import matplotlib.pyplot as plt
 import sys
 import subprocess
@@ -480,37 +476,6 @@ def export_shp(nodes, edges, name_shp='test', df=None):
         df['geometry'] = [Point(xy) for xy in zip(df['x'], df['y'])]
         zones_gdf = GeoDataFrame(df, geometry='geometry', crs={'init': 'epsg:4326'})
         zones_gdf.to_file(name_shp + '_zones.shp')
-
-
-def read_process_zones(bbox):
-    zones = gpd.read_file('data/processed/zones/zones.shp')
-    zones['centroid'] = zones['geometry'].centroid
-    zones = zones.set_geometry('centroid')
-    zones = zones.rename(columns={'geometry': 'polygon_geometry', 'centroid': 'geometry'})
-    zones = zones.set_geometry('geometry')
-    zones = zones.to_crs(4326)
-    zones['x'] = zones.geometry.x
-    zones['y'] = zones.geometry.y
-    if not os.path.isfile('results/osm_nodes.csv'):
-        nodes, edges = ua.osm.load.ua_network_from_bbox(bbox=bbox, remove_lcn=True)
-        nodes.to_csv('results/osm_nodes.csv', index=False)
-        edges.to_csv('results/osm_edges.csv', index=False)
-    else:
-        nodes = pd.read_csv('results/osm_nodes.csv')
-        edges = pd.read_csv('results/osm_edges.csv')
-        nodes.index = nodes['id']
-        edges['from_'] = edges['from']
-        edges['to_'] = edges['to']
-        edges = edges.set_index(['from_', 'to_'])
-    net = pdna.Network(nodes["x"], nodes["y"], edges["from"], edges["to"], edges[["distance"]], twoway=False)
-    zones['node_id'] = net.get_node_ids(zones['x'], zones['y'])
-    zones = zones.rename(columns={'geometry': 'centroid', 'polygon_geometry': 'geometry'})
-    zones = zones.set_geometry('geometry').drop(columns='centroid')
-    zones = zones.to_crs(22192)
-    zones['x_proj'] = zones.geometry.centroid.x
-    zones['y_proj'] = zones.geometry.centroid.y
-    zones = zones.set_index('node_id')
-    return nodes, edges, zones
 
 
 def calculate_indicators(scenario, zones, travel_data):

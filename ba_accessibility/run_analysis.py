@@ -430,30 +430,17 @@ def create_pandana_network():
     return net, zones, travel_data
 
 
-def calculate_distance_matrix(df, id_col):
-    print('Calculating euclidian distance matrix')
-    coords = [coords for coords in zip(df['y_proj'], df['x_proj'])]
-    distances = distance.cdist(coords, coords, 'euclidean')
-    distances = pd.DataFrame(distances, columns=df[id_col].unique(), index=df[id_col].unique())
-    distances = distances.stack().reset_index().rename(columns={'level_0': 'from_id', 'level_1': 'to_id', 0: 'euclidean_distance'})
-    df_to = df.reset_index().rename(columns={'h3_polyfil': 'to_id', 'id_int': 'node_to'}).set_index('to_id')[['jobs', 'lijobs', 'node_to']]
-    df_from = df.reset_index().rename(columns={'h3_polyfil': 'from_id', 'id_int': 'node_from'}).set_index('from_id')[['node_from']]
-    distances = distances.set_index('to_id').join(df_to).reset_index()
-    distances = distances.set_index('from_id').join(df_from).reset_index()
-    print('Distance matrix calculation done')
-    return distances
-
-
 def calculate_pandana_distances(travel_data, net):
     print('Starting shortest path calculation')
-    n = math.ceil(len(travel_data.index)/1000000)
+    batch_length = 4000000
+    n = math.ceil(len(travel_data.index)/batch_length)
     updated_travel_data = pd.DataFrame()
     for i in range(0, n + 1):
         print(i)
-        if i*1000000 < len(travel_data.index):
-            subset = travel_data.iloc[(i-1)*1000000: i*1000000].copy()
+        if i*batch_length < len(travel_data.index):
+            subset = travel_data.iloc[(i-1)*batch_length: i*batch_length].copy()
         else:
-            subset = travel_data.iloc[(i-1)*1000000:].copy()
+            subset = travel_data.iloc[(i-1)*batch_length:].copy()
         subset['pandana_distance'] = net.shortest_path_lengths(list(subset['node_from']), list(subset['node_to']))
         updated_travel_data = pd.concat([updated_travel_data, subset], axis=0)
     travel_data = updated_travel_data[updated_travel_data['pandana_distance'] <= 90]

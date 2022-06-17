@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import sys
 import subprocess
 import psutil
+import h3pandas
 
 
 def process_update_demographics():

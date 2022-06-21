@@ -92,10 +92,10 @@ def calculate_indicators(scenario, zones, travel_data):
     print('Calculating indicators from skims')
     within_60_min = travel_data[travel_data['pandana_distance'] <= 60]
     rename_dict = {'jobs': 'jobs_60', 'lijobs': 'lijobs_60'}
-    jobs_60 = within_60_min.groupby('from_id')['jobs', 'lijobs'].sum().rename(columns=rename_dict)
+    jobs_60 = within_60_min.groupby('from_id')[['jobs', 'lijobs']].sum().rename(columns=rename_dict)
     within_90_min = travel_data[travel_data['pandana_distance'] <= 90]
     rename_dict = {'jobs': 'jobs_90', 'lijobs': 'lijobs_90'}
-    jobs_90 = within_90_min.groupby('from_id')['jobs', 'lijobs'].sum().rename(columns=rename_dict)
+    jobs_90 = within_90_min.groupby('from_id')[['jobs', 'lijobs']].sum().rename(columns=rename_dict)
     zones = zones.set_index('zone_id').join(jobs_60)
     zones = zones.join(jobs_90)
     rename_dict = {'pandana_distance': 'time_cbd'}
@@ -186,7 +186,7 @@ def summarize_results(results):
                 results_stations['pov_jobs'] = results_stations[jobs_baseline] * results_stations['NBI_H10']
                 results_stations['pop_jobsp'] = results_stations[jobs_project] * results_stations['POB10']
                 results_stations['pov_jobsp'] = results_stations[jobs_project] * results_stations['NBI_H10']
-                results_stations = results_stations.groupby('stop_name_from')['POB10', 'NBI_H10', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp', 'pop_jobs', 'pop_jobsp', 'pov_jobs', 'pov_jobsp'].sum()
+                results_stations = results_stations.groupby('stop_name_from')[['POB10', 'NBI_H10', 'pop_acc', 'pop_accp', 'pov_acc', 'pov_accp', 'pop_jobs', 'pop_jobsp', 'pov_jobs', 'pov_jobsp']].sum()
                 results_stations['pop_acc'] = results_stations['pop_acc'] / results_stations['POB10']
                 results_stations['pop_accp'] = results_stations['pop_accp'] / results_stations['POB10']
                 results_stations['pop_accd'] = results_stations['pop_accp'] - results_stations['pop_acc']

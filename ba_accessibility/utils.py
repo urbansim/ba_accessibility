@@ -28,9 +28,9 @@ def process_update_demographics():
     zones = pd.concat([population.reset_index().to_crs(jobs.crs), jobs]).dissolve()
     resolution = 8
     hexagons = zones.h3.polyfill_resample(resolution).reset_index()
+    hexagons = hexagons.rename(columns={'h3_polyfill': 'zone_id'})
     hexagons_with_jobs = gpd.sjoin(hexagons.drop(columns=['jobs']), jobs[['geometry', 'jobs']], how='left', predicate='intersects').drop(columns=['index_right'])
     hexagons_with_jobs = hexagons_with_jobs[~hexagons_with_jobs['jobs'].isnull()].copy()
-    hexagons = hexagons.rename(columns={'h3_polyfill': 'zone_id'})
     hexagons = hexagons[hexagons['zone_id'].isin(hexagons_with_jobs['zone_id'])][['zone_id', 'geometry']].to_crs(22192)
     cols = {'jobs': job_cols, 'population': population_cols}
     agents_per_hexagon = {}

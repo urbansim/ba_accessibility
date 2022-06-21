@@ -71,7 +71,7 @@ def create_pandana_network():
 
 def calculate_pandana_distances(travel_data, net):
     print('Starting shortest path calculation')
-    batch_length = 4000000
+    batch_length = 10000000
     n = math.ceil(len(travel_data.index)/batch_length)
     updated_travel_data = pd.DataFrame()
     for i in range(0, n + 1):

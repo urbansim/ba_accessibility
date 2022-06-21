@@ -32,6 +32,7 @@ def run(project_ids, update_gtfs, update_demographics):
     for scenario in project_scenarios:
         results = compare_indicators(scenario, results)
     summarize_results(results)
+    print('FINISHED ANALYSIS FOR PROJECTS: ', project_ids)
 
 
 def process_updates(update_gtfs, update_demographics):

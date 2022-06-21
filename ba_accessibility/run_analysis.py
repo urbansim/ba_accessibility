@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 def run(project_ids, update_gtfs, update_demographics):
     with open("data/configs.yaml") as f:
         configs = yaml.load(f, Loader=yaml.FullLoader)
-    bbox = eval(configs['bounding_box'])
+    bbox = configs['bounding_box']
     start_time = configs['start_time']
     end_time = configs['end_time']
     weekday = configs['weekday']

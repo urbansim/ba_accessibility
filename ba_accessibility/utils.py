@@ -442,6 +442,7 @@ def read_process_zones(bbox):
     return nodes, edges, zones
 
 def create_ua_network(bbox, scenario, start_time, end_time, weekday):
+    bbox = eval(bbox)
     nodes, edges, zones = read_process_zones(bbox)
     print('Creating UrbanAccess Network')
     gtfs_path = './data/processed/gtfs_%s' % scenario
@@ -531,7 +532,7 @@ if __name__ == '__main__':
 
     update_gtfs = args.update_gtfs if args.update_gtfs else False
     update_demographics = args.update_demographics if args.update_demographics else False
-    bounding_box = eval(args.bounding_box) if args.bounding_box else (-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)
+    bounding_box = args.bounding_box if args.bounding_box else '(-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)'
     scenario = args.scenario if args.scenario else '07:00:00'
     start_time = args.start_time if args.start_time else '07:00:00'
     end_time = args.end_time if args.end_time else '08:00:00'

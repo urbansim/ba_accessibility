@@ -1,4 +1,4 @@
 weekday: monday
-start_time: 07:00:00
-end_time: 08:00:00
+start_time: "07:00:00"
+end_time: "10:00:00"
 bounding_box: "(-59.3177426256, -35.3267410094, -57.6799695705, -34.1435770646)"

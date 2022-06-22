@@ -455,7 +455,7 @@ def create_ua_network(bbox, scenario, start_time, end_time, weekday):
                                        timerange=[start_time, end_time], calendar_dates_lookup=None,
                                        time_aware=True, simplify=True,
                                        use_existing_stop_times_int=True,
-                                       timerange_pad="02:00:00")
+                                       )  #timerange_pad="02:00:00")
     loaded_feeds = ua.gtfs.headways.headways(loaded_feeds, [start_time, end_time])
     loaded_feeds.headways = loaded_feeds.headways.groupby('node_id_route').min().reset_index()
     loaded_feeds.headways.loc[loaded_feeds.headways['mean'].isnull(), 'mean'] = 60

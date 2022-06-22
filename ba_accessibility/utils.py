@@ -259,6 +259,16 @@ def create_gtfs_with_project():
     new_stops = pd.read_csv('data/original/project_updates/new_stops.csv').fillna(0)
     stop_updates = pd.read_csv('data/original/project_updates/modified_routes.csv').fillna(0)
     travel_time_updates = pd.read_csv('data/original/project_updates/modified_times_between_stops.csv').fillna(0)
+    tt_with_delta = pd.DataFrame()
+    for project in travel_time_updates.project_id.unique():
+        tt_proj = travel_time_updates[travel_time_updates['project_id']==project]
+        for route in tt_proj.route_id.unique():
+            tt_proj_route = tt_proj[tt_proj['route_id'] == route]
+            for dir in tt_proj_route['direction_id'].unique():
+                tt = tt_proj_route[tt_proj_route['direction_id'] == dir]
+                tt['delta'] = tt['time_minutes'].cumsum()
+                tt_with_delta = pd.concat([tt_with_delta, tt])
+    travel_time_updates = tt_with_delta.copy()
     for mode in travel_time_updates['mode'].unique():
         original_path = ('data/processed/gtfs_baseline/%s' % mode)
         trips = pd.read_csv('%s/trips.txt' % original_path, dtype={'trip_id': object})
@@ -318,9 +328,9 @@ def export_project_shape(stop_times, trips, project_id, stops, travel_time_updat
         baseline_tt['to'] = baseline_tt['stop_id'].astype('int')
         baseline_tt['from'] = baseline_tt['stop_id'].shift().fillna(0).astype('int')
         baseline_tt['prev_arrival_time'] = baseline_tt['arrival_time'].shift().fillna(0)
-        baseline_tt['min_since_prev'] = (baseline_tt['arrival_time'] - baseline_tt['prev_arrival_time'])/60
-        edges = baseline_tt[baseline_tt['stop_sequence']>1]
-        edges = edges[edges['route_id'].isin(travel_time_updates[travel_time_updates['project_id']==project_id]['route_id'].unique())]
+        baseline_tt['time_minutes'] = (baseline_tt['arrival_time'] - baseline_tt['prev_arrival_time'])/60
+        edges = baseline_tt[baseline_tt['stop_sequence'] > 1]
+        edges = edges[edges['route_id'].isin(travel_time_updates[travel_time_updates['project_id'] == project_id]['route_id'].unique())]
         nodes = stops.drop(columns=['stop_name']).rename(columns={'stop_id': 'id', 'stop_lat': 'y', 'stop_lon': 'x'})
         nodes = nodes[(nodes['id'].isin(edges['from'])) | (nodes['id'].isin(edges['to']))]
         export_shp(nodes, edges, name_shp='project_trajectories/project_%s_baseline_trajectory' % project_id)

@@ -125,6 +125,8 @@ def compare_indicators(scenario, results):
     nodes = gpd.read_file('results/project_trajectories/%s_trajectory_nodes.shp' % scenario).to_crs(comparison.crs)
     edges = gpd.read_file('results/project_trajectories/%s_trajectory_edges.shp' % scenario).to_crs(comparison.crs)
     comparison['project_id'] = project_id
+    if not os.path.exists("results/output_maps"):
+        os.makedirs("results/output_maps")
     for jt in ['', 'li']:
         for tr in ['60', '90']:
             comparison['%sjobs_%sd' % (jt, tr)] = comparison['%sjobs_%sp' % (jt, tr)] - comparison['%sjobs_%s' % (jt, tr)]
@@ -142,7 +144,14 @@ def compare_indicators(scenario, results):
                 edges.plot(ax=ax, color='black', linewidth=0.5)
                 nodes.plot(ax=ax, color='black', markersize=0.5)
                 ax.axis('off')
-                plt.savefig("results/accessibility_change_%s_min.png" % tr)
+                plt.savefig("results/output_maps/accessibility_change_%s_min.png" % tr)
+                comparison.plot(column='%sacc_%s' % (jt, tr), ax=ax, cmap='Spectral', legend=True)
+                edges.plot(ax=ax, color='black', linewidth=0.5)
+                nodes.plot(ax=ax, color='black', markersize=0.5)
+                ax.axis('off')
+                plt.savefig("results/output_maps/baseline_accessibility_%s_min.png" % tr)
+
+    comparison.to_file("results/output_maps/results.shp")
     results = pd.concat([results, comparison])
     return results
 

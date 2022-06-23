@@ -145,9 +145,8 @@ def compare_indicators(scenario, results):
                 nodes.plot(ax=ax, color='black', markersize=0.5)
                 ax.axis('off')
                 plt.savefig("results/output_maps/accessibility_change_%s_min.png" % tr)
+                fig, ax = plt.subplots(1, figsize=(8, 8))
                 comparison.plot(column='%sacc_%s' % (jt, tr), ax=ax, cmap='Spectral', legend=True)
-                edges.plot(ax=ax, color='black', linewidth=0.5)
-                nodes.plot(ax=ax, color='black', markersize=0.5)
                 ax.axis('off')
                 plt.savefig("results/output_maps/baseline_accessibility_%s_min.png" % tr)
 
